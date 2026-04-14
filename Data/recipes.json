@@ -1,0 +1,713 @@
+{
+  "recipes": [
+    {
+      "id": "rec_001",
+      "name": "Scrambled Eggs",
+      "category": "Breakfast",
+      "servings": 2,
+      "price_estimate_usd": 2.5,
+      "ingredients": [
+        {
+          "item_id": "item_002",
+          "name": "Large Eggs",
+          "amount": 4,
+          "unit": "count"
+        },
+        {
+          "item_id": "item_005",
+          "name": "Unsalted Butter",
+          "amount": 14,
+          "unit": "g"
+        },
+        {
+          "item_id": "item_001",
+          "name": "Whole Milk",
+          "amount": 30,
+          "unit": "ml"
+        }
+      ],
+      "instructions": [
+        "Crack eggs into a bowl, add milk and whisk.",
+        "Melt butter in a pan over medium-low heat.",
+        "Pour in eggs and stir gently until just set.",
+        "Season with salt and pepper and serve."
+      ],
+      "tags": [
+        "breakfast",
+        "quick",
+        "high-protein"
+      ],
+      "protein_g": 13,
+      "calories": 220,
+      "carbs_g": 2,
+      "fiber_g": 0,
+      "cook_time_min": 10,
+      "rating": 4.2
+    },
+    {
+      "id": "rec_002",
+      "name": "Garlic Butter Salmon",
+      "category": "Dinner",
+      "servings": 2,
+      "price_estimate_usd": 14.0,
+      "ingredients": [
+        {
+          "item_id": "item_017",
+          "name": "Salmon Fillet",
+          "amount": 400,
+          "unit": "g"
+        },
+        {
+          "item_id": "item_005",
+          "name": "Unsalted Butter",
+          "amount": 28,
+          "unit": "g"
+        },
+        {
+          "item_id": "item_010",
+          "name": "Garlic",
+          "amount": 3,
+          "unit": "cloves"
+        },
+        {
+          "item_id": "item_014",
+          "name": "Lemons",
+          "amount": 1,
+          "unit": "count"
+        }
+      ],
+      "instructions": [
+        "Pat salmon dry and season with salt and pepper.",
+        "Melt butter in a skillet over medium-high heat.",
+        "Add minced garlic and cook for 1 minute.",
+        "Sear salmon 4 minutes per side until cooked through.",
+        "Squeeze lemon over top and serve."
+      ],
+      "tags": [
+        "dinner",
+        "seafood",
+        "high-protein",
+        "omega-3"
+      ],
+      "protein_g": 35,
+      "calories": 320,
+      "carbs_g": 3,
+      "fiber_g": 0,
+      "cook_time_min": 20,
+      "rating": 4.7
+    },
+    {
+      "id": "rec_003",
+      "name": "Chicken Stir-Fry",
+      "category": "Dinner",
+      "servings": 3,
+      "price_estimate_usd": 10.0,
+      "ingredients": [
+        {
+          "item_id": "item_015",
+          "name": "Chicken Breast",
+          "amount": 400,
+          "unit": "g"
+        },
+        {
+          "item_id": "item_009",
+          "name": "Bell Peppers",
+          "amount": 2,
+          "unit": "count"
+        },
+        {
+          "item_id": "item_010",
+          "name": "Garlic",
+          "amount": 2,
+          "unit": "cloves"
+        },
+        {
+          "item_id": "item_022",
+          "name": "Soy Sauce",
+          "amount": 45,
+          "unit": "ml"
+        },
+        {
+          "item_id": "item_023",
+          "name": "Olive Oil",
+          "amount": 14,
+          "unit": "ml"
+        },
+        {
+          "item_id": "item_018",
+          "name": "White Rice",
+          "amount": 180,
+          "unit": "g"
+        }
+      ],
+      "instructions": [
+        "Cook rice according to package instructions.",
+        "Slice chicken and peppers into strips.",
+        "Heat oil in a wok over high heat.",
+        "Stir-fry chicken until golden, about 6 minutes.",
+        "Add garlic and peppers, cook 3 more minutes.",
+        "Add soy sauce, toss to coat and serve over rice."
+      ],
+      "tags": [
+        "dinner",
+        "asian",
+        "high-protein"
+      ],
+      "protein_g": 38,
+      "calories": 420,
+      "carbs_g": 42,
+      "fiber_g": 2,
+      "cook_time_min": 25,
+      "rating": 4.5
+    },
+    {
+      "id": "rec_004",
+      "name": "Overnight Oats",
+      "category": "Breakfast",
+      "servings": 1,
+      "price_estimate_usd": 2.0,
+      "ingredients": [
+        {
+          "item_id": "item_021",
+          "name": "Rolled Oats",
+          "amount": 80,
+          "unit": "g"
+        },
+        {
+          "item_id": "item_001",
+          "name": "Whole Milk",
+          "amount": 180,
+          "unit": "ml"
+        },
+        {
+          "item_id": "item_013",
+          "name": "Blueberries",
+          "amount": 80,
+          "unit": "g"
+        },
+        {
+          "item_id": "item_012",
+          "name": "Bananas",
+          "amount": 1,
+          "unit": "count"
+        }
+      ],
+      "instructions": [
+        "Add oats and milk to a jar and stir.",
+        "Slice banana and add on top with blueberries.",
+        "Cover and refrigerate overnight.",
+        "Stir before eating, add honey if desired."
+      ],
+      "tags": [
+        "breakfast",
+        "no-cook",
+        "meal-prep",
+        "fiber"
+      ],
+      "protein_g": 9,
+      "calories": 310,
+      "carbs_g": 58,
+      "fiber_g": 7,
+      "cook_time_min": 5,
+      "rating": 4.1
+    },
+    {
+      "id": "rec_005",
+      "name": "Pasta Arrabbiata",
+      "category": "Dinner",
+      "servings": 2,
+      "price_estimate_usd": 5.0,
+      "ingredients": [
+        {
+          "item_id": "item_019",
+          "name": "Pasta (Penne)",
+          "amount": 250,
+          "unit": "g"
+        },
+        {
+          "item_id": "item_010",
+          "name": "Garlic",
+          "amount": 4,
+          "unit": "cloves"
+        },
+        {
+          "item_id": "item_023",
+          "name": "Olive Oil",
+          "amount": 30,
+          "unit": "ml"
+        },
+        {
+          "item_id": "item_024",
+          "name": "Hot Sauce",
+          "amount": 15,
+          "unit": "ml"
+        },
+        {
+          "item_id": "item_011",
+          "name": "Yellow Onion",
+          "amount": 1,
+          "unit": "count"
+        }
+      ],
+      "instructions": [
+        "Boil pasta in salted water until al dente.",
+        "Dice onion and mince garlic.",
+        "Saut\u00e9 onion in olive oil for 5 minutes.",
+        "Add garlic and hot sauce, cook 2 minutes.",
+        "Drain pasta, toss with sauce and serve."
+      ],
+      "tags": [
+        "dinner",
+        "vegetarian",
+        "spicy",
+        "pasta"
+      ],
+      "protein_g": 11,
+      "calories": 380,
+      "carbs_g": 62,
+      "fiber_g": 4,
+      "cook_time_min": 25,
+      "rating": 4.3
+    },
+    {
+      "id": "rec_006",
+      "name": "Banana Blueberry Smoothie",
+      "category": "Snack",
+      "servings": 1,
+      "price_estimate_usd": 3.5,
+      "ingredients": [
+        {
+          "item_id": "item_012",
+          "name": "Bananas",
+          "amount": 1,
+          "unit": "count"
+        },
+        {
+          "item_id": "item_013",
+          "name": "Blueberries",
+          "amount": 100,
+          "unit": "g"
+        },
+        {
+          "item_id": "item_004",
+          "name": "Greek Yogurt",
+          "amount": 170,
+          "unit": "g"
+        },
+        {
+          "item_id": "item_001",
+          "name": "Whole Milk",
+          "amount": 120,
+          "unit": "ml"
+        }
+      ],
+      "instructions": [
+        "Add all ingredients to a blender.",
+        "Blend on high until smooth.",
+        "Pour into a glass and serve immediately."
+      ],
+      "tags": [
+        "snack",
+        "breakfast",
+        "no-cook",
+        "quick"
+      ],
+      "protein_g": 14,
+      "calories": 280,
+      "carbs_g": 38,
+      "fiber_g": 4,
+      "cook_time_min": 5,
+      "rating": 4.6
+    },
+    {
+      "id": "rec_007",
+      "name": "Veggie Egg Fried Rice",
+      "category": "Lunch",
+      "servings": 2,
+      "price_estimate_usd": 4.0,
+      "ingredients": [
+        {
+          "item_id": "item_018",
+          "name": "White Rice",
+          "amount": 200,
+          "unit": "g"
+        },
+        {
+          "item_id": "item_002",
+          "name": "Large Eggs",
+          "amount": 2,
+          "unit": "count"
+        },
+        {
+          "item_id": "item_008",
+          "name": "Carrots",
+          "amount": 100,
+          "unit": "g"
+        },
+        {
+          "item_id": "item_022",
+          "name": "Soy Sauce",
+          "amount": 30,
+          "unit": "ml"
+        },
+        {
+          "item_id": "item_023",
+          "name": "Olive Oil",
+          "amount": 14,
+          "unit": "ml"
+        },
+        {
+          "item_id": "item_010",
+          "name": "Garlic",
+          "amount": 2,
+          "unit": "cloves"
+        }
+      ],
+      "instructions": [
+        "Cook and cool rice (day-old rice works best).",
+        "Dice carrots and mince garlic.",
+        "Heat oil in a wok, stir-fry carrots and garlic for 3 minutes.",
+        "Push to the side, scramble eggs in the pan.",
+        "Add rice and soy sauce, toss everything together and serve."
+      ],
+      "tags": [
+        "lunch",
+        "asian",
+        "vegetarian",
+        "meal-prep"
+      ],
+      "protein_g": 12,
+      "calories": 340,
+      "carbs_g": 52,
+      "fiber_g": 3,
+      "cook_time_min": 20,
+      "rating": 4.4
+    },
+    {
+      "id": "rec_008",
+      "name": "Honey Garlic Chicken",
+      "category": "Dinner",
+      "servings": 3,
+      "price_estimate_usd": 11.0,
+      "ingredients": [
+        {
+          "item_id": "item_015",
+          "name": "Chicken Breast",
+          "amount": 600,
+          "unit": "g"
+        },
+        {
+          "item_id": "item_010",
+          "name": "Garlic",
+          "amount": 4,
+          "unit": "cloves"
+        },
+        {
+          "item_id": "item_022",
+          "name": "Soy Sauce",
+          "amount": 30,
+          "unit": "ml"
+        },
+        {
+          "item_id": "item_023",
+          "name": "Olive Oil",
+          "amount": 14,
+          "unit": "ml"
+        },
+        {
+          "item_id": "item_014",
+          "name": "Lemons",
+          "amount": 1,
+          "unit": "count"
+        }
+      ],
+      "instructions": [
+        "Mix soy sauce, minced garlic, and lemon juice as marinade.",
+        "Coat chicken and marinate for at least 10 minutes.",
+        "Heat oil in a skillet over medium-high heat.",
+        "Cook chicken 6-7 minutes per side until golden.",
+        "Rest 5 minutes before slicing and serve."
+      ],
+      "tags": [
+        "dinner",
+        "high-protein",
+        "asian"
+      ],
+      "protein_g": 40,
+      "calories": 310,
+      "carbs_g": 4,
+      "fiber_g": 0,
+      "cook_time_min": 30,
+      "rating": 4.8
+    },
+    {
+      "id": "rec_009",
+      "name": "Spinach & Carrot Salad",
+      "category": "Salad",
+      "servings": 2,
+      "price_estimate_usd": 4.5,
+      "ingredients": [
+        {
+          "item_id": "item_007",
+          "name": "Baby Spinach",
+          "amount": 150,
+          "unit": "g"
+        },
+        {
+          "item_id": "item_008",
+          "name": "Carrots",
+          "amount": 150,
+          "unit": "g"
+        },
+        {
+          "item_id": "item_014",
+          "name": "Lemons",
+          "amount": 1,
+          "unit": "count"
+        },
+        {
+          "item_id": "item_023",
+          "name": "Olive Oil",
+          "amount": 20,
+          "unit": "ml"
+        }
+      ],
+      "instructions": [
+        "Wash and dry spinach, shred carrots.",
+        "Whisk together lemon juice and olive oil as dressing.",
+        "Toss spinach and carrots with dressing.",
+        "Season with salt and pepper and serve."
+      ],
+      "tags": [
+        "salad",
+        "vegetarian",
+        "no-cook",
+        "healthy"
+      ],
+      "protein_g": 3,
+      "calories": 120,
+      "carbs_g": 10,
+      "fiber_g": 5,
+      "cook_time_min": 10,
+      "rating": 4.0
+    },
+    {
+      "id": "rec_010",
+      "name": "Blueberry Yogurt Parfait",
+      "category": "Dessert",
+      "servings": 2,
+      "price_estimate_usd": 4.0,
+      "ingredients": [
+        {
+          "item_id": "item_004",
+          "name": "Greek Yogurt",
+          "amount": 340,
+          "unit": "g"
+        },
+        {
+          "item_id": "item_013",
+          "name": "Blueberries",
+          "amount": 150,
+          "unit": "g"
+        },
+        {
+          "item_id": "item_021",
+          "name": "Rolled Oats",
+          "amount": 60,
+          "unit": "g"
+        },
+        {
+          "item_id": "item_005",
+          "name": "Unsalted Butter",
+          "amount": 10,
+          "unit": "g"
+        }
+      ],
+      "instructions": [
+        "Toast oats in butter in a pan until golden, let cool.",
+        "Layer yogurt in a glass, then blueberries, then toasted oats.",
+        "Repeat layers and serve immediately."
+      ],
+      "tags": [
+        "dessert",
+        "no-cook",
+        "sweet",
+        "snack"
+      ],
+      "protein_g": 16,
+      "calories": 260,
+      "carbs_g": 32,
+      "fiber_g": 3,
+      "cook_time_min": 5,
+      "rating": 4.3
+    },
+    {
+      "id": "rec_011",
+      "name": "Banana Oat Cookies",
+      "category": "Dessert",
+      "servings": 12,
+      "price_estimate_usd": 3.0,
+      "ingredients": [
+        {
+          "item_id": "item_012",
+          "name": "Bananas",
+          "amount": 2,
+          "unit": "count"
+        },
+        {
+          "item_id": "item_021",
+          "name": "Rolled Oats",
+          "amount": 160,
+          "unit": "g"
+        },
+        {
+          "item_id": "item_005",
+          "name": "Unsalted Butter",
+          "amount": 28,
+          "unit": "g"
+        }
+      ],
+      "instructions": [
+        "Preheat oven to 175\u00b0C (350\u00b0F).",
+        "Mash bananas in a bowl until smooth.",
+        "Mix in oats and melted butter.",
+        "Drop spoonfuls onto a baking sheet.",
+        "Bake 12-15 minutes until golden."
+      ],
+      "tags": [
+        "dessert",
+        "baking",
+        "sweet",
+        "healthy"
+      ],
+      "protein_g": 2,
+      "calories": 90,
+      "carbs_g": 16,
+      "fiber_g": 2,
+      "cook_time_min": 25,
+      "rating": 4.1
+    },
+    {
+      "id": "rec_012",
+      "name": "Carrot & Onion Soup",
+      "category": "Soup",
+      "servings": 4,
+      "price_estimate_usd": 4.5,
+      "ingredients": [
+        {
+          "item_id": "item_008",
+          "name": "Carrots",
+          "amount": 400,
+          "unit": "g"
+        },
+        {
+          "item_id": "item_011",
+          "name": "Yellow Onion",
+          "amount": 2,
+          "unit": "count"
+        },
+        {
+          "item_id": "item_010",
+          "name": "Garlic",
+          "amount": 3,
+          "unit": "cloves"
+        },
+        {
+          "item_id": "item_023",
+          "name": "Olive Oil",
+          "amount": 20,
+          "unit": "ml"
+        },
+        {
+          "item_id": "item_001",
+          "name": "Whole Milk",
+          "amount": 120,
+          "unit": "ml"
+        }
+      ],
+      "instructions": [
+        "Dice onion, slice carrots, mince garlic.",
+        "Saut\u00e9 onion and garlic in olive oil for 5 minutes.",
+        "Add carrots and cover with water, simmer 20 minutes.",
+        "Blend until smooth, stir in milk.",
+        "Season with salt and pepper and serve hot."
+      ],
+      "tags": [
+        "soup",
+        "vegetarian",
+        "healthy",
+        "warm"
+      ],
+      "protein_g": 3,
+      "calories": 130,
+      "carbs_g": 18,
+      "fiber_g": 5,
+      "cook_time_min": 40,
+      "rating": 4.2
+    },
+    {
+      "id": "rec_013",
+      "name": "Egg Drop Soup",
+      "category": "Soup",
+      "servings": 2,
+      "price_estimate_usd": 3.0,
+      "ingredients": [
+        {
+          "item_id": "item_002",
+          "name": "Large Eggs",
+          "amount": 2,
+          "unit": "count"
+        },
+        {
+          "item_id": "item_022",
+          "name": "Soy Sauce",
+          "amount": 15,
+          "unit": "ml"
+        },
+        {
+          "item_id": "item_010",
+          "name": "Garlic",
+          "amount": 1,
+          "unit": "cloves"
+        },
+        {
+          "item_id": "item_011",
+          "name": "Yellow Onion",
+          "amount": 1,
+          "unit": "count"
+        }
+      ],
+      "instructions": [
+        "Bring 600ml water to a boil with garlic and diced onion.",
+        "Add soy sauce and reduce to a gentle simmer.",
+        "Whisk eggs in a bowl, then slowly drizzle into the soup while stirring.",
+        "Cook 1 minute until egg ribbons form and serve hot."
+      ],
+      "tags": [
+        "soup",
+        "asian",
+        "quick",
+        "light"
+      ],
+      "protein_g": 8,
+      "calories": 110,
+      "carbs_g": 6,
+      "fiber_g": 1,
+      "cook_time_min": 15,
+      "rating": 4.5
+    }
+  ],
+  "meta": {
+    "total_recipes": 13,
+    "categories": [
+      "Breakfast",
+      "Lunch",
+      "Dinner",
+      "Snack",
+      "Salad",
+      "Dessert",
+      "Soup"
+    ],
+    "schema_version": "1.1"
+  }
+}
