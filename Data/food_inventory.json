@@ -1,0 +1,621 @@
+{
+  "inventory": {
+    "last_updated": "2026-04-13",
+    "categories": [
+      {
+        "id": "cat_001",
+        "name": "Dairy & Eggs",
+        "items": [
+          {
+            "id": "item_001",
+            "name": "Whole Milk",
+            "brand": "Generic",
+            "quantity": 1,
+            "unit": "gallon",
+            "price_usd": 4.29,
+            "expiry_date": "2026-04-18",
+            "duration_days": 7,
+            "nutrition_per_serving": {
+              "serving_size": "240ml",
+              "calories": 150,
+              "protein_g": 8,
+              "carbs_g": 12,
+              "fat_g": 8
+            },
+            "tags": [
+              "dairy",
+              "drink"
+            ]
+          },
+          {
+            "id": "item_002",
+            "name": "Large Eggs",
+            "brand": "Generic",
+            "quantity": 12,
+            "unit": "count",
+            "price_usd": 5.49,
+            "expiry_date": "2026-04-27",
+            "duration_days": 35,
+            "nutrition_per_serving": {
+              "serving_size": "1 egg (50g)",
+              "calories": 70,
+              "protein_g": 6,
+              "carbs_g": 0,
+              "fat_g": 5
+            },
+            "tags": [
+              "protein",
+              "breakfast"
+            ]
+          },
+          {
+            "id": "item_003",
+            "name": "Cheddar Cheese",
+            "brand": "Tillamook",
+            "quantity": 200,
+            "unit": "g",
+            "price_usd": 6.99,
+            "expiry_date": "2026-05-01",
+            "duration_days": 21,
+            "nutrition_per_serving": {
+              "serving_size": "28g",
+              "calories": 110,
+              "protein_g": 7,
+              "carbs_g": 0,
+              "fat_g": 9
+            },
+            "tags": [
+              "dairy",
+              "cheese"
+            ]
+          },
+          {
+            "id": "item_004",
+            "name": "Greek Yogurt",
+            "brand": "Chobani",
+            "quantity": 3,
+            "unit": "cup",
+            "price_usd": 5.79,
+            "expiry_date": "2026-04-20",
+            "duration_days": 14,
+            "nutrition_per_serving": {
+              "serving_size": "170g",
+              "calories": 100,
+              "protein_g": 17,
+              "carbs_g": 6,
+              "fat_g": 0
+            },
+            "tags": [
+              "dairy",
+              "breakfast",
+              "snack"
+            ]
+          },
+          {
+            "id": "item_005",
+            "name": "Unsalted Butter",
+            "brand": "Land O Lakes",
+            "quantity": 250,
+            "unit": "g",
+            "price_usd": 5.29,
+            "expiry_date": "2026-06-01",
+            "duration_days": 30,
+            "nutrition_per_serving": {
+              "serving_size": "14g",
+              "calories": 100,
+              "protein_g": 0,
+              "carbs_g": 0,
+              "fat_g": 11
+            },
+            "tags": [
+              "dairy",
+              "cooking"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "cat_002",
+        "name": "Vegetables",
+        "items": [
+          {
+            "id": "item_006",
+            "name": "Broccoli",
+            "brand": null,
+            "quantity": 1,
+            "unit": "head",
+            "price_usd": 2.49,
+            "expiry_date": "2026-04-16",
+            "duration_days": 5,
+            "nutrition_per_serving": {
+              "serving_size": "91g",
+              "calories": 31,
+              "protein_g": 3,
+              "carbs_g": 6,
+              "fat_g": 0
+            },
+            "tags": [
+              "vegetable",
+              "green",
+              "healthy"
+            ]
+          },
+          {
+            "id": "item_007",
+            "name": "Baby Spinach",
+            "brand": "Earthbound Farm",
+            "quantity": 150,
+            "unit": "g",
+            "price_usd": 3.99,
+            "expiry_date": "2026-04-15",
+            "duration_days": 5,
+            "nutrition_per_serving": {
+              "serving_size": "30g",
+              "calories": 7,
+              "protein_g": 1,
+              "carbs_g": 1,
+              "fat_g": 0
+            },
+            "tags": [
+              "vegetable",
+              "leafy",
+              "salad"
+            ]
+          },
+          {
+            "id": "item_008",
+            "name": "Carrots",
+            "brand": null,
+            "quantity": 500,
+            "unit": "g",
+            "price_usd": 1.99,
+            "expiry_date": "2026-04-25",
+            "duration_days": 21,
+            "nutrition_per_serving": {
+              "serving_size": "85g",
+              "calories": 35,
+              "protein_g": 1,
+              "carbs_g": 8,
+              "fat_g": 0
+            },
+            "tags": [
+              "vegetable",
+              "root",
+              "snack"
+            ]
+          },
+          {
+            "id": "item_009",
+            "name": "Bell Peppers",
+            "brand": null,
+            "quantity": 3,
+            "unit": "count",
+            "price_usd": 3.49,
+            "expiry_date": "2026-04-17",
+            "duration_days": 7,
+            "nutrition_per_serving": {
+              "serving_size": "1 medium (119g)",
+              "calories": 31,
+              "protein_g": 1,
+              "carbs_g": 7,
+              "fat_g": 0
+            },
+            "tags": [
+              "vegetable",
+              "colorful",
+              "stir-fry"
+            ]
+          },
+          {
+            "id": "item_010",
+            "name": "Garlic",
+            "brand": null,
+            "quantity": 1,
+            "unit": "bulb",
+            "price_usd": 0.79,
+            "expiry_date": "2026-05-10",
+            "duration_days": 90,
+            "nutrition_per_serving": {
+              "serving_size": "3g (1 clove)",
+              "calories": 5,
+              "protein_g": 0,
+              "carbs_g": 1,
+              "fat_g": 0
+            },
+            "tags": [
+              "vegetable",
+              "aromatic",
+              "cooking"
+            ]
+          },
+          {
+            "id": "item_011",
+            "name": "Yellow Onion",
+            "brand": null,
+            "quantity": 3,
+            "unit": "count",
+            "price_usd": 1.49,
+            "expiry_date": "2026-05-01",
+            "duration_days": 60,
+            "nutrition_per_serving": {
+              "serving_size": "1 medium (110g)",
+              "calories": 44,
+              "protein_g": 1,
+              "carbs_g": 10,
+              "fat_g": 0
+            },
+            "tags": [
+              "vegetable",
+              "aromatic",
+              "cooking"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "cat_003",
+        "name": "Fruits",
+        "items": [
+          {
+            "id": "item_012",
+            "name": "Bananas",
+            "brand": null,
+            "quantity": 5,
+            "unit": "count",
+            "price_usd": 1.29,
+            "expiry_date": "2026-04-16",
+            "duration_days": 5,
+            "nutrition_per_serving": {
+              "serving_size": "1 medium (118g)",
+              "calories": 105,
+              "protein_g": 1,
+              "carbs_g": 27,
+              "fat_g": 0
+            },
+            "tags": [
+              "fruit",
+              "breakfast",
+              "snack"
+            ]
+          },
+          {
+            "id": "item_013",
+            "name": "Blueberries",
+            "brand": null,
+            "quantity": 250,
+            "unit": "g",
+            "price_usd": 4.99,
+            "expiry_date": "2026-04-17",
+            "duration_days": 7,
+            "nutrition_per_serving": {
+              "serving_size": "148g",
+              "calories": 84,
+              "protein_g": 1,
+              "carbs_g": 21,
+              "fat_g": 0
+            },
+            "tags": [
+              "fruit",
+              "berry",
+              "antioxidant"
+            ]
+          },
+          {
+            "id": "item_014",
+            "name": "Lemons",
+            "brand": null,
+            "quantity": 4,
+            "unit": "count",
+            "price_usd": 2.49,
+            "expiry_date": "2026-04-30",
+            "duration_days": 21,
+            "nutrition_per_serving": {
+              "serving_size": "1 medium (58g)",
+              "calories": 17,
+              "protein_g": 1,
+              "carbs_g": 5,
+              "fat_g": 0
+            },
+            "tags": [
+              "fruit",
+              "citrus",
+              "cooking"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "cat_004",
+        "name": "Meat & Seafood",
+        "items": [
+          {
+            "id": "item_015",
+            "name": "Chicken Breast",
+            "brand": null,
+            "quantity": 600,
+            "unit": "g",
+            "price_usd": 8.99,
+            "expiry_date": "2026-05-13",
+            "duration_days": 270,
+            "nutrition_per_serving": {
+              "serving_size": "100g",
+              "calories": 165,
+              "protein_g": 31,
+              "carbs_g": 0,
+              "fat_g": 4
+            },
+            "tags": [
+              "protein",
+              "meat",
+              "poultry"
+            ]
+          },
+          {
+            "id": "item_016",
+            "name": "Ground Beef (80/20)",
+            "brand": null,
+            "quantity": 500,
+            "unit": "g",
+            "price_usd": 7.49,
+            "expiry_date": "2026-05-13",
+            "duration_days": 120,
+            "nutrition_per_serving": {
+              "serving_size": "100g",
+              "calories": 254,
+              "protein_g": 17,
+              "carbs_g": 0,
+              "fat_g": 20
+            },
+            "tags": [
+              "protein",
+              "meat",
+              "beef"
+            ]
+          },
+          {
+            "id": "item_017",
+            "name": "Salmon Fillet",
+            "brand": null,
+            "quantity": 400,
+            "unit": "g",
+            "price_usd": 12.99,
+            "expiry_date": "2026-05-20",
+            "duration_days": 180,
+            "nutrition_per_serving": {
+              "serving_size": "100g",
+              "calories": 208,
+              "protein_g": 20,
+              "carbs_g": 0,
+              "fat_g": 13
+            },
+            "tags": [
+              "protein",
+              "seafood",
+              "omega-3"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "cat_005",
+        "name": "Grains & Pantry",
+        "items": [
+          {
+            "id": "item_018",
+            "name": "White Rice",
+            "brand": "Nishiki",
+            "quantity": 2,
+            "unit": "kg",
+            "price_usd": 9.99,
+            "expiry_date": "2027-04-01",
+            "duration_days": 730,
+            "nutrition_per_serving": {
+              "serving_size": "45g dry",
+              "calories": 160,
+              "protein_g": 3,
+              "carbs_g": 36,
+              "fat_g": 0
+            },
+            "tags": [
+              "grain",
+              "staple",
+              "carb"
+            ]
+          },
+          {
+            "id": "item_019",
+            "name": "Pasta (Penne)",
+            "brand": "Barilla",
+            "quantity": 500,
+            "unit": "g",
+            "price_usd": 2.29,
+            "expiry_date": "2027-06-01",
+            "duration_days": 730,
+            "nutrition_per_serving": {
+              "serving_size": "56g dry",
+              "calories": 200,
+              "protein_g": 7,
+              "carbs_g": 42,
+              "fat_g": 1
+            },
+            "tags": [
+              "grain",
+              "pasta",
+              "staple"
+            ]
+          },
+          {
+            "id": "item_020",
+            "name": "All-Purpose Flour",
+            "brand": "King Arthur",
+            "quantity": 1,
+            "unit": "kg",
+            "price_usd": 4.49,
+            "expiry_date": "2026-10-01",
+            "duration_days": 365,
+            "nutrition_per_serving": {
+              "serving_size": "30g",
+              "calories": 110,
+              "protein_g": 3,
+              "carbs_g": 23,
+              "fat_g": 0
+            },
+            "tags": [
+              "grain",
+              "baking",
+              "staple"
+            ]
+          },
+          {
+            "id": "item_021",
+            "name": "Rolled Oats",
+            "brand": "Bob's Red Mill",
+            "quantity": 800,
+            "unit": "g",
+            "price_usd": 5.99,
+            "expiry_date": "2026-12-01",
+            "duration_days": 365,
+            "nutrition_per_serving": {
+              "serving_size": "40g",
+              "calories": 150,
+              "protein_g": 5,
+              "carbs_g": 27,
+              "fat_g": 3
+            },
+            "tags": [
+              "grain",
+              "breakfast",
+              "fiber"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "cat_006",
+        "name": "Condiments & Sauces",
+        "items": [
+          {
+            "id": "item_022",
+            "name": "Soy Sauce",
+            "brand": "Kikkoman",
+            "quantity": 300,
+            "unit": "ml",
+            "price_usd": 3.49,
+            "expiry_date": "2027-01-01",
+            "duration_days": 730,
+            "nutrition_per_serving": {
+              "serving_size": "15ml",
+              "calories": 10,
+              "protein_g": 1,
+              "carbs_g": 1,
+              "fat_g": 0
+            },
+            "tags": [
+              "condiment",
+              "asian",
+              "cooking"
+            ]
+          },
+          {
+            "id": "item_023",
+            "name": "Olive Oil (Extra Virgin)",
+            "brand": "California Olive Ranch",
+            "quantity": 500,
+            "unit": "ml",
+            "price_usd": 11.99,
+            "expiry_date": "2026-11-01",
+            "duration_days": 540,
+            "nutrition_per_serving": {
+              "serving_size": "14ml",
+              "calories": 120,
+              "protein_g": 0,
+              "carbs_g": 0,
+              "fat_g": 14
+            },
+            "tags": [
+              "oil",
+              "cooking",
+              "healthy-fat"
+            ]
+          },
+          {
+            "id": "item_024",
+            "name": "Hot Sauce",
+            "brand": "Tabasco",
+            "quantity": 150,
+            "unit": "ml",
+            "price_usd": 4.29,
+            "expiry_date": "2027-06-01",
+            "duration_days": 1095,
+            "nutrition_per_serving": {
+              "serving_size": "5ml",
+              "calories": 0,
+              "protein_g": 0,
+              "carbs_g": 0,
+              "fat_g": 0
+            },
+            "tags": [
+              "condiment",
+              "spicy",
+              "sauce"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "cat_007",
+        "name": "Beverages",
+        "items": [
+          {
+            "id": "item_025",
+            "name": "Orange Juice",
+            "brand": "Tropicana",
+            "quantity": 1,
+            "unit": "liter",
+            "price_usd": 5.49,
+            "expiry_date": "2026-04-18",
+            "duration_days": 7,
+            "nutrition_per_serving": {
+              "serving_size": "240ml",
+              "calories": 110,
+              "protein_g": 2,
+              "carbs_g": 26,
+              "fat_g": 0
+            },
+            "tags": [
+              "drink",
+              "breakfast",
+              "vitamin-c"
+            ]
+          },
+          {
+            "id": "item_026",
+            "name": "Sparkling Water",
+            "brand": "LaCroix",
+            "quantity": 12,
+            "unit": "cans",
+            "price_usd": 6.99,
+            "expiry_date": "2027-04-01",
+            "duration_days": 548,
+            "nutrition_per_serving": {
+              "serving_size": "355ml",
+              "calories": 0,
+              "protein_g": 0,
+              "carbs_g": 0,
+              "fat_g": 0
+            },
+            "tags": [
+              "drink",
+              "water",
+              "zero-calorie"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "meta": {
+    "total_items": 26,
+    "schema_version": "1.1"
+  }
+}
