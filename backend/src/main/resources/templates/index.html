@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>SmartFridge</title>
+
+    <style>
+        body { font-family: Arial; background:#f7f2ea; margin:0; }
+        .app { display:grid; grid-template-columns:220px 1fr; }
+
+        .sidebar { padding:20px; background:#fbf7f1; }
+        .nav-item { padding:10px; border-radius:10px; text-decoration:none; display:block; }
+        .nav-item.active { background:#8c4b32; color:white; }
+
+        .main { padding:20px; }
+        .tab, .chip, .sort-box {
+            text-decoration:none;
+            display:inline-block;
+            padding:10px;
+            border-radius:12px;
+            margin-right:10px;
+            border:1px solid #ddd;
+            color:black;
+        }
+        .tab.active { background:#8c4b32; color:white; }
+
+        .item-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:20px; }
+
+        .item-card, .add-card {
+            background:white;
+            border-radius:16px;
+            padding:20px;
+            text-align:center;
+        }
+
+        .add-card { border:2px dashed #ccc; }
+
+        .status-safe { color:green; }
+        .status-soon { color:orange; }
+        .status-expired { color:red; }
+
+    </style>
+</head>
+
+<body>
+<div class="app">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>SmartFridge</h2>
+
+        <a href="/" class="nav-item active">My Fridge</a>
+    </div>
+
+    <!-- Main -->
+    <div class="main">
+
+        <h1>My Fridge</h1>
+
+        <!-- Search -->
+        <form action="/" method="get">
+            <input type="hidden" name="category" th:value="${selectedCategory}">
+            <input type="hidden" name="chip" th:value="${selectedChip}">
+            <input type="hidden" name="sort" th:value="${selectedSort}">
+
+            <input name="q" placeholder="search"
+                   th:value="${searchQuery}">
+            <button type="submit">search</button>
+        </form>
+
+        <!-- Categories -->
+        <div>
+            <a th:href="@{/(category='All')}"
+               class="tab"
+               th:classappend="${selectedCategory=='All'}?' active':''">All</a>
+
+            <a th:href="@{/(category='Vegetables')}"
+               class="tab"
+               th:classappend="${selectedCategory=='Vegetables'}?' active':''">Vegetables</a>
+
+            <a th:href="@{/(category='Fruits')}"
+               class="tab"
+               th:classappend="${selectedCategory=='Fruits'}?' active':''">Fruits</a>
+
+            <a th:href="@{/(category='Dairy')}"
+               class="tab"
+               th:classappend="${selectedCategory=='Dairy'}?' active':''">Dairy</a>
+
+            <a th:href="@{/(category='Meat')}"
+               class="tab"
+               th:classappend="${selectedCategory=='Meat'}?' active':''">Meat</a>
+        </div>
+
+        <!-- Toolbar -->
+        <div style="margin-top:20px;">
+            <a th:href="@{/(category=${selectedCategory},chip='expiry')}"
+               class="chip">expiry</a>
+
+            <a th:href="@{/(category=${selectedCategory},chip='new')}"
+               class="chip">new</a>
+
+            <a th:href="@{/(category=${selectedCategory},sort='expiry')}"
+               class="sort-box">Sort by Expiry</a>
+
+            <a th:href="@{/(category=${selectedCategory},sort='name')}"
+               class="sort-box">Sort by Name</a>
+        </div>
+
+        <!-- Grid -->
+        <div class="item-grid">
+
+            <!-- Add -->
+            <a href="/add" class="add-card">
+                <h2>+</h2>
+                <div>Add Item</div>
+            </a>
+
+            <!-- Items -->
+            <div class="item-card" th:each="item : ${items}">
+
+                <h3 th:text="${item.name}">Milk</h3>
+                <div th:text="${item.category}">Dairy</div>
+                <div th:text="${item.expiryDate}"></div>
+
+                <div th:if="${item.daysLeft<=0}" class="status-expired">
+                    Expired
+                </div>
+
+                <div th:if="${item.daysLeft>0 and item.daysLeft<=2}" class="status-soon"
+                     th:text="${item.daysLeft + ' days left'}">
+                </div>
+
+                <div th:if="${item.daysLeft>2}" class="status-safe"
+                     th:text="${item.daysLeft + ' days left'}">
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

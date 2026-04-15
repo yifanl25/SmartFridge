@@ -1,23 +1,12 @@
 [
-  {"name": "Whole Milk", "expiryDate": "2026-04-18", "category": "Dairy"},
-  {"name": "Large Eggs (12pk)", "expiryDate": "2026-04-25", "category": "Eggs"},
-  {"name": "Baby Spinach", "expiryDate": "2026-04-15", "category": "Vegetables"},
-  {"name": "Ribeye Steak", "expiryDate": "2026-04-16", "category": "Meat"},
-  {"name": "Greek Yogurt", "expiryDate": "2026-04-30", "category": "Dairy"},
-  {"name": "Salmon Fillet", "expiryDate": "2026-04-14", "category": "Meat"},
-  {"name": "Blueberries", "expiryDate": "2026-04-19", "category": "Fruits"},
-  {"name": "Cheddar Cheese", "expiryDate": "2026-05-15", "category": "Dairy"},
-  {"name": "Cherry Tomatoes", "expiryDate": "2026-04-20", "category": "Vegetables"},
-  {"name": "Chicken Breast", "expiryDate": "2026-04-17", "category": "Meat"},
-  {"name": "Broccoli", "expiryDate": "2026-04-21", "category": "Vegetables"},
-  {"name": "Fuji Apples", "expiryDate": "2026-06-01", "category": "Fruits"},
-  {"name": "Unsalted Butter", "expiryDate": "2026-07-10", "category": "Dairy"},
-  {"name": "Smoked Bacon", "expiryDate": "2026-04-28", "category": "Meat"},
-  {"name": "Romaine Lettuce", "expiryDate": "2026-04-16", "category": "Vegetables"},
-  {"name": "Bananas", "expiryDate": "2026-04-18", "category": "Fruits"},
-  {"name": "Orange Juice", "expiryDate": "2026-04-22", "category": "Beverages"},
-  {"name": "Sourdough Bread", "expiryDate": "2026-04-15", "category": "Bakery"},
-  {"name": "Pork Ribs", "expiryDate": "2026-04-19", "category": "Meat"},
-  {"name": "Strawberries", "expiryDate": "2026-04-15", "category": "Fruits"}
+  {"name": "Whole Milk", "expiryDate": "2026-04-15", "category": "Dairy", "storageArea": "Fridge", "quantityLabel": "1 L"},
+  {"name": "Baby Spinach", "expiryDate": "2026-04-18", "category": "Vegetables", "storageArea": "Fridge", "quantityLabel": "150 g"},
+  {"name": "Avocado", "expiryDate": "2026-04-14", "category": "Fruits", "storageArea": "Fridge", "quantityLabel": "2 pcs"},
+  {"name": "Cheddar Cheese", "expiryDate": "2026-04-21", "category": "Dairy", "storageArea": "Fridge", "quantityLabel": "200 g"},
+  {"name": "Chicken Breast", "expiryDate": "2026-04-16", "category": "Meat", "storageArea": "Fridge", "quantityLabel": "500 g"},
+  {"name": "Cherry Tomatoes", "expiryDate": "2026-04-17", "category": "Vegetables", "storageArea": "Fridge", "quantityLabel": "250 g"},
+  {"name": "Greek Yogurt", "expiryDate": "2026-04-22", "category": "Dairy", "storageArea": "Fridge", "quantityLabel": "2 cups"},
+  {"name": "Sourdough Bread", "expiryDate": "2026-04-16", "category": "Grains", "storageArea": "Pantry", "quantityLabel": "1 loaf"},
+  {"name": "Frozen Dumplings", "expiryDate": "2026-05-20", "category": "Frozen", "storageArea": "Freezer", "quantityLabel": "1 bag"},
+  {"name": "Orange Juice", "expiryDate": "2026-04-20", "category": "Beverages", "storageArea": "Fridge", "quantityLabel": "1 bottle"}
 ]
-

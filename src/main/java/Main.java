@@ -1,24 +1,26 @@
 import java.util.List;
+import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
         InventoryManager manager = new InventoryManager();
+        manager.seedSampleData();
 
-        // 模拟用户输入增加东西
-        manager.addFood("牛奶", "2026-04-20", "乳制品");
-        manager.addFood("鸡蛋", "2026-04-15", "蛋类");
-        manager.addFood("苹果", "2026-05-01", "水果");
-
-        System.out.println("--- 原始库存 ---");
+        System.out.println("--- Inventory ---");
         manager.getInventory().forEach(System.out::println);
 
-        // 测试：从紧急到不紧急排序
-        System.out.println("\n--- 按照过期时间排序 (紧急优先) ---");
-        List<FoodItem> sortedList = InventoryManager.sortItemsByUrgency(manager.getInventory());
-        sortedList.forEach(System.out::println);
+        System.out.println("\n--- Sorted by expiry ---");
+        List<FoodItem> byExpiry = manager.getItems("", "All", "expiry");
+        byExpiry.forEach(System.out::println);
 
-        // 测试：分类查看
-        System.out.println("\n--- 查看分类: 水果 ---");
-        manager.filterByCategory("水果").forEach(System.out::println);
+        System.out.println("\n--- Filter: Dairy ---");
+        manager.getItems("", "Dairy", "expiry").forEach(System.out::println);
+
+        System.out.println("\n--- Storage summary ---");
+        for (Map.Entry<String, Long> entry : manager.getStorageSummary().entrySet()) {
+            System.out.println(entry.getKey() + ": " + entry.getValue());
+        }
+
+        System.out.println("\nExpiring soon: " + manager.getExpiringSoonCount());
     }
 }
