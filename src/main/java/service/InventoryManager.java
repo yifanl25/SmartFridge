@@ -1,43 +1,49 @@
-import java.time.LocalDate;
+package service;
+
+import model.FoodCategory;
+import model.FoodItem;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class InventoryManager {
-    // 使用 final 确保引用不被篡改
+    // Legacy helper inventory store kept for backward compatibility/demo only.
+    // Main PRD flow should rely on InventoryService.
     private final List<FoodItem> inventory = new ArrayList<>();
 
-    // 逻辑：添加食物（对应“自行增加东西，目前输入字符增加”）
+    // Legacy add method: manually creates item.
+    // PRD-compliant Add Item should go through suggestion-based InventoryService.addItem.
     public void addFood(String name, String expiryDateStr, String category) {
+        FoodCategory foodCategory = new FoodCategory(category, category, "icon");
         FoodItem newItem = new FoodItem(
                 String.valueOf(System.currentTimeMillis()),
                 name,
-                LocalDate.parse(expiryDateStr),
-                category
+                foodCategory,
+                1,
+                "pcs",
+                java.time.LocalDate.now().toString(),
+                expiryDateStr
         );
         inventory.add(newItem);
     }
 
-    /**
-     * 静态方法：实现你备注里的“按照新旧顺序和预期过期时间排序”
-     * 逻辑：从紧急（快过期）到不紧急
-     */
+    // Legacy static sorter by expiry date ascending.
     public static List<FoodItem> sortItemsByUrgency(List<FoodItem> items) {
         return items.stream()
                 .sorted(Comparator.comparing(FoodItem::getExpiryDate))
                 .collect(Collectors.toList());
     }
 
-    /**
-     * 逻辑：根据分类过滤（对应“点这个可以看到分类”）
-     */
+    // Legacy filter by ingredient category name.
     public List<FoodItem> filterByCategory(String category) {
         return inventory.stream()
-                .filter(item -> item.getCategory().equalsIgnoreCase(category))
+                .filter(item -> item.getCategory().getName().equalsIgnoreCase(category))
                 .collect(Collectors.toList());
     }
 
+    // Returns underlying list (non-defensive legacy API).
     public List<FoodItem> getInventory() {
         return inventory;
     }

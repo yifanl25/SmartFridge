@@ -16,7 +16,7 @@ repositories {
 }
 
 application {
-    mainClass.set("") /** Update with your main driver app location */
+    mainClass.set("ui.Main") /** Update with your main driver app location */
 }
 
 dependencies {
