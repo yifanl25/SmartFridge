@@ -34,36 +34,33 @@ public class UserPreference {
     }
 
     /**
-     * Toggles a health goal on or off.
-     * <p>
-     * If the goal is already selected, it will be removed.
-     * If it is not selected, it will be added.
+     * Selects a health goal, replacing any previously selected goal.
+     * Only one goal can be selected at a time.
      * Call this when the user clicks one of the three goal cards.
      *
      * @param goal one of the goal constants
      */
-    public void toggleGoal(String goal) {
-        if (goals.contains(goal)) {
-            goals.remove(goal);
-        } else {
-            goals.add(goal);
-        }
+    public void selectGoal(String goal) {
+        goals.clear();
+        goals.add(goal);
     }
 
     /**
-     * Returns true if the user has selected at least one health goal.
+     * Returns true if the user has selected ONLY one health goal.
+     *
      * Use this to control whether the Continue button is enabled.
      *
-     * @return true if at least one goal is selected, false otherwise
+     * @return true if ONLY one goal is selected, false otherwise
      */
     public boolean hasGoalSelected() {
-        return !goals.isEmpty();
+        return goals.size() == 1;
     }
 
     /**
      * Returns the list of selected health goals.
+     * Will always contain at most one entry.
      *
-     * @return list of goal strings
+     * @return list of selected goal strings
      */
     public List<String> getGoals() {
         return goals;
