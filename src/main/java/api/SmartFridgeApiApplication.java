@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Import;
 /**
  * 按绿色三角跑起来 = 开 HTTP 服务给 Flutter / Run this class (or {@code bootRun}) to start the HTTP API for Flutter.
  * <p>命令行玩游戏还是走 {@link ui.Main} / Text game still uses {@link ui.Main}.</p>
- * @see team.TeamModuleBacklog 分工清单 / team task list
  */
 @SpringBootApplication
 @Import(FridgeBeansConfig.class)
