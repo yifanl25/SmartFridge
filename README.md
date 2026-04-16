@@ -11,6 +11,18 @@ This readme should contain the following information:
 
 Ask yourself, if you started here in the readme, would you have what you need to work on this project and/or use the application?  
 
+## Run (CLI vs HTTP API)
+
+- **Interactive console (original course driver):** `./gradlew run` — uses `ui.Main` → `SmartFridgeApp`.
+- **Spring Boot REST API (for Flutter / other clients):** `./gradlew bootRun` — listens on **port 8080** (`api.SmartFridgeApiApplication`).
+  - Example: `GET http://127.0.0.1:8080/api/inventory`
+  - CORS is open for development (`/api/**`).
+
+### Flutter app (`hello_flutter`)
+
+- Start the API first (`bootRun`).
+- Default base URL: `http://127.0.0.1:8080` (iOS Simulator / desktop). **Android Emulator** uses `http://10.0.2.2:8080` (see `lib/config/api_config.dart`).
+- Override: `flutter run --dart-define=SMARTFRIDGE_API=http://YOUR_LAN_IP:8080`
 
 Added two last sections as reminders that are needed for homework.
 

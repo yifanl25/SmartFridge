@@ -1,31 +1,56 @@
 package model;
 
+/**
+ * Immutable ingredient taxonomy for inventory and grocery lists (e.g. Dairy, Produce).
+ * <p>
+ * 不可变的「食材/配料」分类，用于库存与购物清单展示与筛选；不得用于菜谱筛选（菜谱分类请用 {@link RecipeCategory}）。
+ */
 public class FoodCategory {
-    // PRD: Ingredient taxonomy only (Dairy/Produce/Pantry...). Do not use for recipe filtering.
+    /** Stable id from catalog JSON. / 目录 JSON 中的稳定分类 id。 */
     private final String id;
-    // Display name shown on Inventory/Grocery ingredient filters.
+    /** Human-readable label for filters and UI. / 人类可读名称，用于筛选与界面。 */
     private final String name;
-    // Decorative category icon key used by UI.
+    /** Decorative icon key for UI. / 界面装饰用图标键。 */
     private final String icon;
 
-    // Constructs an immutable ingredient category from static catalog data.
+    /**
+     * Creates an ingredient category row from static catalog data.
+     * <p>
+     * 根据静态目录数据构造一条食材分类。
+     *
+     * @param id   stable category identifier / 稳定分类标识
+     * @param name display name / 显示名称
+     * @param icon icon token / 图标 token
+     */
     public FoodCategory(String id, String name, String icon) {
         this.id = id;
         this.name = name;
         this.icon = icon;
     }
 
-    // Stable identifier from catalog JSON; used for deterministic category mapping.
+    /**
+     * Returns the category id.
+     * <p>
+     * 返回分类 id。
+     */
     public String getId() {
         return id;
     }
 
-    // Human-readable ingredient category label.
+    /**
+     * Returns the display name.
+     * <p>
+     * 返回显示名称。
+     */
     public String getName() {
         return name;
     }
 
-    // Returns icon token only; icon behavior itself stays decorative in MVP.
+    /**
+     * Returns the icon key (visual metadata only in MVP).
+     * <p>
+     * 返回图标键（MVP 中仅作展示元数据）。
+     */
     public String getIcon() {
         return icon;
     }

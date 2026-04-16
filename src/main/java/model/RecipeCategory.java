@@ -1,31 +1,40 @@
 package model;
 
+/**
+ * Recipe-side taxonomy (e.g. Quick Meals); not interchangeable with {@link FoodCategory}.
+ * <p>
+ * 菜谱侧分类（如快手菜）；与食材分类 {@link FoodCategory} 不可混用。
+ */
 public class RecipeCategory {
-    // PRD: Recipe taxonomy only (Breakfast/Quick Meals...). Never merge with FoodCategory.
+    /** Stable id from recipes JSON. / 来自菜谱 JSON 的稳定 id。 */
     private final String id;
-    // Recipe card grouping label used on Recommendation page.
+    /** Display label on recommendation cards and filters. / 推荐卡片与筛选上的显示标签。 */
     private final String name;
-    // Decorative category icon key for recipe UI tags.
+    /** Decorative icon key for recipe UI. / 菜谱界面装饰图标键。 */
     private final String icon;
 
-    // Constructs an immutable recipe category loaded from recipes JSON.
+    /**
+     * Creates an immutable recipe category from JSON.
+     * <p>
+     * 根据 JSON 创建不可变菜谱分类。
+     */
     public RecipeCategory(String id, String name, String icon) {
         this.id = id;
         this.name = name;
         this.icon = icon;
     }
 
-    // Stable identifier used by deterministic recipe category filters.
+    /** Returns category id. / 返回分类 id。 */
     public String getId() {
         return id;
     }
 
-    // Display name used by Recommendation category filters.
+    /** Returns display name. / 返回显示名称。 */
     public String getName() {
         return name;
     }
 
-    // Returns recipe category icon token (visual metadata only).
+    /** Returns icon token. / 返回图标 token。 */
     public String getIcon() {
         return icon;
     }

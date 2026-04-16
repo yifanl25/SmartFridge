@@ -5,29 +5,34 @@ import model.Preference;
 
 import java.util.UUID;
 
+/**
+ * Holds at most one {@link Preference} in memory for the current session.
+ * <p>
+ * 在内存中至多保存一个 {@link Preference}，表示本会话用户偏好。
+ */
 public class PreferenceService implements IPreferenceService {
-    // Session-only current preference; null means not selected yet.
+    /** Current preference or null if unset. / 当前偏好；未设置时为 null。 */
     private Preference currentPreference;
 
-    // Stateless constructor; service holds runtime state only.
+    /** Creates an empty preference service. / 创建无初始偏好的服务。 */
     public PreferenceService() {
     }
 
+    /** {@inheritDoc} */
     @Override
-    // Persist selected goal in memory for current loop only.
     public Preference savePreference(HealthGoal goal) {
         currentPreference = new Preference(UUID.randomUUID().toString(), goal);
         return currentPreference;
     }
 
+    /** {@inheritDoc} */
     @Override
-    // Return current preference or null if user has not configured one.
     public Preference getPreference() {
         return currentPreference;
     }
 
+    /** {@inheritDoc} */
     @Override
-    // Reset preference at checkout so next app start behaves first-time.
     public void clearPreference() {
         currentPreference = null;
     }

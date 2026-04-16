@@ -101,14 +101,15 @@ classDiagram
     GroceryController --> GroceryItem : manages
 ```
 
+> **Diagram note:** The diagram above is a **rough sketch** (legacy names like `FoodDatabase`, `storageLocation`). The diagram **below** matches the current codebase and PRD.
 
 ```mermaid
 classDiagram
 
     class SmartFridgeApp {
         <<utility>>
-        - FOOD_CATALOG_FILE : String
-        - RECIPE_FILE : String
+        - FOOD_CATALOG_RESOURCE : String
+        - RECIPE_RESOURCE : String
         - SmartFridgeApp()
         + main(args : String[]) : void
     }
@@ -160,11 +161,14 @@ classDiagram
     }
 
     class FoodCatalogEntry {
+        - id : String
         - foodName : String
+        - aliases : List~String~
         - defaultExpiryDays : int
         - category : FoodCategory
-        + FoodCatalogEntry(foodName : String, defaultExpiryDays : int, category : FoodCategory)
+        + getId() : String
         + getFoodName() : String
+        + getAliases() : List~String~
         + getDefaultExpiryDays() : int
         + getCategory() : FoodCategory
     }
@@ -198,9 +202,13 @@ classDiagram
     }
 
     class Recipe {
+        <<see nested types in code>>
         - id : String
         - title : String
         - recipeCategory : RecipeCategory
+        - healthTags : List~Recipe_HealthTag~
+        - requiredIngredients : List~Recipe_Ingredient~
+        - optionalIngredients : List~Recipe_Ingredient~
         - matchScore : double
         - rating : double
         - cookTime : int
@@ -208,17 +216,25 @@ classDiagram
         - description : String
         - availableIngredients : List~String~
         - missingIngredients : List~String~
-        + Recipe(id : String, title : String, recipeCategory : RecipeCategory, matchScore : double, rating : double, cookTime : int, calories : int, description : String, availableIngredients : List~String~, missingIngredients : List~String~)
-        + getId() : String
-        + getTitle() : String
-        + getRecipeCategory() : RecipeCategory
-        + getMatchScore() : double
-        + getRating() : double
-        + getCookTime() : int
-        + getCalories() : int
-        + getDescription() : String
-        + getAvailableIngredients() : List~String~
-        + getMissingIngredients() : List~String~
+        - urgentMatchedCount : int
+        + loaded(...) Recipe
+        + withComputed(...) Recipe
+        + getters...
+    }
+
+    class Recipe_HealthTag {
+        <<enumeration nested in Recipe>>
+        HIGH_PROTEIN
+        LOW_CALORIE
+        BLOOD_SUGAR_FRIENDLY
+        BALANCED
+    }
+
+    class Recipe_Ingredient {
+        <<static nested in Recipe>>
+        - name : String
+        - quantityText : String
+        - optional : boolean
     }
 
     class GroceryItem {
@@ -242,6 +258,8 @@ classDiagram
         + searchSuggestions(prefix : String) : List~FoodCatalogEntry~
         + containsFood(foodName : String) : boolean
         + getDefaultExpiryDays(foodName : String) : int
+        + resolveEntry(foodName : String) : Optional~FoodCatalogEntry~
+        + canonicalFoodName(raw : String) : String
     }
 
     class IInventoryService {
@@ -289,6 +307,8 @@ classDiagram
         + searchSuggestions(prefix : String) : List~FoodCatalogEntry~
         + containsFood(foodName : String) : boolean
         + getDefaultExpiryDays(foodName : String) : int
+        + resolveEntry(foodName : String) : Optional~FoodCatalogEntry~
+        + canonicalFoodName(raw : String) : String
     }
 
     class InventoryService {
@@ -312,9 +332,10 @@ classDiagram
     }
 
     class RecommendationService {
-        - recipes : List~Recipe~
+        - recipeTemplates : List~Recipe~
+        - foodCatalog : IFoodCatalog
         - currentRecommendations : List~Recipe~
-        + RecommendationService(recipes : List~Recipe~)
+        + RecommendationService(recipes : List~Recipe~, foodCatalog : IFoodCatalog)
         + getRecommendations(inventory : List~FoodItem~, preference : Preference) : List~Recipe~
         + filterByRecipeCategory(categoryName : String) : List~Recipe~
         + sortByMatchScore() : List~Recipe~
@@ -341,12 +362,19 @@ classDiagram
         <<utility>>
         - JsonFoodCatalogLoader()
         + loadFromFile(path : String) : List~FoodCatalogEntry~
+        + loadFromFileSafe(path : String) : List~FoodCatalogEntry~
     }
 
     class JsonRecipeLoader {
         <<utility>>
         - JsonRecipeLoader()
         + loadFromFile(path : String) : List~Recipe~
+        + loadFromFileSafe(path : String) : List~Recipe~
+    }
+
+    class SessionReset {
+        <<utility>>
+        + clearAll(preferenceService, inventoryService, recommendationService, groceryService) : void
     }
 
     class FoodCatalogJsonFile {
@@ -387,7 +415,9 @@ classDiagram
 
     class GroceryController {
         - groceryService : IGroceryService
+        - onCheckoutLoopEnd : Runnable
         + GroceryController(groceryService : IGroceryService)
+        + GroceryController(groceryService : IGroceryService, onCheckoutLoopEnd : Runnable)
         + toggleCollected(itemId : String) : GroceryItem
         + updateQuantity(itemId : String, delta : int) : GroceryItem
         + deleteItem(itemId : String) : void
@@ -438,6 +468,8 @@ classDiagram
     Preference --> HealthGoal : selected
     FoodCatalogEntry --> FoodCategory : classified as
     Recipe --> RecipeCategory : belongs to
+    Recipe --> Recipe_HealthTag : uses
+    Recipe --> Recipe_Ingredient : contains
     Recipe --> FoodItem : matches against
     GroceryItem --> FoodCategory : classified as
 
@@ -457,6 +489,7 @@ classDiagram
     RecommendationService --> Preference : reads
     RecommendationService --> FoodItem : reads
     RecommendationService --> Recipe : uses
+    RecommendationService --> IFoodCatalog : normalizes names
     GroceryService --> GroceryItem : manages
 
     InventoryController --> IInventoryService : uses
@@ -487,6 +520,7 @@ classDiagram
     SmartFridgeApp --> PreferenceController : builds
     SmartFridgeApp --> RecommendationController : builds
     SmartFridgeApp --> GroceryController : builds
+    SmartFridgeApp --> SessionReset : uses on checkout
     SmartFridgeApp --> WebApp : starts
     SmartFridgeApp --> ConsoleApp : optionally starts
 
@@ -500,6 +534,8 @@ classDiagram
 
     note for ConsoleApp "Optional input shell. Added to match the teacher-style console interaction layer."
     note for RecipeCategory "Separate category type for recipes. FoodCategory is for ingredients; RecipeCategory is for dishes."
+    note for Recipe "PRD fields: enum HealthTag and static class Ingredient are nested inside Recipe.java (not separate top-level files)."
+    note for SessionReset "PRD: after checkout, clears preference, inventory, recommendations, grocery (no persistence)."
 ```
 
 

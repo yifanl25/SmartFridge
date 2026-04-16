@@ -1,0 +1,536 @@
+{
+  "recipes": [
+    {
+      "id": "rec_001",
+      "title": "Scrambled Eggs",
+      "recipeCategory": {
+        "id": "rc_breakfast",
+        "name": "Breakfast",
+        "icon": "breakfast"
+      },
+      "healthTags": [
+        "HIGH_PROTEIN"
+      ],
+      "requiredIngredients": [
+        {
+          "name": "Large Eggs",
+          "quantityText": "4 count",
+          "optional": false
+        },
+        {
+          "name": "Unsalted Butter",
+          "quantityText": "14 g",
+          "optional": false
+        },
+        {
+          "name": "Whole Milk",
+          "quantityText": "30 ml",
+          "optional": false
+        }
+      ],
+      "optionalIngredients": [],
+      "rating": 4.2,
+      "cookTime": 10,
+      "calories": 220,
+      "description": "Crack eggs into a bowl, add milk and whisk.\nMelt butter in a pan over medium-low heat.\nPour in eggs and stir gently until just set.\nSeason with salt and pepper and serve."
+    },
+    {
+      "id": "rec_002",
+      "title": "Garlic Butter Salmon",
+      "recipeCategory": {
+        "id": "rc_dinner",
+        "name": "Dinner",
+        "icon": "dinner"
+      },
+      "healthTags": [
+        "HIGH_PROTEIN"
+      ],
+      "requiredIngredients": [
+        {
+          "name": "Salmon Fillet",
+          "quantityText": "400 g",
+          "optional": false
+        },
+        {
+          "name": "Unsalted Butter",
+          "quantityText": "28 g",
+          "optional": false
+        },
+        {
+          "name": "Garlic",
+          "quantityText": "3 cloves",
+          "optional": false
+        },
+        {
+          "name": "Lemons",
+          "quantityText": "1 count",
+          "optional": false
+        }
+      ],
+      "optionalIngredients": [],
+      "rating": 4.7,
+      "cookTime": 20,
+      "calories": 320,
+      "description": "Pat salmon dry and season with salt and pepper.\nMelt butter in a skillet over medium-high heat.\nAdd minced garlic and cook for 1 minute.\nSear salmon 4 minutes per side until cooked through.\nSqueeze lemon over top and serve."
+    },
+    {
+      "id": "rec_003",
+      "title": "Chicken Stir-Fry",
+      "recipeCategory": {
+        "id": "rc_dinner",
+        "name": "Dinner",
+        "icon": "dinner"
+      },
+      "healthTags": [
+        "HIGH_PROTEIN"
+      ],
+      "requiredIngredients": [
+        {
+          "name": "Chicken Breast",
+          "quantityText": "400 g",
+          "optional": false
+        },
+        {
+          "name": "Bell Peppers",
+          "quantityText": "2 count",
+          "optional": false
+        },
+        {
+          "name": "Garlic",
+          "quantityText": "2 cloves",
+          "optional": false
+        },
+        {
+          "name": "Soy Sauce",
+          "quantityText": "45 ml",
+          "optional": false
+        },
+        {
+          "name": "Olive Oil",
+          "quantityText": "14 ml",
+          "optional": false
+        },
+        {
+          "name": "White Rice",
+          "quantityText": "180 g",
+          "optional": false
+        }
+      ],
+      "optionalIngredients": [],
+      "rating": 4.5,
+      "cookTime": 25,
+      "calories": 420,
+      "description": "Cook rice according to package instructions.\nSlice chicken and peppers into strips.\nHeat oil in a wok over high heat.\nStir-fry chicken until golden, about 6 minutes.\nAdd garlic and peppers, cook 3 more minutes.\nAdd soy sauce, toss to coat and serve over rice."
+    },
+    {
+      "id": "rec_004",
+      "title": "Overnight Oats",
+      "recipeCategory": {
+        "id": "rc_breakfast",
+        "name": "Breakfast",
+        "icon": "breakfast"
+      },
+      "healthTags": [
+        "BALANCED"
+      ],
+      "requiredIngredients": [
+        {
+          "name": "Rolled Oats",
+          "quantityText": "80 g",
+          "optional": false
+        },
+        {
+          "name": "Whole Milk",
+          "quantityText": "180 ml",
+          "optional": false
+        },
+        {
+          "name": "Blueberries",
+          "quantityText": "80 g",
+          "optional": false
+        },
+        {
+          "name": "Bananas",
+          "quantityText": "1 count",
+          "optional": false
+        }
+      ],
+      "optionalIngredients": [],
+      "rating": 4.1,
+      "cookTime": 5,
+      "calories": 310,
+      "description": "Add oats and milk to a jar and stir.\nSlice banana and add on top with blueberries.\nCover and refrigerate overnight.\nStir before eating, add honey if desired."
+    },
+    {
+      "id": "rec_005",
+      "title": "Pasta Arrabbiata",
+      "recipeCategory": {
+        "id": "rc_dinner",
+        "name": "Dinner",
+        "icon": "dinner"
+      },
+      "healthTags": [
+        "BALANCED"
+      ],
+      "requiredIngredients": [
+        {
+          "name": "Pasta (Penne)",
+          "quantityText": "250 g",
+          "optional": false
+        },
+        {
+          "name": "Garlic",
+          "quantityText": "4 cloves",
+          "optional": false
+        },
+        {
+          "name": "Olive Oil",
+          "quantityText": "30 ml",
+          "optional": false
+        },
+        {
+          "name": "Hot Sauce",
+          "quantityText": "15 ml",
+          "optional": false
+        },
+        {
+          "name": "Yellow Onion",
+          "quantityText": "1 count",
+          "optional": false
+        }
+      ],
+      "optionalIngredients": [],
+      "rating": 4.3,
+      "cookTime": 25,
+      "calories": 380,
+      "description": "Boil pasta in salted water until al dente.\nDice onion and mince garlic.\nSauté onion in olive oil for 5 minutes.\nAdd garlic and hot sauce, cook 2 minutes.\nDrain pasta, toss with sauce and serve."
+    },
+    {
+      "id": "rec_006",
+      "title": "Banana Blueberry Smoothie",
+      "recipeCategory": {
+        "id": "rc_snack",
+        "name": "Snack",
+        "icon": "snack"
+      },
+      "healthTags": [
+        "BALANCED"
+      ],
+      "requiredIngredients": [
+        {
+          "name": "Bananas",
+          "quantityText": "1 count",
+          "optional": false
+        },
+        {
+          "name": "Blueberries",
+          "quantityText": "100 g",
+          "optional": false
+        },
+        {
+          "name": "Greek Yogurt",
+          "quantityText": "170 g",
+          "optional": false
+        },
+        {
+          "name": "Whole Milk",
+          "quantityText": "120 ml",
+          "optional": false
+        }
+      ],
+      "optionalIngredients": [],
+      "rating": 4.6,
+      "cookTime": 5,
+      "calories": 280,
+      "description": "Add all ingredients to a blender.\nBlend on high until smooth.\nPour into a glass and serve immediately."
+    },
+    {
+      "id": "rec_007",
+      "title": "Veggie Egg Fried Rice",
+      "recipeCategory": {
+        "id": "rc_lunch",
+        "name": "Lunch",
+        "icon": "lunch"
+      },
+      "healthTags": [
+        "BALANCED"
+      ],
+      "requiredIngredients": [
+        {
+          "name": "White Rice",
+          "quantityText": "200 g",
+          "optional": false
+        },
+        {
+          "name": "Large Eggs",
+          "quantityText": "2 count",
+          "optional": false
+        },
+        {
+          "name": "Carrots",
+          "quantityText": "100 g",
+          "optional": false
+        },
+        {
+          "name": "Soy Sauce",
+          "quantityText": "30 ml",
+          "optional": false
+        },
+        {
+          "name": "Olive Oil",
+          "quantityText": "14 ml",
+          "optional": false
+        },
+        {
+          "name": "Garlic",
+          "quantityText": "2 cloves",
+          "optional": false
+        }
+      ],
+      "optionalIngredients": [],
+      "rating": 4.4,
+      "cookTime": 20,
+      "calories": 340,
+      "description": "Cook and cool rice (day-old rice works best).\nDice carrots and mince garlic.\nHeat oil in a wok, stir-fry carrots and garlic for 3 minutes.\nPush to the side, scramble eggs in the pan.\nAdd rice and soy sauce, toss everything together and serve."
+    },
+    {
+      "id": "rec_008",
+      "title": "Honey Garlic Chicken",
+      "recipeCategory": {
+        "id": "rc_dinner",
+        "name": "Dinner",
+        "icon": "dinner"
+      },
+      "healthTags": [
+        "HIGH_PROTEIN"
+      ],
+      "requiredIngredients": [
+        {
+          "name": "Chicken Breast",
+          "quantityText": "600 g",
+          "optional": false
+        },
+        {
+          "name": "Garlic",
+          "quantityText": "4 cloves",
+          "optional": false
+        },
+        {
+          "name": "Soy Sauce",
+          "quantityText": "30 ml",
+          "optional": false
+        },
+        {
+          "name": "Olive Oil",
+          "quantityText": "14 ml",
+          "optional": false
+        },
+        {
+          "name": "Lemons",
+          "quantityText": "1 count",
+          "optional": false
+        }
+      ],
+      "optionalIngredients": [],
+      "rating": 4.8,
+      "cookTime": 30,
+      "calories": 310,
+      "description": "Mix soy sauce, minced garlic, and lemon juice as marinade.\nCoat chicken and marinate for at least 10 minutes.\nHeat oil in a skillet over medium-high heat.\nCook chicken 6-7 minutes per side until golden.\nRest 5 minutes before slicing and serve."
+    },
+    {
+      "id": "rec_009",
+      "title": "Spinach & Carrot Salad",
+      "recipeCategory": {
+        "id": "rc_salad",
+        "name": "Salad",
+        "icon": "salad"
+      },
+      "healthTags": [
+        "BALANCED"
+      ],
+      "requiredIngredients": [
+        {
+          "name": "Baby Spinach",
+          "quantityText": "150 g",
+          "optional": false
+        },
+        {
+          "name": "Carrots",
+          "quantityText": "150 g",
+          "optional": false
+        },
+        {
+          "name": "Lemons",
+          "quantityText": "1 count",
+          "optional": false
+        },
+        {
+          "name": "Olive Oil",
+          "quantityText": "20 ml",
+          "optional": false
+        }
+      ],
+      "optionalIngredients": [],
+      "rating": 4.0,
+      "cookTime": 10,
+      "calories": 120,
+      "description": "Wash and dry spinach, shred carrots.\nWhisk together lemon juice and olive oil as dressing.\nToss spinach and carrots with dressing.\nSeason with salt and pepper and serve."
+    },
+    {
+      "id": "rec_010",
+      "title": "Blueberry Yogurt Parfait",
+      "recipeCategory": {
+        "id": "rc_dessert",
+        "name": "Dessert",
+        "icon": "dessert"
+      },
+      "healthTags": [
+        "BALANCED"
+      ],
+      "requiredIngredients": [
+        {
+          "name": "Greek Yogurt",
+          "quantityText": "340 g",
+          "optional": false
+        },
+        {
+          "name": "Blueberries",
+          "quantityText": "150 g",
+          "optional": false
+        },
+        {
+          "name": "Rolled Oats",
+          "quantityText": "60 g",
+          "optional": false
+        },
+        {
+          "name": "Unsalted Butter",
+          "quantityText": "10 g",
+          "optional": false
+        }
+      ],
+      "optionalIngredients": [],
+      "rating": 4.3,
+      "cookTime": 5,
+      "calories": 260,
+      "description": "Toast oats in butter in a pan until golden, let cool.\nLayer yogurt in a glass, then blueberries, then toasted oats.\nRepeat layers and serve immediately."
+    },
+    {
+      "id": "rec_011",
+      "title": "Banana Oat Cookies",
+      "recipeCategory": {
+        "id": "rc_dessert",
+        "name": "Dessert",
+        "icon": "dessert"
+      },
+      "healthTags": [
+        "BALANCED"
+      ],
+      "requiredIngredients": [
+        {
+          "name": "Bananas",
+          "quantityText": "2 count",
+          "optional": false
+        },
+        {
+          "name": "Rolled Oats",
+          "quantityText": "160 g",
+          "optional": false
+        },
+        {
+          "name": "Unsalted Butter",
+          "quantityText": "28 g",
+          "optional": false
+        }
+      ],
+      "optionalIngredients": [],
+      "rating": 4.1,
+      "cookTime": 25,
+      "calories": 90,
+      "description": "Preheat oven to 175°C (350°F).\nMash bananas in a bowl until smooth.\nMix in oats and melted butter.\nDrop spoonfuls onto a baking sheet.\nBake 12-15 minutes until golden."
+    },
+    {
+      "id": "rec_012",
+      "title": "Carrot & Onion Soup",
+      "recipeCategory": {
+        "id": "rc_soup",
+        "name": "Soup",
+        "icon": "soup"
+      },
+      "healthTags": [
+        "BALANCED"
+      ],
+      "requiredIngredients": [
+        {
+          "name": "Carrots",
+          "quantityText": "400 g",
+          "optional": false
+        },
+        {
+          "name": "Yellow Onion",
+          "quantityText": "2 count",
+          "optional": false
+        },
+        {
+          "name": "Garlic",
+          "quantityText": "3 cloves",
+          "optional": false
+        },
+        {
+          "name": "Olive Oil",
+          "quantityText": "20 ml",
+          "optional": false
+        },
+        {
+          "name": "Whole Milk",
+          "quantityText": "120 ml",
+          "optional": false
+        }
+      ],
+      "optionalIngredients": [],
+      "rating": 4.2,
+      "cookTime": 40,
+      "calories": 130,
+      "description": "Dice onion, slice carrots, mince garlic.\nSauté onion and garlic in olive oil for 5 minutes.\nAdd carrots and cover with water, simmer 20 minutes.\nBlend until smooth, stir in milk.\nSeason with salt and pepper and serve hot."
+    },
+    {
+      "id": "rec_013",
+      "title": "Egg Drop Soup",
+      "recipeCategory": {
+        "id": "rc_soup",
+        "name": "Soup",
+        "icon": "soup"
+      },
+      "healthTags": [
+        "BALANCED"
+      ],
+      "requiredIngredients": [
+        {
+          "name": "Large Eggs",
+          "quantityText": "2 count",
+          "optional": false
+        },
+        {
+          "name": "Soy Sauce",
+          "quantityText": "15 ml",
+          "optional": false
+        },
+        {
+          "name": "Garlic",
+          "quantityText": "1 cloves",
+          "optional": false
+        },
+        {
+          "name": "Yellow Onion",
+          "quantityText": "1 count",
+          "optional": false
+        }
+      ],
+      "optionalIngredients": [],
+      "rating": 4.5,
+      "cookTime": 15,
+      "calories": 110,
+      "description": "Bring 600ml water to a boil with garlic and diced onion.\nAdd soy sauce and reduce to a gentle simmer.\nWhisk eggs in a bowl, then slowly drizzle into the soup while stirring.\nCook 1 minute until egg ribbons form and serve hot."
+    }
+  ]
+}

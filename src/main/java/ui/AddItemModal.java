@@ -2,25 +2,37 @@ package ui;
 
 import controller.InventoryController;
 
+/**
+ * Stub Add Item modal: user must pick catalog suggestions; submit calls {@link InventoryController#addItem(String)}.
+ * <p>
+ * 「添加食材」弹窗占位：须选择目录建议；提交调用 {@link InventoryController#addItem(String)}。
+ */
 public class AddItemModal {
-    // Controller gateway for Add Item submission.
     private final InventoryController inventoryController;
 
-    // Wire add-item modal to inventory controller.
+    /**
+     * @param inventoryController inventory controller / 库存控制器
+     */
     public AddItemModal(InventoryController inventoryController) {
         this.inventoryController = inventoryController;
     }
 
-    // Render Add Item modal container.
-    // PRD interaction notes:
-    // - modal stays open after successful ADD
-    // - close only via overlay click or X button
+    /**
+     * Placeholder open modal message.
+     * <p>
+     * 占位：打开弹窗提示。
+     */
     public void render() {
+        // 这里应该像控制台一样：先显示目录联想，再 submitFoodName / Like console: show catalog hints, then submitFoodName.
+        // INSERT YOUR CODE HERE
         System.out.println("Add Item Modal");
     }
 
-    // Submit selected suggestion text to create one FoodItem.
-    // PRD: submission must use suggestion selection path (no free-form custom item outside suggestions).
+    /**
+     * Submits the selected suggestion string (not arbitrary free text per PRD).
+     * <p>
+     * 提交所选建议字符串（PRD 禁止任意自由文本）。
+     */
     public void submitFoodName(String foodName) {
         inventoryController.addItem(foodName);
     }

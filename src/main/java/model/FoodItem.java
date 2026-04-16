@@ -2,23 +2,32 @@ package model;
 
 import java.time.LocalDate;
 
+/**
+ * One inventory row in the current session (no persistence across runs).
+ * <p>
+ * 当前会话中的一条库存记录；不落盘，结账后会话清空时一并清除。
+ */
 public class FoodItem {
-    // Session-scoped unique identifier for inventory operations.
+    /** Unique id for list keys and updates. / 列表键与更新操作用的唯一 id。 */
     private final String id;
-    // Name selected from suggestion list (no custom free-form add in MVP).
+    /** Canonical food name (from catalog suggestions). / 规范食材名（来自目录建议）。 */
     private final String name;
-    // Ingredient category only; do not treat as recipe category.
+    /** Ingredient category for inventory filters. / 用于库存筛选的食材分类。 */
     private final FoodCategory category;
-    // PRD default quantity is 1 on Add Item success.
+    /** Amount on hand. / 当前数量。 */
     private final int quantity;
-    // Unit text for display/calculation context.
+    /** Unit label (e.g. pcs). / 单位文案（如 pcs）。 */
     private final String unit;
-    // ISO date string for deterministic "newness" and sort-by-created calculations.
+    /** ISO date string when the item was added (date granularity). / ISO 日期字符串，表示入库日（按日粒度）。 */
     private final String createdAt;
-    // ISO date string used for urgency/warning/safe classification.
+    /** ISO date string for expiry. / ISO 日期字符串，表示过期日。 */
     private final String expiryDate;
 
-    // Immutable inventory item for current demo session only (no persistence).
+    /**
+     * Builds an immutable inventory snapshot.
+     * <p>
+     * 构造不可变的库存快照。
+     */
     public FoodItem(
             String id,
             String name,
@@ -36,48 +45,56 @@ public class FoodItem {
         this.expiryDate = expiryDate;
     }
 
-    // Returns stable item id for view-level keying and item lookup.
+    /** Returns item id. / 返回条目 id。 */
     public String getId() {
         return id;
     }
 
-    // Returns selected canonical food name.
+    /** Returns canonical food name. / 返回规范食材名。 */
     public String getName() {
         return name;
     }
 
-    // Returns ingredient category for Inventory/Grocery filtering.
+    /** Returns ingredient category. / 返回食材分类。 */
     public FoodCategory getCategory() {
         return category;
     }
 
-    // Returns item amount; MVP add flow initializes this to 1.
+    /** Returns quantity. / 返回数量。 */
     public int getQuantity() {
         return quantity;
     }
 
-    // Returns quantity unit string.
+    /** Returns unit string. / 返回单位字符串。 */
     public String getUnit() {
         return unit;
     }
 
-    // Returns creation timestamp used by "sort by createdAt".
+    /** Returns created-at date string. / 返回创建/入库日期字符串。 */
     public String getCreatedAt() {
         return createdAt;
     }
 
-    // Returns expiry timestamp used by urgency scoring and UI state.
+    /** Returns expiry date string. / 返回过期日期字符串。 */
     public String getExpiryDate() {
         return expiryDate;
     }
 
-    // PRD "New": added within last 24 hours. Uses date granularity in current model.
+    /**
+     * PRD "new" item: created on or after yesterday (date-level model).
+     * <p>
+     * PRD「新品」：创建日在昨天及之后（按日期粒度判断）。
+     */
     public boolean isNew() {
         LocalDate created = LocalDate.parse(createdAt);
         return !created.isBefore(LocalDate.now().minusDays(1));
     }
 
-    // PRD "Urgent": expires today. Warning/safe breakdown handled at service/view layer.
+    /**
+     * PRD "urgent" item: expires today.
+     * <p>
+     * PRD「紧急」：过期日为今天。
+     */
     public boolean isUrgent() {
         LocalDate expiry = LocalDate.parse(expiryDate);
         return expiry.isEqual(LocalDate.now());
