@@ -1,0 +1,390 @@
+{
+  "entries": [
+    {
+      "id": "item_001",
+      "foodName": "Whole Milk",
+      "aliases": [
+        "dairy",
+        "drink"
+      ],
+      "defaultExpiryDays": 7,
+      "category": {
+        "id": "cat_001",
+        "name": "Dairy & Eggs",
+        "icon": "dairy_eggs"
+      }
+    },
+    {
+      "id": "item_002",
+      "foodName": "Large Eggs",
+      "aliases": [
+        "protein",
+        "breakfast"
+      ],
+      "defaultExpiryDays": 35,
+      "category": {
+        "id": "cat_001",
+        "name": "Dairy & Eggs",
+        "icon": "dairy_eggs"
+      }
+    },
+    {
+      "id": "item_003",
+      "foodName": "Cheddar Cheese",
+      "aliases": [
+        "cheese",
+        "dairy"
+      ],
+      "defaultExpiryDays": 21,
+      "category": {
+        "id": "cat_001",
+        "name": "Dairy & Eggs",
+        "icon": "dairy_eggs"
+      }
+    },
+    {
+      "id": "item_004",
+      "foodName": "Greek Yogurt",
+      "aliases": [
+        "breakfast",
+        "snack",
+        "dairy"
+      ],
+      "defaultExpiryDays": 14,
+      "category": {
+        "id": "cat_001",
+        "name": "Dairy & Eggs",
+        "icon": "dairy_eggs"
+      }
+    },
+    {
+      "id": "item_005",
+      "foodName": "Unsalted Butter",
+      "aliases": [
+        "cooking",
+        "dairy"
+      ],
+      "defaultExpiryDays": 30,
+      "category": {
+        "id": "cat_001",
+        "name": "Dairy & Eggs",
+        "icon": "dairy_eggs"
+      }
+    },
+    {
+      "id": "item_006",
+      "foodName": "Broccoli",
+      "aliases": [
+        "vegetable",
+        "healthy",
+        "green"
+      ],
+      "defaultExpiryDays": 5,
+      "category": {
+        "id": "cat_002",
+        "name": "Vegetables",
+        "icon": "vegetables"
+      }
+    },
+    {
+      "id": "item_007",
+      "foodName": "Baby Spinach",
+      "aliases": [
+        "vegetable",
+        "leafy",
+        "salad"
+      ],
+      "defaultExpiryDays": 5,
+      "category": {
+        "id": "cat_002",
+        "name": "Vegetables",
+        "icon": "vegetables"
+      }
+    },
+    {
+      "id": "item_008",
+      "foodName": "Carrots",
+      "aliases": [
+        "vegetable",
+        "snack",
+        "root"
+      ],
+      "defaultExpiryDays": 21,
+      "category": {
+        "id": "cat_002",
+        "name": "Vegetables",
+        "icon": "vegetables"
+      }
+    },
+    {
+      "id": "item_009",
+      "foodName": "Bell Peppers",
+      "aliases": [
+        "colorful",
+        "vegetable",
+        "stir-fry"
+      ],
+      "defaultExpiryDays": 7,
+      "category": {
+        "id": "cat_002",
+        "name": "Vegetables",
+        "icon": "vegetables"
+      }
+    },
+    {
+      "id": "item_010",
+      "foodName": "Garlic",
+      "aliases": [
+        "cooking",
+        "vegetable",
+        "aromatic"
+      ],
+      "defaultExpiryDays": 90,
+      "category": {
+        "id": "cat_002",
+        "name": "Vegetables",
+        "icon": "vegetables"
+      }
+    },
+    {
+      "id": "item_011",
+      "foodName": "Yellow Onion",
+      "aliases": [
+        "cooking",
+        "vegetable",
+        "aromatic"
+      ],
+      "defaultExpiryDays": 60,
+      "category": {
+        "id": "cat_002",
+        "name": "Vegetables",
+        "icon": "vegetables"
+      }
+    },
+    {
+      "id": "item_012",
+      "foodName": "Bananas",
+      "aliases": [
+        "fruit",
+        "breakfast",
+        "snack"
+      ],
+      "defaultExpiryDays": 5,
+      "category": {
+        "id": "cat_003",
+        "name": "Fruits",
+        "icon": "fruits"
+      }
+    },
+    {
+      "id": "item_013",
+      "foodName": "Blueberries",
+      "aliases": [
+        "fruit",
+        "berry",
+        "antioxidant"
+      ],
+      "defaultExpiryDays": 7,
+      "category": {
+        "id": "cat_003",
+        "name": "Fruits",
+        "icon": "fruits"
+      }
+    },
+    {
+      "id": "item_014",
+      "foodName": "Lemons",
+      "aliases": [
+        "fruit",
+        "citrus",
+        "cooking"
+      ],
+      "defaultExpiryDays": 21,
+      "category": {
+        "id": "cat_003",
+        "name": "Fruits",
+        "icon": "fruits"
+      }
+    },
+    {
+      "id": "item_015",
+      "foodName": "Chicken Breast",
+      "aliases": [
+        "meat",
+        "protein",
+        "poultry"
+      ],
+      "defaultExpiryDays": 270,
+      "category": {
+        "id": "cat_004",
+        "name": "Meat & Seafood",
+        "icon": "meat_seafood"
+      }
+    },
+    {
+      "id": "item_016",
+      "foodName": "Ground Beef (80/20)",
+      "aliases": [
+        "meat",
+        "protein",
+        "beef"
+      ],
+      "defaultExpiryDays": 120,
+      "category": {
+        "id": "cat_004",
+        "name": "Meat & Seafood",
+        "icon": "meat_seafood"
+      }
+    },
+    {
+      "id": "item_017",
+      "foodName": "Salmon Fillet",
+      "aliases": [
+        "protein",
+        "omega-3",
+        "seafood"
+      ],
+      "defaultExpiryDays": 180,
+      "category": {
+        "id": "cat_004",
+        "name": "Meat & Seafood",
+        "icon": "meat_seafood"
+      }
+    },
+    {
+      "id": "item_018",
+      "foodName": "White Rice",
+      "aliases": [
+        "carb",
+        "staple",
+        "grain"
+      ],
+      "defaultExpiryDays": 730,
+      "category": {
+        "id": "cat_005",
+        "name": "Grains & Pantry",
+        "icon": "grains_pantry"
+      }
+    },
+    {
+      "id": "item_019",
+      "foodName": "Pasta (Penne)",
+      "aliases": [
+        "pasta",
+        "staple",
+        "grain"
+      ],
+      "defaultExpiryDays": 730,
+      "category": {
+        "id": "cat_005",
+        "name": "Grains & Pantry",
+        "icon": "grains_pantry"
+      }
+    },
+    {
+      "id": "item_020",
+      "foodName": "All-Purpose Flour",
+      "aliases": [
+        "staple",
+        "baking",
+        "grain"
+      ],
+      "defaultExpiryDays": 365,
+      "category": {
+        "id": "cat_005",
+        "name": "Grains & Pantry",
+        "icon": "grains_pantry"
+      }
+    },
+    {
+      "id": "item_021",
+      "foodName": "Rolled Oats",
+      "aliases": [
+        "breakfast",
+        "fiber",
+        "grain"
+      ],
+      "defaultExpiryDays": 365,
+      "category": {
+        "id": "cat_005",
+        "name": "Grains & Pantry",
+        "icon": "grains_pantry"
+      }
+    },
+    {
+      "id": "item_022",
+      "foodName": "Soy Sauce",
+      "aliases": [
+        "cooking",
+        "condiment",
+        "asian"
+      ],
+      "defaultExpiryDays": 730,
+      "category": {
+        "id": "cat_006",
+        "name": "Condiments & Sauces",
+        "icon": "condiments_sauces"
+      }
+    },
+    {
+      "id": "item_023",
+      "foodName": "Olive Oil (Extra Virgin)",
+      "aliases": [
+        "cooking",
+        "oil",
+        "healthy-fat"
+      ],
+      "defaultExpiryDays": 540,
+      "category": {
+        "id": "cat_006",
+        "name": "Condiments & Sauces",
+        "icon": "condiments_sauces"
+      }
+    },
+    {
+      "id": "item_024",
+      "foodName": "Hot Sauce",
+      "aliases": [
+        "spicy",
+        "condiment",
+        "sauce"
+      ],
+      "defaultExpiryDays": 1095,
+      "category": {
+        "id": "cat_006",
+        "name": "Condiments & Sauces",
+        "icon": "condiments_sauces"
+      }
+    },
+    {
+      "id": "item_025",
+      "foodName": "Orange Juice",
+      "aliases": [
+        "breakfast",
+        "vitamin-c",
+        "drink"
+      ],
+      "defaultExpiryDays": 7,
+      "category": {
+        "id": "cat_007",
+        "name": "Beverages",
+        "icon": "beverages"
+      }
+    },
+    {
+      "id": "item_026",
+      "foodName": "Sparkling Water",
+      "aliases": [
+        "zero-calorie",
+        "water",
+        "drink"
+      ],
+      "defaultExpiryDays": 548,
+      "category": {
+        "id": "cat_007",
+        "name": "Beverages",
+        "icon": "beverages"
+      }
+    }
+  ]
+}
