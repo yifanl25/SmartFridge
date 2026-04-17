@@ -6,34 +6,34 @@ import service.IGroceryService;
 import java.util.List;
 
 /**
- * MVC controller for the Grocery list, totals, and checkout; delegates to {@link IGroceryService}.
- * Optional {@link Runnable} runs after checkout for full session reset (PRD).
- * <p>
- * 购物清单、汇总与结账控制器；委托 {@link IGroceryService}。可选 {@link Runnable} 在结账后执行完整会话重置（PRD）。
- * <p>删一行、结账怎么清空：看 {@link api.web.GroceryApiController} 上面的注释 / Delete + checkout notes live in GroceryApiController.</p>
+ * 这个 controller 是 grocery 模块中间那一层。
+ *
+ * 大白话：
+ * - API 层不要直接碰 service 细节
+ * - 所以这里当一个中间转发层
+ * - 上面接 API，下面接 IGroceryService
+ *
+ * 这样整体分层还是保持你原本的 MVC 结构。
  */
 public class GroceryController {
-    /** Grocery state and pricing. / 购物状态与计价。 */
+    // 真正管购物清单逻辑的是 service；controller 主要负责转发。
     private final IGroceryService groceryService;
-    /**
-     * Invoked on {@link #checkout()}; may clear only grocery or full session via {@link service.SessionReset}.
-     * <p>
-     * 在 {@link #checkout()} 时调用；可仅清购物或经 {@link service.SessionReset} 清全会话。
-     */
+
+    // 这是 checkout 时要执行的“收尾动作”。
+    // 默认只是清空 grocery；
+    // 但如果以后你要把库存、偏好、推荐一起重置，
+    // 也可以把更大的 reset 动作塞进来。
     private final Runnable onCheckoutLoopEnd;
 
     /**
-     * Default: checkout runs {@link IGroceryService#checkout()} only.
-     * <p>
-     * 默认：结账仅调用 {@link IGroceryService#checkout()}。
+     * 默认构造：checkout 只做 grocery 自己的清空。
      */
     public GroceryController(IGroceryService groceryService) {
         this(groceryService, groceryService::checkout);
     }
 
     /**
-     * @param groceryService      grocery service / 购物服务
-     * @param onCheckoutLoopEnd   extra hook after checkout (e.g. session reset) / 结账后的额外钩子（如会话重置）
+     * 自定义构造：允许外部传一个更完整的 checkout 收尾逻辑。
      */
     public GroceryController(IGroceryService groceryService, Runnable onCheckoutLoopEnd) {
         this.groceryService = groceryService;
@@ -41,57 +41,87 @@ public class GroceryController {
     }
 
     /**
-     * Returns current grocery rows from the service.
-     * <p>
-     * 从服务返回当前购物行。
+     * 取当前购物清单。
      */
     public List<GroceryItem> getItems() {
         return groceryService.getItems();
     }
 
     /**
-     * Appends a row (e.g. from missing-ingredient flow).
-     * <p>
-     * 追加一行（例如来自缺失食材流程）。
+     * 加一条购物项。
      */
     public void addLine(GroceryItem item) {
         groceryService.addLine(item);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * 按分类筛选购物项。
+     */
+    // ===== teammate note =====
+    // controller 这里只做转发，不要把复杂业务规则塞进来。
+    // insert your code here only if the service signature changes
+    public List<GroceryItem> filterByCategory(String categoryName) {
+        return groceryService.filterByCategory(categoryName);
+    }
+
+    /**
+     * 按名字搜索购物项。
+     */
+    // ===== teammate note =====
+    // controller 这里只做转发，不要把复杂搜索逻辑写在这里。
+    // insert your code here only if the service signature changes
+    public List<GroceryItem> searchByName(String keyword) {
+        return groceryService.searchByName(keyword);
+    }
+
+    /**
+     * 勾选 / 取消勾选某个购物项是否已买。
+     */
     public GroceryItem toggleCollected(String itemId) {
         return groceryService.toggleCollected(itemId);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * 按增量修改数量。
+     */
     public GroceryItem updateQuantity(String itemId, int delta) {
         return groceryService.updateQuantity(itemId, delta);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * 删除一条购物项。
+     */
     public void deleteItem(String itemId) {
         groceryService.deleteItem(itemId);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * 算小计。
+     */
     public double calculateSubtotal() {
         return groceryService.calculateSubtotal();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * 算税。
+     */
     public double calculateTax(double subtotal) {
         return groceryService.calculateTax(subtotal);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * 算总价。
+     */
     public double calculateTotal(double subtotal, double tax) {
         return groceryService.calculateTotal(subtotal, tax);
     }
 
     /**
-     * Runs checkout hook (typically clears grocery and may reset whole session).
-     * <p>
-     * 执行结账钩子（通常清空购物并可能重置整会话）。
+     * 执行 checkout。
+     *
+     * 这里不是直接写死成某一种 reset，
+     * 而是跑构造时传进来的 Runnable，
+     * 这样以后要换结账后的行为会更灵活。
      */
     public void checkout() {
         onCheckoutLoopEnd.run();

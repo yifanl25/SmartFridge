@@ -8,54 +8,62 @@ import service.IRecommendationService;
 import java.util.List;
 
 /**
- * MVC controller for Recommendation and Recipe Detail flows; delegates scoring to {@link IRecommendationService}.
- * <p>
- * 推荐与菜谱详情流程控制器；打分逻辑委托 {@link IRecommendationService}。
- * <p>老图里可能写 filterByCategory，代码里菜谱类叫 {@link #filterByRecipeCategory(String)} — 名字不一样，意思一样。</p>
- * <p>手机要更多 URL：看 {@link api.web.RecommendationApiController}。</p>
+ * 这个 controller 是 recommendation 模块中间那一层。
+ *
+ * 大白话：
+ * - service 负责推荐算法和缓存
+ * - API 负责对外暴露 HTTP
+ * - controller 就负责把两边接起来
+ *
+ * 另外，这里也顺手补了“按 id 取一条 recipe”这个动作，
+ * 方便 recipe detail endpoint 使用。
  */
 public class RecommendationController {
-    /** Recommendation engine and cache. / 推荐引擎与缓存。 */
+    // 真正负责推荐逻辑的是 recommendationService。
     private final IRecommendationService recommendationService;
 
-    /**
-     * @param recommendationService injected implementation / 注入的实现
-     */
     public RecommendationController(IRecommendationService recommendationService) {
         this.recommendationService = recommendationService;
     }
 
     /**
-     * Refreshes scored recommendations from inventory + preference.
-     * <p>
-     * 根据库存与偏好刷新带分推荐。
+     * 根据当前库存 + 当前偏好，刷新并返回推荐列表。
      */
     public List<Recipe> getRecommendations(List<FoodItem> inventory, Preference preference) {
         return recommendationService.getRecommendations(inventory, preference);
     }
 
     /**
-     * Filters current cache by {@link model.RecipeCategory} substring (never {@link model.FoodCategory}).
-     * <p>
-     * 按 {@link model.RecipeCategory} 子串筛选当前缓存（勿用 {@link model.FoodCategory}）。
+     * 按菜谱分类筛选当前推荐缓存。
+     *
+     * 注意这里筛的是 RecipeCategory，
+     * 不是库存那边的 FoodCategory。
      */
     public List<Recipe> filterByRecipeCategory(String categoryName) {
         return recommendationService.filterByRecipeCategory(categoryName);
     }
 
     /**
-     * Sorts current cache by match score with PRD tie-breaks.
-     * <p>
-     * 按匹配分及 PRD 决胜规则排序当前缓存。
+     * 从当前推荐结果里，根据 recipeId 找出某一条菜谱。
+     *
+     * 这是 recipe detail endpoint 会用到的帮助方法。
+     */
+    public Recipe getRecommendationById(List<FoodItem> inventory, Preference preference, String recipeId) {
+        return getRecommendations(inventory, preference).stream()
+                .filter(r -> r.getId().equals(recipeId))
+                .findFirst()
+                .orElse(null);
+    }
+
+    /**
+     * 按 match score 排序。
      */
     public List<Recipe> sortByMatchScore() {
         return recommendationService.sortByMatchScore();
     }
 
     /**
-     * Sorts current cache primarily by cook time ascending.
-     * <p>
-     * 以烹饪时间升序为主排序当前缓存。
+     * 按 cook time 排序。
      */
     public List<Recipe> sortByCookTime() {
         return recommendationService.sortByCookTime();

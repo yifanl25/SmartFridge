@@ -5,79 +5,85 @@ import model.GroceryItem;
 import java.util.List;
 
 /**
- * Session grocery list: rows, edits, pricing summary, checkout and clear.
- * <p>
- * 会话购物清单：行数据、编辑、计价汇总、结账与清空。
+ * 这是 grocery 模块的 service 接口。
+ *
+ * 大白话：
+ * 只要是“购物清单应该会做的事”，
+ * 都先在这里列出来，
+ * 然后具体由 GroceryService 去实现。
+ *
+ * 这样 controller / api 只依赖接口，
+ * 分层会更清楚。
  */
 public interface IGroceryService {
 
     /**
-     * Returns current grocery rows (defensive copy semantics up to implementation).
-     * <p>
-     * 返回当前购物行（具体是否防御性拷贝由实现决定）。
+     * 取当前购物清单全部行。
      */
     List<GroceryItem> getItems();
 
     /**
-     * Appends one row (e.g. built from missing recipe ingredients).
-     * <p>
-     * 追加一行（例如由菜谱缺失食材生成）。
+     * 加一条购物项。
      */
     void addLine(GroceryItem item);
 
     /**
-     * Toggles collected flag; only collected rows count in subtotal.
-     * <p>
-     * 切换「已采购」标记；仅已勾选行计入小计。
+     * 按分类筛选。
+     * <p>Teammate note: 这个接口是给 grocery 分类筛选用的。
+     * insert your code here: keep interface in sync if service rule changes</p>
+     */
+    List<GroceryItem> filterByCategory(String categoryName);
+
+    /**
+     * 按名字关键字搜索。
+     * <p>Teammate note: 这个接口是给 grocery 名字搜索用的。
+     * insert your code here: keep interface in sync if search rule changes</p>
+     */
+    List<GroceryItem> searchByName(String keyword);
+
+    /**
+     * 切换某行是否已买。
+     *
+     * 这里会返回改完后的那一行，
+     * 方便上层直接拿去回给前端。
      */
     GroceryItem toggleCollected(String itemId);
 
     /**
-     * Adjusts quantity by delta (floor at zero in service).
-     * <p>
-     * 按增量调整数量（服务层将数量下限钳制为 0）。
+     * 按增量修改数量。
      */
     GroceryItem updateQuantity(String itemId, int delta);
 
     /**
-     * Removes one row by id.
-     * <p>
-     * 按 id 删除一行。
+     * 删除一条购物项。
      */
     void deleteItem(String itemId);
 
     /**
-     * Subtotal = sum(quantity * price) for collected rows only.
-     * <p>
-     * 小计 = 仅对已勾选行求和（数量×单价）。
+     * 计算小计。
+     *
+     * 规则：只统计 collected 的项，
+     * 每项金额 = 数量 * 单价。
      */
     double calculateSubtotal();
 
     /**
-     * Tax = subtotal * 0.08 (PRD fixed rate).
-     * <p>
-     * 税额 = 小计 × 0.08（PRD 固定税率）。
+     * 计算税额。
      */
     double calculateTax(double subtotal);
 
     /**
-     * Total = subtotal + tax.
-     * <p>
-     * 总额 = 小计 + 税。
+     * 计算总额。
      */
     double calculateTotal(double subtotal, double tax);
 
     /**
-     * Checkout hook for grocery module (typically clears grocery list).
-     * <p>
-     * 购物模块结账钩子（通常清空购物列表）。
+     * checkout 时，购物模块自己要做的收尾动作。
      */
     void checkout();
 
     /**
-     * Clears all grocery rows (session reset coordinator may call this).
-     * <p>
-     * 清空全部购物行（会话重置协调器可调用）。
+     * 直接清空购物清单。
      */
     void clearGrocery();
 }
