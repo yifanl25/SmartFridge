@@ -363,13 +363,16 @@ class _InventoryScreenState extends State<InventoryScreen> {
       ),
     );
 
-    return RefreshIndicator(
-      onRefresh: () async {
-        if (widget.useLiveApi) {
-          await _reloadFromApi();
-        }
-      },
-      child: body,
+    return Scaffold(
+      backgroundColor: SfColors.cream,
+      body: RefreshIndicator(
+        onRefresh: () async {
+          if (widget.useLiveApi) {
+            await _reloadFromApi();
+          }
+        },
+        child: body,
+      ),
     );
   }
 }

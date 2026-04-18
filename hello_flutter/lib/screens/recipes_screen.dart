@@ -411,13 +411,9 @@ class _RecipesScreenState extends State<RecipesScreen> {
       ),
     );
 
-    return RefreshIndicator(
-      onRefresh: () async {
-        if (widget.useLiveApi) {
-          await _loadRecipes();
-        }
-      },
-      child: body,
+    return Scaffold(
+      backgroundColor: SfColors.cream,
+      body: body,
     );
   }
 }
