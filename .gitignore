@@ -31,4 +31,4 @@ bin
 
 # ingore ide files
 .vscode
-idea/
+idea/.DS_Store
