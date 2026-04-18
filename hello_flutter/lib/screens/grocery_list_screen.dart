@@ -85,7 +85,7 @@ class _GroceryListScreenState extends State<GroceryListScreen> {
     if (!widget.useLiveApi) return;
     try {
       final updated =
-          await FridgeApiService.instance.toggleGroceryCollected(item.id);
+      await FridgeApiService.instance.toggleGroceryCollected(item.id);
       if (!mounted) return;
       setState(() {
         final i = _items.indexWhere((e) => e.id == item.id);
@@ -104,7 +104,7 @@ class _GroceryListScreenState extends State<GroceryListScreen> {
     if (!widget.useLiveApi) return;
     try {
       final updated =
-          await FridgeApiService.instance.updateGroceryQuantity(item.id, delta);
+      await FridgeApiService.instance.updateGroceryQuantity(item.id, delta);
       if (!mounted) return;
       setState(() {
         final i = _items.indexWhere((e) => e.id == item.id);
@@ -136,7 +136,11 @@ class _GroceryListScreenState extends State<GroceryListScreen> {
     if (text.isEmpty) return;
     if (!widget.useLiveApi) return;
     try {
-      await FridgeApiService.instance.addGroceryLine(foodName: text, quantity: 1, price: 0);
+      await FridgeApiService.instance.addGroceryLine(
+        foodName: text,
+        quantity: 1,
+        price: 0,
+      );
       _quickAdd.clear();
       if (!mounted) return;
       setState(() => _showCompleted = false);
@@ -168,273 +172,285 @@ class _GroceryListScreenState extends State<GroceryListScreen> {
     final done = _items.where((e) => e.collected).length;
     final filtered = _filtered.toList();
 
-    return ColoredBox(
-      color: SfColors.cream,
-      child: Column(
-        children: [
-          if (widget.useLiveApi && _loading)
-            const LinearProgressIndicator(minHeight: 3),
-          if (_apiError != null && widget.useLiveApi)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(28, 8, 28, 0),
-              child: Material(
-                color: Colors.orange.shade50,
-                borderRadius: BorderRadius.circular(12),
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Text(
-                    'Could not load grocery API. ./gradlew bootRun · $_apiError',
-                    style: TextStyle(color: Colors.orange.shade900, fontSize: 12),
+    return Scaffold(
+      backgroundColor: SfColors.cream,
+      body: SafeArea(
+        child: ColoredBox(
+          color: SfColors.cream,
+          child: Column(
+            children: [
+              if (widget.useLiveApi && _loading)
+                const LinearProgressIndicator(minHeight: 3),
+              if (_apiError != null && widget.useLiveApi)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(28, 8, 28, 0),
+                  child: Material(
+                    color: Colors.orange.shade50,
+                    borderRadius: BorderRadius.circular(12),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Text(
+                        'Could not load grocery API. ./gradlew bootRun · $_apiError',
+                        style: TextStyle(
+                          color: Colors.orange.shade900,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
                   ),
+                ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(28, 28, 28, 12),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Grocery List',
+                            style: TextStyle(
+                              fontSize: 34,
+                              fontWeight: FontWeight.w800,
+                              color: SfColors.brown,
+                              height: 1.1,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            '$active items to buy · $done already done',
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: SfColors.brownMuted,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 18),
+                    SizedBox(
+                      width: 360,
+                      child: TextField(
+                        controller: _search,
+                        decoration: InputDecoration(
+                          hintText: 'Search grocery items...',
+                          prefixIcon: Icon(
+                            Icons.search,
+                            color: SfColors.brownMuted,
+                          ),
+                          filled: true,
+                          fillColor: SfColors.whiteCard,
+                          contentPadding:
+                          const EdgeInsets.symmetric(vertical: 14),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(SfRadii.pill),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(28, 28, 28, 12),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Grocery List',
-                        style: TextStyle(
-                          fontSize: 34,
-                          fontWeight: FontWeight.w800,
-                          color: SfColors.brown,
-                          height: 1.1,
+              Padding(
+                padding: const EdgeInsets.fromLTRB(28, 4, 28, 14),
+                child: Row(
+                  children: [
+                    _TopToggleChip(
+                      label: 'To Buy ($active)',
+                      selected: !_showCompleted,
+                      onTap: () => setState(() => _showCompleted = false),
+                    ),
+                    const SizedBox(width: 10),
+                    _TopToggleChip(
+                      label: 'Completed ($done)',
+                      selected: _showCompleted,
+                      onTap: () => setState(() => _showCompleted = true),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            _CategoryFilterChip(
+                              label: 'All',
+                              selected: _filterCategory == null,
+                              onTap: () => setState(() => _filterCategory = null),
+                            ),
+                            for (final c in GroceryUiCategory.values)
+                              _CategoryFilterChip(
+                                label: c.label,
+                                selected: _filterCategory == c,
+                                onTap: () => setState(() => _filterCategory = c),
+                              ),
+                          ],
                         ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        '$active items to buy · $done already done',
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: SfColors.brownMuted,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 18),
-                SizedBox(
-                  width: 360,
-                  child: TextField(
-                    controller: _search,
-                    decoration: InputDecoration(
-                      hintText: 'Search grocery items...',
-                      prefixIcon: Icon(Icons.search, color: SfColors.brownMuted),
-                      filled: true,
-                      fillColor: SfColors.whiteCard,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 14),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(SfRadii.pill),
-                        borderSide: BorderSide.none,
                       ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(28, 4, 28, 14),
-            child: Row(
-              children: [
-                _TopToggleChip(
-                  label: 'To Buy ($active)',
-                  selected: !_showCompleted,
-                  onTap: () => setState(() => _showCompleted = false),
-                ),
-                const SizedBox(width: 10),
-                _TopToggleChip(
-                  label: 'Completed ($done)',
-                  selected: _showCompleted,
-                  onTap: () => setState(() => _showCompleted = true),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        _CategoryFilterChip(
-                          label: 'All',
-                          selected: _filterCategory == null,
-                          onTap: () => setState(() => _filterCategory = null),
-                        ),
-                        for (final c in GroceryUiCategory.values)
-                          _CategoryFilterChip(
-                            label: c.label,
-                            selected: _filterCategory == c,
-                            onTap: () => setState(() => _filterCategory = c),
-                          ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: RefreshIndicator(
-              onRefresh: widget.useLiveApi ? _reload : () async {},
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
-                child: Container(
-                  decoration: BoxDecoration(
+              ),
+              if (widget.useLiveApi)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+                  child: Material(
                     color: SfColors.whiteCard,
                     borderRadius: BorderRadius.circular(SfRadii.card),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.05),
-                        blurRadius: 14,
-                        offset: const Offset(0, 6),
-                      ),
-                    ],
-                  ),
-                  child: filtered.isEmpty
-                      ? ListView(
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          children: [
-                            const SizedBox(height: 80),
-                            Center(
-                              child: Text(
-                                _showCompleted
-                                    ? 'No completed items yet.'
-                                    : 'No matching grocery items.',
-                                style: TextStyle(
-                                  color: SfColors.brownMuted,
-                                  fontSize: 15,
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                      : ListView.separated(
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 8,
-                            horizontal: 12,
-                          ),
-                          itemBuilder: (context, i) {
-                            final item = filtered[i];
-                            return _GroceryRow(
-                              item: item,
-                              useApi: widget.useLiveApi,
-                              onToggleDone: () => _toggleCollected(item),
-                              onMinus: () => _deltaQty(item, -1),
-                              onPlus: () => _deltaQty(item, 1),
-                            );
-                          },
-                          separatorBuilder: (context, index) => const Divider(
-                            color: Color(0xFFEDE2D6),
-                            height: 1,
-                          ),
-                          itemCount: filtered.length,
-                        ),
-                ),
-              ),
-            ),
-          ),
-          if (widget.useLiveApi)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
-              child: Material(
-                color: SfColors.whiteCard,
-                borderRadius: BorderRadius.circular(SfRadii.card),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Subtotal \$${_subtotal.toStringAsFixed(2)} · '
-                              'Tax \$${_tax.toStringAsFixed(2)}',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: SfColors.brownMuted,
-                              ),
-                            ),
-                            Text(
-                              'Total \$${_total.toStringAsFixed(2)}',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w800,
-                                color: SfColors.brown,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      FilledButton(
-                        onPressed: _items.isEmpty ? null : _checkout,
-                        style: FilledButton.styleFrom(
-                          backgroundColor: SfColors.brown,
-                          foregroundColor: Colors.white,
-                        ),
-                        child: const Text('Checkout'),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _quickAdd,
-                    enabled: widget.useLiveApi,
-                    onSubmitted: (_) => _addQuickItem(),
-                    decoration: InputDecoration(
-                      hintText: widget.useLiveApi
-                          ? 'Quick add (catalog name, e.g. Whole Milk)...'
-                          : 'Offline mode',
-                      filled: true,
-                      fillColor: SfColors.whiteCard,
-                      contentPadding: const EdgeInsets.symmetric(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
                         horizontal: 16,
-                        vertical: 14,
+                        vertical: 12,
                       ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(SfRadii.pill),
-                        borderSide: BorderSide.none,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Subtotal \$${_subtotal.toStringAsFixed(2)} · '
+                                      'Tax \$${_tax.toStringAsFixed(2)}',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: SfColors.brownMuted,
+                                  ),
+                                ),
+                                Text(
+                                  'Total \$${_total.toStringAsFixed(2)}',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w800,
+                                    color: SfColors.brown,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          FilledButton(
+                            onPressed: _items.isEmpty ? null : _checkout,
+                            style: FilledButton.styleFrom(
+                              backgroundColor: SfColors.brown,
+                              foregroundColor: Colors.white,
+                            ),
+                            child: const Text('Checkout'),
+                          ),
+                        ],
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(width: 10),
-                FilledButton.icon(
-                  style: FilledButton.styleFrom(
-                    backgroundColor: SfColors.brown,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 14,
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _quickAdd,
+                        enabled: widget.useLiveApi,
+                        onSubmitted: (_) => _addQuickItem(),
+                        decoration: InputDecoration(
+                          hintText: widget.useLiveApi
+                              ? 'Quick add (catalog name, e.g. Whole Milk)...'
+                              : 'Offline mode',
+                          filled: true,
+                          fillColor: SfColors.whiteCard,
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 14,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(SfRadii.pill),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                      ),
                     ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(SfRadii.pill),
+                    const SizedBox(width: 10),
+                    FilledButton.icon(
+                      style: FilledButton.styleFrom(
+                        backgroundColor: SfColors.brown,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 14,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(SfRadii.pill),
+                        ),
+                      ),
+                      onPressed: widget.useLiveApi ? _addQuickItem : null,
+                      icon: const Icon(Icons.add),
+                      label: const Text(
+                        'Add',
+                        style: TextStyle(fontWeight: FontWeight.w700),
+                      ),
                     ),
-                  ),
-                  onPressed: widget.useLiveApi ? _addQuickItem : null,
-                  icon: const Icon(Icons.add),
-                  label: const Text(
-                    'Add',
-                    style: TextStyle(fontWeight: FontWeight.w700),
+                  ],
+                ),
+              ),
+
+              Expanded(
+                child: RefreshIndicator(
+                  onRefresh: widget.useLiveApi ? _reload : () async {},
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: SfColors.whiteCard,
+                        borderRadius: BorderRadius.circular(SfRadii.card),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.05),
+                            blurRadius: 14,
+                            offset: const Offset(0, 6),
+                          ),
+                        ],
+                      ),
+                      child: filtered.isEmpty
+                          ? ListView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        padding: const EdgeInsets.all(24),
+                        children: [
+                          Text(
+                            _showCompleted
+                                ? 'No completed items yet.'
+                                : 'No grocery items found.',
+                            style: TextStyle(
+                              color: SfColors.brownMuted,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      )
+                          : ListView.separated(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
+                        itemCount: filtered.length,
+                        separatorBuilder: (_, __) =>
+                            Divider(color: SfColors.chipBgLight),
+                        itemBuilder: (context, index) {
+                          final item = filtered[index];
+                          return _GroceryRow(
+                            item: item,
+                            useApi: widget.useLiveApi,
+                            onToggleDone: () => _toggleCollected(item),
+                            onMinus: () => _deltaQty(item, -1),
+                            onPlus: () => _deltaQty(item, 1),
+                          );
+                        },
+                      ),
+                    ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -548,20 +564,20 @@ class _GroceryRow extends StatelessWidget {
       ),
       trailing: useApi
           ? Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  onPressed: item.quantity > 0 ? onMinus : null,
-                  icon: const Icon(Icons.remove_circle_outline),
-                  color: SfColors.brownMuted,
-                ),
-                IconButton(
-                  onPressed: onPlus,
-                  icon: const Icon(Icons.add_circle_outline),
-                  color: SfColors.brown,
-                ),
-              ],
-            )
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+            onPressed: item.quantity > 0 ? onMinus : null,
+            icon: const Icon(Icons.remove_circle_outline),
+            color: SfColors.brownMuted,
+          ),
+          IconButton(
+            onPressed: onPlus,
+            icon: const Icon(Icons.add_circle_outline),
+            color: SfColors.brown,
+          ),
+        ],
+      )
           : null,
     );
   }
