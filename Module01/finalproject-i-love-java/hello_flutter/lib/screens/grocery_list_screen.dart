@@ -23,12 +23,6 @@ class _GroceryListScreenState extends State<GroceryListScreen> {
 
   late Future<_GroceryScreenData> _screenFuture;
 
-  // Reference:
-  // Flutter cookbook - Fetch data from the internet
-  // https://docs.flutter.dev/cookbook/networking/fetch-data
-  //
-  // Create the Future once in initState so the request does not rerun
-  // every time build() runs.
   @override
   void initState() {
     super.initState();
@@ -97,9 +91,6 @@ class _GroceryListScreenState extends State<GroceryListScreen> {
     return result.toList();
   }
 
-  // Reference:
-  // Flutter cookbook - Send data to the internet
-  // https://docs.flutter.dev/cookbook/networking/send-data
   Future<void> _toggleCollected(GroceryLineView item) async {
     if (!widget.useLiveApi) {
       return;
@@ -215,11 +206,6 @@ class _GroceryListScreenState extends State<GroceryListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Reference:
-    // Flutter cookbook - Fetch data from the internet
-    // https://docs.flutter.dev/cookbook/networking/fetch-data
-    //
-    // FutureBuilder handles loading, error, and success states.
     return FutureBuilder<_GroceryScreenData>(
       future: _screenFuture,
       builder: (context, snapshot) {
@@ -244,9 +230,9 @@ class _GroceryListScreenState extends State<GroceryListScreen> {
         final done = items.where((item) => item.collected).length;
         final filtered = _filtered(items);
 
-        return ColoredBox(
-          color: SfColors.cream,
-          child: Column(
+        return Scaffold(
+          backgroundColor: SfColors.cream,
+          body: Column(
             children: [
               if (widget.useLiveApi && loading)
                 const LinearProgressIndicator(minHeight: 3),

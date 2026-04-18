@@ -5,7 +5,6 @@ import '../services/fridge_api_service.dart';
 import '../theme/smart_fridge_tokens.dart';
 import 'recipe_detail_screen.dart';
 
-/// Recommended recipes screen.
 class RecipesScreen extends StatefulWidget {
   const RecipesScreen({super.key, this.useLiveApi = true});
 
@@ -123,12 +122,6 @@ class _RecipesScreenState extends State<RecipesScreen> {
     });
   }
 
-  // Reference:
-  // Flutter cookbook - Fetch data from the internet
-  // https://docs.flutter.dev/cookbook/networking/fetch-data
-  //
-  // Create the Future once in initState so the request does not run again
-  // every time build() is called.
   @override
   void initState() {
     super.initState();
@@ -194,11 +187,6 @@ class _RecipesScreenState extends State<RecipesScreen> {
     return list;
   }
 
-  // Reference:
-  // Flutter cookbook - Fetch data from the internet
-  // https://docs.flutter.dev/cookbook/networking/fetch-data
-  //
-  // Open the detail screen after loading its detail JSON from the API.
   Future<void> _openRecipe(RecipeRecommendation recipe) async {
     if (!widget.useLiveApi) {
       final added = await Navigator.of(context).push<bool>(
@@ -290,11 +278,6 @@ class _RecipesScreenState extends State<RecipesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Reference:
-    // Flutter cookbook - Fetch data from the internet
-    // https://docs.flutter.dev/cookbook/networking/fetch-data
-    //
-    // FutureBuilder handles loading, success, and error states.
     return FutureBuilder<List<RecipeRecommendation>>(
       future: _recipesFuture,
       builder: (context, snapshot) {
@@ -542,9 +525,12 @@ class _RecipesScreenState extends State<RecipesScreen> {
           ),
         );
 
-        return RefreshIndicator(
-          onRefresh: _refreshRecipes,
-          child: body,
+        return Scaffold(
+          backgroundColor: SfColors.cream,
+          body: RefreshIndicator(
+            onRefresh: _refreshRecipes,
+            child: body,
+          ),
         );
       },
     );
