@@ -32,6 +32,10 @@ springBoot {
     mainClass = 'api.SmartFridgeApiApplication'
 }
 
+tasks.named('bootRun') {
+    mainClass = 'api.SmartFridgeApiApplication'
+}
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
