@@ -17,7 +17,6 @@ import java.util.Set;
 /**
  * Loads {@code recipes.json} into {@link Recipe#loaded} templates (no runtime scores yet).
  * <p>
- * 将 {@code recipes.json} 加载为 {@link Recipe#loaded} 模板（尚无运行时分数）。
  */
 public final class JsonRecipeLoader {
     private static final ObjectMapper MAPPER = new ObjectMapper();
@@ -28,7 +27,6 @@ public final class JsonRecipeLoader {
     /**
      * Parses recipes array; unknown health tag strings are skipped; empty tags default to {@link Recipe.HealthTag#BALANCED}.
      * <p>
-     * 解析菜谱数组；未知健康标签字符串跳过；空标签默认 {@link Recipe.HealthTag#BALANCED}。
      */
     public static List<Recipe> loadFromFile(String pathOrResource) throws IOException {
         InputStream in = JsonRecipeLoader.class.getResourceAsStream(
@@ -67,7 +65,6 @@ public final class JsonRecipeLoader {
     /**
      * Same as {@link #loadFromFile(String)} with unchecked exception for callers.
      * <p>
-     * 与 {@link #loadFromFile(String)} 相同，对调用方抛出非受检异常。
      */
     public static List<Recipe> loadFromFileSafe(String pathOrResource) {
         try {
@@ -80,7 +77,6 @@ public final class JsonRecipeLoader {
     /**
      * Maps DTO list to {@link Recipe.Ingredient} list; skips null names.
      * <p>
-     * 将 DTO 列表映射为 {@link Recipe.Ingredient}；跳过空名。
      */
     private static List<Recipe.Ingredient> mapIngredients(List<IngredientDto> list) {
         if (list == null) {
@@ -100,7 +96,6 @@ public final class JsonRecipeLoader {
     /**
      * Parses string tags into enum set; defaults to {@link Recipe.HealthTag#BALANCED} if none valid.
      * <p>
-     * 将字符串标签解析为枚举集；若无有效值则默认 {@link Recipe.HealthTag#BALANCED}。
      */
     private static List<Recipe.HealthTag> parseHealthTags(List<String> raw) {
         Set<Recipe.HealthTag> set = EnumSet.noneOf(Recipe.HealthTag.class);
@@ -112,7 +107,7 @@ public final class JsonRecipeLoader {
                 try {
                     set.add(Recipe.HealthTag.valueOf(s.trim()));
                 } catch (IllegalArgumentException ignored) {
-                    // ignore unknown tags in JSON / 忽略 JSON 中未知标签
+                    // ignore unknown tags in JSON
                 }
             }
         }

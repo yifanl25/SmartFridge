@@ -63,7 +63,6 @@ public class RecommendationService implements IRecommendationService {
     /**
      * PRD convenience points by cook time buckets (≤15, ≤30, else 0).
      * <p>
-     * 按烹饪时间档位的便利分（≤15、≤30、否则 0）。
      */
     private static int convenienceScore(int cookTime) {
         if (cookTime <= 15) {
@@ -118,7 +117,6 @@ public class RecommendationService implements IRecommendationService {
     /**
      * Bonus when required ingredients are matched by urgent inventory items.
      * <p>
-     * 当必选食材由「临期」库存项匹配时的加分。
      */
     private static int urgentUsageScore(int urgentMatchedRequiredCount) {
         if (urgentMatchedRequiredCount <= 0) {
@@ -222,7 +220,7 @@ public class RecommendationService implements IRecommendationService {
     /**
      * {@inheritDoc}
      * <p>
-     * 主键为烹饪时间升序；次级键使用单字段 {@code reversed()}，避免对整个复合比较器 {@code reversed()} 误伤主键。
+     * Sort cooking time ascending order.
      */
     @Override
     public List<Recipe> sortByCookTime() {
