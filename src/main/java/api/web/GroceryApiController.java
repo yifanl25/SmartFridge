@@ -1,6 +1,7 @@
 package api.web;
 
 import api.dto.GroceryAddRequest;
+import controller.CatalogController;
 import controller.GroceryController;
 import model.FoodCatalogEntry;
 import model.FoodCategory;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import service.IFoodCatalog;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,31 +25,21 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
- * 这个类就是 grocery page 的 HTTP 接口层。
- *
- * 大白话：
- * 前端和购物清单有关的操作，基本都从这里进来：
- * - 看列表
- * - 手动加一项
- * - 删一项
- * - 勾选已买
- * - 改数量
- * - 结账
- * - 看 subtotal / tax / total
- *
- * 另外也顺手吸收了你组员那块逻辑：
- * 支持按分类筛选、按名字搜索。
+ * HTTP entry layer for grocery endpoints used by the Flutter frontend.
+ * <p>
+ * Spring routing and request/response handling stay here. Grocery state changes delegate to
+ * {@link GroceryController}, and catalog-backed name resolution delegates to {@link CatalogController}.
  */
 @RestController
 @RequestMapping("/api/grocery")
 public class GroceryApiController {
 
+    private final CatalogController catalogController;
     private final GroceryController groceryController;
-    private final IFoodCatalog foodCatalog;
 
-    public GroceryApiController(GroceryController groceryController, IFoodCatalog foodCatalog) {
+    public GroceryApiController(CatalogController catalogController, GroceryController groceryController) {
+        this.catalogController = catalogController;
         this.groceryController = groceryController;
-        this.foodCatalog = foodCatalog;
     }
 
     /**
@@ -103,12 +93,11 @@ public class GroceryApiController {
             return ResponseEntity.badRequest().build();
         }
 
-        // 先尝试精确解析。
-        Optional<FoodCatalogEntry> resolved = foodCatalog.resolveEntry(body.getFoodName().trim());
+        Optional<FoodCatalogEntry> resolved = catalogController.resolveEntry(body.getFoodName().trim());
 
         // 精确解析不到，再退一步用 suggestion。
         FoodCatalogEntry entry = resolved.orElseGet(
-                () -> foodCatalog.searchSuggestions(body.getFoodName().trim()).stream()
+                () -> catalogController.searchSuggestions(body.getFoodName().trim()).stream()
                         .findFirst()
                         .orElse(null));
 
@@ -120,7 +109,7 @@ public class GroceryApiController {
 
         FoodCategory cat = entry.getCategory();
         String id = UUID.randomUUID().toString();
-        String name = foodCatalog.canonicalFoodName(body.getFoodName().trim());
+        String name = catalogController.canonicalFoodName(body.getFoodName().trim());
 
         // 数量和价格做最基本保护：
         // - quantity 最少 0

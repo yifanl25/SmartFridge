@@ -1,8 +1,34 @@
+// ignore_for_file: slash_for_doc_comments
+
 import 'package:flutter/material.dart';
 
 import '../models/recipe_recommendation.dart';
 import '../theme/smart_fridge_tokens.dart';
 
+/**
+ * Recipe detail screen.
+ * <p>
+ * Entry screen for recipe details.
+ * Receives one recipe and switches between desktop and mobile layouts.
+ *
+ * Official references:
+ * StatefulWidget:
+ * https://api.flutter.dev/flutter/widgets/StatefulWidget-class.html
+ * State:
+ * https://api.flutter.dev/flutter/widgets/State-class.html
+ * Scaffold:
+ * https://api.flutter.dev/flutter/material/Scaffold-class.html
+ * SafeArea:
+ * https://api.flutter.dev/flutter/widgets/SafeArea-class.html
+ * LayoutBuilder:
+ * https://api.flutter.dev/flutter/widgets/LayoutBuilder-class.html
+ *
+ * Open-source reference:
+ * Flutter samples:
+ * https://github.com/flutter/samples
+ * material_3_demo:
+ * https://github.com/flutter/samples/tree/main/material_3_demo
+ */
 class RecipeDetailScreen extends StatefulWidget {
   const RecipeDetailScreen({super.key, required this.recipe});
 
@@ -12,6 +38,12 @@ class RecipeDetailScreen extends StatefulWidget {
   State<RecipeDetailScreen> createState() => _RecipeDetailScreenState();
 }
 
+/**
+ * State for RecipeDetailScreen.
+ * <p>
+ * Stores local detail-page state such as the current recipe,
+ * saved state, ingredient list, match score, and timing values.
+ */
 class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   bool _saved = false;
 
@@ -72,7 +104,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                                           ? Icons.bookmark
                                           : Icons.bookmark_border,
                                       onTap: () => setState(
-                                        () => _saved = !_saved,
+                                            () => _saved = !_saved,
                                       ),
                                     ),
                                     const SizedBox(width: 8),
@@ -121,17 +153,23 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
     );
   }
 
+  /**
+   * Builds ingredient rows for the detail screen.
+   * <p>
+   * Uses ingredient details from the recipe when available.
+   * Otherwise builds a local fallback list from ingredient tags.
+   */
   List<_IngredientItem> _ingredientRows(RecipeRecommendation recipe) {
     final details = recipe.ingredientDetails;
     if (details != null && details.isNotEmpty) {
       return details
           .map(
             (d) => _IngredientItem(
-              name: d.name,
-              amount: d.quantityText.isEmpty ? '—' : d.quantityText,
-              inFridge: d.inFridge,
-            ),
-          )
+          name: d.name,
+          amount: d.quantityText.isEmpty ? '—' : d.quantityText,
+          inFridge: d.inFridge,
+        ),
+      )
           .toList();
     }
     final rows = <_IngredientItem>[];
@@ -142,15 +180,34 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
     }
     while (rows.length < 6) {
       final fillers = [
-        const _IngredientItem(name: 'Whole Milk', amount: '2 tbsp', inFridge: true),
-        const _IngredientItem(name: 'Unsalted Butter', amount: '10 g', inFridge: false),
-        const _IngredientItem(name: 'Sourdough Bread', amount: '2 slices', inFridge: false),
+        const _IngredientItem(
+          name: 'Whole Milk',
+          amount: '2 tbsp',
+          inFridge: true,
+        ),
+        const _IngredientItem(
+          name: 'Unsalted Butter',
+          amount: '10 g',
+          inFridge: false,
+        ),
+        const _IngredientItem(
+          name: 'Sourdough Bread',
+          amount: '2 slices',
+          inFridge: false,
+        ),
       ];
-      rows.add(fillers[(rows.length - recipe.ingredientTags.length) % fillers.length]);
+      rows.add(
+        fillers[(rows.length - recipe.ingredientTags.length) % fillers.length],
+      );
     }
     return rows.take(6).toList();
   }
 
+  /**
+   * Returns a fallback amount label for an ingredient name.
+   * <p>
+   * Provides a default amount when detailed ingredient data is missing.
+   */
   String _amountFor(String text) {
     switch (text.toLowerCase()) {
       case 'eggs':
@@ -169,6 +226,11 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
     }
   }
 
+  /**
+   * Returns a fallback kcal value for an ingredient name.
+   * <p>
+   * Provides a default kcal value when nutrition data is missing.
+   */
   int _kcalFor(String text) {
     switch (text.toLowerCase()) {
       case 'eggs':
@@ -188,6 +250,23 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   }
 }
 
+/**
+ * Desktop recipe info rail.
+ * <p>
+ * Left-side desktop panel with back navigation, tags, title,
+ * description, summary cards, ingredient match, ingredient list,
+ * and the main CTA.
+ *
+ * Official references:
+ * ListView.separated:
+ * https://api.flutter.dev/flutter/widgets/ListView/ListView.separated.html
+ * TextButton:
+ * https://api.flutter.dev/flutter/material/TextButton-class.html
+ * FilledButton:
+ * https://api.flutter.dev/flutter/material/FilledButton-class.html
+ * Divider:
+ * https://api.flutter.dev/flutter/material/Divider-class.html
+ */
 class _RecipeInfoRail extends StatelessWidget {
   const _RecipeInfoRail({
     required this.recipe,
@@ -236,7 +315,11 @@ class _RecipeInfoRail extends StatelessWidget {
             children: [
               _TagPill(label: recipe.slot.label, fill: SfColors.chipBgLight),
               const SizedBox(width: 8),
-              _TagPill(label: '${recipe.matchPercent}% match', fill: const Color(0xFFEAF6EC), fg: SfColors.matchGreen),
+              _TagPill(
+                label: '${recipe.matchPercent}% match',
+                fill: const Color(0xFFEAF6EC),
+                fg: SfColors.matchGreen,
+              ),
             ],
           ),
           const SizedBox(height: 14),
@@ -251,7 +334,8 @@ class _RecipeInfoRail extends StatelessWidget {
           ),
           const SizedBox(height: 14),
           Text(
-            (recipe.description != null && recipe.description!.trim().isNotEmpty)
+            (recipe.description != null &&
+                recipe.description!.trim().isNotEmpty)
                 ? recipe.description!.trim()
                 : 'A rich, protein-packed breakfast made from ingredients already in your fridge.',
             style: TextStyle(
@@ -377,6 +461,22 @@ class _RecipeInfoRail extends StatelessWidget {
   }
 }
 
+/**
+ * Mobile recipe detail layout.
+ * <p>
+ * Mobile detail layout built with a SliverAppBar and SliverList.
+ * Shows summary tags, description, and ingredients.
+ *
+ * Official references:
+ * CustomScrollView:
+ * https://api.flutter.dev/flutter/widgets/CustomScrollView-class.html
+ * SliverAppBar:
+ * https://api.flutter.dev/flutter/material/SliverAppBar-class.html
+ * SliverList:
+ * https://api.flutter.dev/flutter/widgets/SliverList-class.html
+ * ListTile:
+ * https://api.flutter.dev/flutter/material/ListTile-class.html
+ */
 class _MobileRecipeDetail extends StatelessWidget {
   const _MobileRecipeDetail({
     required this.recipe,
@@ -421,9 +521,19 @@ class _MobileRecipeDetail extends StatelessWidget {
                 spacing: 8,
                 runSpacing: 8,
                 children: [
-                  _TagPill(label: '${recipe.prepMinutes} min', fill: SfColors.chipBgLight),
-                  _TagPill(label: '${recipe.kcal} kcal', fill: SfColors.chipBgLight),
-                  _TagPill(label: '${recipe.matchPercent}% match', fill: const Color(0xFFEAF6EC), fg: SfColors.matchGreen),
+                  _TagPill(
+                    label: '${recipe.prepMinutes} min',
+                    fill: SfColors.chipBgLight,
+                  ),
+                  _TagPill(
+                    label: '${recipe.kcal} kcal',
+                    fill: SfColors.chipBgLight,
+                  ),
+                  _TagPill(
+                    label: '${recipe.matchPercent}% match',
+                    fill: const Color(0xFFEAF6EC),
+                    fg: SfColors.matchGreen,
+                  ),
                 ],
               ),
               const SizedBox(height: 16),
@@ -441,16 +551,23 @@ class _MobileRecipeDetail extends StatelessWidget {
               ],
               const Text(
                 'Ingredients',
-                style: TextStyle(fontWeight: FontWeight.w800, color: SfColors.brown),
+                style: TextStyle(
+                  fontWeight: FontWeight.w800,
+                  color: SfColors.brown,
+                ),
               ),
               const SizedBox(height: 8),
               ...ingredients.map(
-                (e) => ListTile(
+                    (e) => ListTile(
                   dense: true,
                   contentPadding: EdgeInsets.zero,
                   leading: Icon(
-                    e.inFridge ? Icons.check_circle : Icons.radio_button_unchecked,
-                    color: e.inFridge ? SfColors.matchGreen : SfColors.brownMuted,
+                    e.inFridge
+                        ? Icons.check_circle
+                        : Icons.radio_button_unchecked,
+                    color: e.inFridge
+                        ? SfColors.matchGreen
+                        : SfColors.brownMuted,
                   ),
                   title: Text(e.name),
                   trailing: Text(e.amount),
@@ -464,6 +581,11 @@ class _MobileRecipeDetail extends StatelessWidget {
   }
 }
 
+/**
+ * Ingredient row model.
+ * <p>
+ * Lightweight ingredient model used inside the detail screen.
+ */
 class _IngredientItem {
   const _IngredientItem({
     required this.name,
@@ -476,6 +598,11 @@ class _IngredientItem {
   final bool inFridge;
 }
 
+/**
+ * Small numeric info card.
+ * <p>
+ * Small summary card for values like prep time or calories.
+ */
 class _InfoMiniCard extends StatelessWidget {
   const _InfoMiniCard({
     required this.value,
@@ -534,6 +661,11 @@ class _InfoMiniCard extends StatelessWidget {
   }
 }
 
+/**
+ * Ingredient match summary card.
+ * <p>
+ * Shows the ingredient match percentage for the current recipe.
+ */
 class _MatchCard extends StatelessWidget {
   const _MatchCard({required this.match});
 
@@ -583,6 +715,11 @@ class _MatchCard extends StatelessWidget {
   }
 }
 
+/**
+ * Reusable tag pill.
+ * <p>
+ * Reusable pill label for short tags like slot, match, or time.
+ */
 class _TagPill extends StatelessWidget {
   const _TagPill({
     required this.label,
@@ -614,6 +751,11 @@ class _TagPill extends StatelessWidget {
   }
 }
 
+/**
+ * Review pill.
+ * <p>
+ * Rating summary pill with stars, score, and review count.
+ */
 class _ReviewPill extends StatelessWidget {
   const _ReviewPill({required this.rating, required this.reviews});
 
@@ -662,6 +804,11 @@ class _ReviewPill extends StatelessWidget {
   }
 }
 
+/**
+ * Timeline pill.
+ * <p>
+ * Bottom summary pill for prep, cook, total time, and servings.
+ */
 class _TimelinePill extends StatelessWidget {
   const _TimelinePill({
     required this.prep,
@@ -707,6 +854,11 @@ class _TimelinePill extends StatelessWidget {
   );
 }
 
+/**
+ * Single time block inside timeline pill.
+ * <p>
+ * Single label-value block inside the timeline summary.
+ */
 class _TimeBlock extends StatelessWidget {
   const _TimeBlock({required this.title, required this.value});
 
@@ -739,6 +891,17 @@ class _TimeBlock extends StatelessWidget {
   }
 }
 
+/**
+ * Circular icon button.
+ * <p>
+ * Round icon button used for actions like bookmark and share.
+ *
+ * Official references:
+ * InkWell:
+ * https://api.flutter.dev/flutter/material/InkWell-class.html
+ * Container:
+ * https://api.flutter.dev/flutter/widgets/Container-class.html
+ */
 class _CircleIconButton extends StatelessWidget {
   const _CircleIconButton({required this.icon, this.onTap});
 
@@ -764,6 +927,11 @@ class _CircleIconButton extends StatelessWidget {
   }
 }
 
+/**
+ * Ingredient tile.
+ * <p>
+ * Desktop ingredient tile with name, fridge status, and kcal summary.
+ */
 class _IngredientTile extends StatelessWidget {
   const _IngredientTile({required this.item, required this.kcal});
 
@@ -789,7 +957,9 @@ class _IngredientTile extends StatelessWidget {
             child: Icon(
               Icons.circle,
               size: 6,
-              color: item.inFridge ? SfColors.matchGreen : SfColors.chipBgLight,
+              color: item.inFridge
+                  ? SfColors.matchGreen
+                  : SfColors.chipBgLight,
             ),
           ),
           const SizedBox(height: 10),

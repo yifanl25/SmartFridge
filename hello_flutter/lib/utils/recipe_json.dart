@@ -1,5 +1,8 @@
+// ignore_for_file: slash_for_doc_comments
+
 import '../models/recipe_recommendation.dart';
 
+/** Maps a backend recipe category name to a meal slot. */
 RecipeMealSlot mealSlotFromCategoryName(String name) {
   switch (name.toLowerCase()) {
     case 'breakfast':
@@ -19,8 +22,14 @@ RecipeMealSlot mealSlotFromCategoryName(String name) {
   }
 }
 
+/** Normalizes text for case-insensitive ingredient matching. */
 String _norm(String s) => s.trim().toLowerCase();
 
+/**
+ * Parses one recipe recommendation from API JSON.
+ * <p>
+ * Builds the app model used by the recipes and detail screens.
+ */
 RecipeRecommendation recipeRecommendationFromJson(Map<String, dynamic> json) {
   final cat = json['recipeCategory'] as Map<String, dynamic>?;
   final catName = cat?['name'] as String? ?? '';

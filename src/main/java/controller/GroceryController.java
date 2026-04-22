@@ -6,14 +6,10 @@ import service.IGroceryService;
 import java.util.List;
 
 /**
- * 这个 controller 是 grocery 模块中间那一层。
- *
- * 大白话：
- * - API 层不要直接碰 service 细节
- * - 所以这里当一个中间转发层
- * - 上面接 API，下面接 IGroceryService
- *
- * 这样整体分层还是保持你原本的 MVC 结构。
+ * Internal coordination layer for grocery operations and checkout flow.
+ * <p>
+ * This class is intentionally thin: HTTP routing belongs in {@code api.web}, business logic stays
+ * in {@link IGroceryService}, and this layer coordinates module-level actions such as session reset.
  */
 public class GroceryController {
     // 真正管购物清单逻辑的是 service；controller 主要负责转发。

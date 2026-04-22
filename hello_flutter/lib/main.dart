@@ -1,3 +1,5 @@
+// ignore_for_file: slash_for_doc_comments
+
 import 'package:flutter/material.dart';
 
 import 'app/main_shell.dart';
@@ -5,10 +7,20 @@ import 'screens/preferences_screen.dart';
 import 'screens/welcome_screen.dart';
 import 'theme/smart_fridge_tokens.dart';
 
+/** App entry point. */
 void main() {
   runApp(const SmartFridgeApp());
 }
 
+/**
+ * Root app widget.
+ * <p>
+ * Sets up the shared theme and named routes.
+ *
+ * Official references:
+ * MaterialApp: https://api.flutter.dev/flutter/material/MaterialApp-class.html
+ * ThemeData: https://api.flutter.dev/flutter/material/ThemeData-class.html
+ */
 class SmartFridgeApp extends StatelessWidget {
   const SmartFridgeApp({super.key});
 

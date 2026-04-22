@@ -2,6 +2,7 @@ package api.web;
 
 import api.dto.RecipeDetailResponse;
 import api.dto.RecipeToGroceryResponse;
+import controller.CatalogController;
 import controller.GroceryController;
 import controller.InventoryController;
 import controller.PreferenceController;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import service.IFoodCatalog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,40 +29,32 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
- * 这个类就是「推荐页 / 菜谱详情页」对外暴露的 HTTP 接口。
- *
- * 大白话说，它现在主要做三件事：
- * 1. 把推荐列表给前端
- * 2. 把某一道菜的详情给前端
- * 3. 把某道菜里缺的食材，直接塞进 grocery list
- *
- * 这里我没有直接照搬组员那套 repository，
- * 而是尽量沿着你现有的 controller / service 流程走，
- * 这样才不会在项目里再长出第二套数据流。
+ * HTTP entry layer for recommendation, recipe-detail, and recipe-to-grocery endpoints.
+ * <p>
+ * Spring routing stays here. Cross-module actions delegate to the existing internal controller
+ * layer so the HTTP API and the legacy Java demo share one backend call chain.
  */
 @RestController
 @RequestMapping("/api/recommendations")
 public class RecommendationApiController {
 
-    // 现有系统里已经有的几个控制器，这里直接借来用。
-    // 这样可以复用你原本的大框架，而不是另起炉灶。
+    private final CatalogController catalogController;
     private final InventoryController inventoryController;
     private final PreferenceController preferenceController;
     private final RecommendationController recommendationController;
     private final GroceryController groceryController;
-    private final IFoodCatalog foodCatalog;
 
     public RecommendationApiController(
+            CatalogController catalogController,
             InventoryController inventoryController,
             PreferenceController preferenceController,
             RecommendationController recommendationController,
-            GroceryController groceryController,
-            IFoodCatalog foodCatalog) {
+            GroceryController groceryController) {
+        this.catalogController = catalogController;
         this.inventoryController = inventoryController;
         this.preferenceController = preferenceController;
         this.recommendationController = recommendationController;
         this.groceryController = groceryController;
-        this.foodCatalog = foodCatalog;
     }
 
     /**
@@ -135,7 +127,7 @@ public class RecommendationApiController {
 
         // 真正把 recipe 组装成 detail response 的重活，
         // 放在 DTO 的 from(...) 里做，避免 controller 太臃肿。
-        return ResponseEntity.ok(RecipeDetailResponse.from(recipe, inventory, foodCatalog));
+        return ResponseEntity.ok(RecipeDetailResponse.from(recipe, inventory, catalogController::canonicalFoodName));
     }
 
     /**
@@ -180,7 +172,7 @@ public class RecommendationApiController {
 
             // 先尽量把名字统一成 catalog 里的标准写法，
             // 这样不容易因为别名不同而产生重复项。
-            String canonical = foodCatalog.canonicalFoodName(ingredient.getName());
+            String canonical = catalogController.canonicalFoodName(ingredient.getName());
 
             // quantityText 可能写成 "2 count"、"1 clove" 之类，
             // 这里尽量取出一个正整数；实在读不出来就默认 1。
@@ -231,9 +223,9 @@ public class RecommendationApiController {
     // 如果以后 missingIngredients 的算法改了，或者要区分 optional / required / substitute，先看这里。
     // insert your code here: refine missing-ingredient rule if PRD changes
     private boolean isMissingRequiredIngredient(Recipe recipe, Recipe.Ingredient ingredient) {
-        String target = norm(foodCatalog.canonicalFoodName(ingredient.getName()));
+        String target = norm(catalogController.canonicalFoodName(ingredient.getName()));
         return recipe.getMissingIngredients().stream()
-                .map(foodCatalog::canonicalFoodName)
+                .map(catalogController::canonicalFoodName)
                 .map(RecommendationApiController::norm)
                 .anyMatch(target::equals);
     }
@@ -247,7 +239,7 @@ public class RecommendationApiController {
     private GroceryItem findExistingGroceryItem(String canonicalName) {
         String key = norm(canonicalName);
         return groceryController.getItems().stream()
-                .filter(item -> norm(foodCatalog.canonicalFoodName(item.getName())).equals(key))
+                .filter(item -> norm(catalogController.canonicalFoodName(item.getName())).equals(key))
                 .findFirst()
                 .orElse(null);
     }
@@ -285,11 +277,11 @@ public class RecommendationApiController {
      * 2. resolve 不到就用 suggestion 顶一个
      */
     private FoodCatalogEntry resolveEntry(String foodName) {
-        Optional<FoodCatalogEntry> direct = foodCatalog.resolveEntry(foodName);
+        Optional<FoodCatalogEntry> direct = catalogController.resolveEntry(foodName);
         if (direct.isPresent()) {
             return direct.get();
         }
-        return foodCatalog.searchSuggestions(foodName).stream().findFirst().orElse(null);
+        return catalogController.searchSuggestions(foodName).stream().findFirst().orElse(null);
     }
 
     /**

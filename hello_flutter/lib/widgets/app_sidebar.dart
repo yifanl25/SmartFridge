@@ -1,8 +1,32 @@
+// ignore_for_file: slash_for_doc_comments
+
 import 'package:flutter/material.dart';
 
 import '../navigation/app_destination.dart';
 import '../theme/smart_fridge_tokens.dart';
 
+/**
+ * Application sidebar.
+ * <p>
+ * Sidebar with brand, navigation, badges, and a footer summary.
+ * Used both as a fixed sidebar and as drawer content.
+ *
+ * Official references:
+ * StatelessWidget:
+ * https://api.flutter.dev/flutter/widgets/StatelessWidget-class.html
+ * Column:
+ * https://api.flutter.dev/flutter/widgets/Column-class.html
+ * Spacer:
+ * https://api.flutter.dev/flutter/widgets/Spacer-class.html
+ * Drawer:
+ * https://api.flutter.dev/flutter/material/Drawer-class.html
+ *
+ * Open-source reference:
+ * Flutter samples:
+ * https://github.com/flutter/samples
+ * material_3_demo:
+ * https://github.com/flutter/samples/tree/main/material_3_demo
+ */
 class AppSidebar extends StatelessWidget {
   const AppSidebar({
     super.key,
@@ -25,6 +49,19 @@ class AppSidebar extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          /**
+           * Brand header.
+           * <p>
+           * Top brand area with the app icon and name.
+           *
+           * Official references:
+           * Row:
+           * https://api.flutter.dev/flutter/widgets/Row-class.html
+           * Container:
+           * https://api.flutter.dev/flutter/widgets/Container-class.html
+           * Icon:
+           * https://api.flutter.dev/flutter/widgets/Icon-class.html
+           */
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 28, 20, 24),
             child: Row(
@@ -36,7 +73,11 @@ class AppSidebar extends StatelessWidget {
                     color: SfColors.brown,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const Icon(Icons.kitchen, color: Colors.white, size: 22),
+                  child: const Icon(
+                    Icons.kitchen,
+                    color: Colors.white,
+                    size: 22,
+                  ),
                 ),
                 const SizedBox(width: 12),
                 Text(
@@ -50,6 +91,13 @@ class AppSidebar extends StatelessWidget {
               ],
             ),
           ),
+
+          /**
+           * Main navigation group.
+           * <p>
+           * Main navigation for inventory, recipes, grocery, and settings.
+           * Highlights the current page and switches destination on tap.
+           */
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Column(
@@ -87,6 +135,13 @@ class AppSidebar extends StatelessWidget {
             ),
           ),
           const Spacer(),
+
+          /**
+           * Conditional footer area.
+           * <p>
+           * Shows the recipe summary on the recipes page,
+           * and the storage summary on other pages.
+           */
           if (selected == AppDestination.recipes)
             const _ThisWeekFooter()
           else ...[
@@ -121,6 +176,23 @@ class AppSidebar extends StatelessWidget {
   }
 }
 
+/**
+ * Single navigation row.
+ * <p>
+ * One sidebar navigation item with icon, label,
+ * selected state, and an optional badge.
+ * Calls onTap to change the destination.
+ *
+ * Official references:
+ * Material:
+ * https://api.flutter.dev/flutter/material/Material-class.html
+ * InkWell:
+ * https://api.flutter.dev/flutter/material/InkWell-class.html
+ * Ink:
+ * https://api.flutter.dev/flutter/material/Ink-class.html
+ * Row:
+ * https://api.flutter.dev/flutter/widgets/Row-class.html
+ */
 class _NavRow extends StatelessWidget {
   const _NavRow({
     required this.label,
@@ -140,6 +212,7 @@ class _NavRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final bg = selected ? SfColors.brown : Colors.transparent;
     final fg = selected ? Colors.white : SfColors.brown;
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -167,7 +240,10 @@ class _NavRow extends StatelessWidget {
               ),
               if (badge != null && badge! > 0)
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
                     color: selected
                         ? Colors.white.withValues(alpha: 0.25)
@@ -176,10 +252,10 @@ class _NavRow extends StatelessWidget {
                   ),
                   child: Text(
                     '$badge',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w800,
-                      color: selected ? Colors.white : Colors.white,
+                      color: Colors.white,
                     ),
                   ),
                 ),
@@ -191,6 +267,20 @@ class _NavRow extends StatelessWidget {
   }
 }
 
+/**
+ * Recipes-specific footer summary.
+ * <p>
+ * Footer summary shown when the recipes page is selected.
+ * Displays weekly recipe stats and progress.
+ *
+ * Official references:
+ * LinearProgressIndicator:
+ * https://api.flutter.dev/flutter/material/LinearProgressIndicator-class.html
+ * Column:
+ * https://api.flutter.dev/flutter/widgets/Column-class.html
+ * Row:
+ * https://api.flutter.dev/flutter/widgets/Row-class.html
+ */
 class _ThisWeekFooter extends StatelessWidget {
   const _ThisWeekFooter();
 
@@ -291,7 +381,7 @@ class _ThisWeekFooter extends StatelessWidget {
           ),
           ClipRRect(
             borderRadius: BorderRadius.circular(4),
-            child: LinearProgressIndicator(
+            child: const LinearProgressIndicator(
               value: 0.72,
               minHeight: 5,
               backgroundColor: SfColors.chipBgLight,
@@ -304,6 +394,20 @@ class _ThisWeekFooter extends StatelessWidget {
   }
 }
 
+/**
+ * Storage summary row.
+ * <p>
+ * One storage summary row with label, item count,
+ * and usage progress.
+ *
+ * Official references:
+ * LinearProgressIndicator:
+ * https://api.flutter.dev/flutter/material/LinearProgressIndicator-class.html
+ * Column:
+ * https://api.flutter.dev/flutter/widgets/Column-class.html
+ * Row:
+ * https://api.flutter.dev/flutter/widgets/Row-class.html
+ */
 class _StorageRow extends StatelessWidget {
   const _StorageRow({
     required this.label,

@@ -1,3 +1,5 @@
+// ignore_for_file: slash_for_doc_comments
+
 import 'package:flutter/material.dart';
 
 import '../models/grocery_line.dart';
@@ -5,6 +7,33 @@ import '../services/fridge_api_service.dart';
 import '../theme/smart_fridge_tokens.dart';
 import '../utils/grocery_category_map.dart';
 
+/**
+ * Grocery list screen.
+ * <p>
+ * Grocery list page with search, category filters, status toggles,
+ * quick add, totals, and checkout.
+ * Supports live API mode and local-only mode.
+ *
+ * Official references:
+ * StatefulWidget:
+ * https://api.flutter.dev/flutter/widgets/StatefulWidget-class.html
+ * State:
+ * https://api.flutter.dev/flutter/widgets/State-class.html
+ * Scaffold:
+ * https://api.flutter.dev/flutter/material/Scaffold-class.html
+ * SafeArea:
+ * https://api.flutter.dev/flutter/widgets/SafeArea-class.html
+ * RefreshIndicator:
+ * https://api.flutter.dev/flutter/material/RefreshIndicator-class.html
+ * ListView.separated:
+ * https://api.flutter.dev/flutter/widgets/ListView/ListView.separated.html
+ *
+ * Open-source reference:
+ * Flutter samples:
+ * https://github.com/flutter/samples
+ * material_3_demo:
+ * https://github.com/flutter/samples/tree/main/material_3_demo
+ */
 class GroceryListScreen extends StatefulWidget {
   const GroceryListScreen({super.key, this.useLiveApi = true});
 
@@ -14,6 +43,13 @@ class GroceryListScreen extends StatefulWidget {
   State<GroceryListScreen> createState() => _GroceryListScreenState();
 }
 
+/**
+ * State for GroceryListScreen.
+ * <p>
+ * Stores search text, quick-add text, selected category,
+ * completed toggle, grocery items, loading state, API error,
+ * and price totals.
+ */
 class _GroceryListScreenState extends State<GroceryListScreen> {
   final TextEditingController _search = TextEditingController();
   final TextEditingController _quickAdd = TextEditingController();
@@ -37,6 +73,12 @@ class _GroceryListScreenState extends State<GroceryListScreen> {
     }
   }
 
+  /**
+   * Reloads grocery items and totals from server.
+   * <p>
+   * Loads grocery items and price totals from the backend.
+   * On failure, stores the error message.
+   */
   Future<void> _reload() async {
     setState(() {
       _loading = true;
@@ -69,6 +111,11 @@ class _GroceryListScreenState extends State<GroceryListScreen> {
     super.dispose();
   }
 
+  /**
+   * Filtered grocery list.
+   * <p>
+   * Applies status, search text, and category filter to the current list.
+   */
   Iterable<GroceryLineView> get _filtered {
     var q = _items.where((e) => e.collected == _showCompleted);
     final text = _search.text.trim().toLowerCase();
@@ -81,6 +128,12 @@ class _GroceryListScreenState extends State<GroceryListScreen> {
     return q;
   }
 
+  /**
+   * Toggles collected state for one grocery line.
+   * <p>
+   * Toggles the collected state for one grocery item.
+   * Refreshes totals after a successful update.
+   */
   Future<void> _toggleCollected(GroceryLineView item) async {
     if (!widget.useLiveApi) return;
     try {
@@ -96,10 +149,18 @@ class _GroceryListScreenState extends State<GroceryListScreen> {
       await _refreshTotalsOnly();
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$e')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('$e')),
+      );
     }
   }
 
+  /**
+   * Updates quantity by delta for one grocery line.
+   * <p>
+   * Changes the quantity of one grocery item by delta.
+   * Refreshes totals after a successful update.
+   */
   Future<void> _deltaQty(GroceryLineView item, int delta) async {
     if (!widget.useLiveApi) return;
     try {
@@ -115,10 +176,17 @@ class _GroceryListScreenState extends State<GroceryListScreen> {
       await _refreshTotalsOnly();
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$e')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('$e')),
+      );
     }
   }
 
+  /**
+   * Refreshes totals only.
+   * <p>
+   * Reloads subtotal, tax, and total without refreshing the full item list.
+   */
   Future<void> _refreshTotalsOnly() async {
     try {
       final t = await FridgeApiService.instance.fetchGroceryTotals();
@@ -131,6 +199,12 @@ class _GroceryListScreenState extends State<GroceryListScreen> {
     } catch (_) {}
   }
 
+  /**
+   * Adds a quick grocery item.
+   * <p>
+   * Adds one grocery item from the quick-add input.
+   * Clears the input and reloads the list on success.
+   */
   Future<void> _addQuickItem() async {
     final text = _quickAdd.text.trim();
     if (text.isEmpty) return;
@@ -147,10 +221,17 @@ class _GroceryListScreenState extends State<GroceryListScreen> {
       await _reload();
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$e')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('$e')),
+      );
     }
   }
 
+  /**
+   * Performs grocery checkout.
+   * <p>
+   * Calls the checkout API and reloads the list on success.
+   */
   Future<void> _checkout() async {
     if (!widget.useLiveApi) return;
     try {
@@ -162,7 +243,9 @@ class _GroceryListScreenState extends State<GroceryListScreen> {
       await _reload();
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$e')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('$e')),
+      );
     }
   }
 
@@ -277,13 +360,15 @@ class _GroceryListScreenState extends State<GroceryListScreen> {
                             _CategoryFilterChip(
                               label: 'All',
                               selected: _filterCategory == null,
-                              onTap: () => setState(() => _filterCategory = null),
+                              onTap: () =>
+                                  setState(() => _filterCategory = null),
                             ),
                             for (final c in GroceryUiCategory.values)
                               _CategoryFilterChip(
                                 label: c.label,
                                 selected: _filterCategory == c,
-                                onTap: () => setState(() => _filterCategory = c),
+                                onTap: () =>
+                                    setState(() => _filterCategory = c),
                               ),
                           ],
                         ),
@@ -390,7 +475,6 @@ class _GroceryListScreenState extends State<GroceryListScreen> {
                   ],
                 ),
               ),
-
               Expanded(
                 child: RefreshIndicator(
                   onRefresh: widget.useLiveApi ? _reload : () async {},
@@ -431,7 +515,7 @@ class _GroceryListScreenState extends State<GroceryListScreen> {
                           vertical: 12,
                         ),
                         itemCount: filtered.length,
-                        separatorBuilder: (_, __) =>
+                        separatorBuilder: (context, index) =>
                             Divider(color: SfColors.chipBgLight),
                         itemBuilder: (context, index) {
                           final item = filtered[index];
@@ -456,6 +540,15 @@ class _GroceryListScreenState extends State<GroceryListScreen> {
   }
 }
 
+/**
+ * Top toggle chip.
+ * <p>
+ * Toggle chip for switching between to-buy and completed items.
+ *
+ * Official references:
+ * ChoiceChip:
+ * https://api.flutter.dev/flutter/material/ChoiceChip-class.html
+ */
 class _TopToggleChip extends StatelessWidget {
   const _TopToggleChip({
     required this.label,
@@ -475,7 +568,8 @@ class _TopToggleChip extends StatelessWidget {
       onSelected: (_) => onTap(),
       selectedColor: SfColors.brown,
       backgroundColor: SfColors.whiteCard,
-      side: BorderSide(color: selected ? SfColors.brown : SfColors.chipBgLight),
+      side:
+      BorderSide(color: selected ? SfColors.brown : SfColors.chipBgLight),
       labelStyle: TextStyle(
         color: selected ? Colors.white : SfColors.brown,
         fontSize: 13,
@@ -488,6 +582,15 @@ class _TopToggleChip extends StatelessWidget {
   }
 }
 
+/**
+ * Category filter chip.
+ * <p>
+ * Category chip used to filter the grocery list.
+ *
+ * Official references:
+ * FilterChip:
+ * https://api.flutter.dev/flutter/material/FilterChip-class.html
+ */
 class _CategoryFilterChip extends StatelessWidget {
   const _CategoryFilterChip({
     required this.label,
@@ -521,6 +624,18 @@ class _CategoryFilterChip extends StatelessWidget {
   }
 }
 
+/**
+ * Grocery row widget.
+ * <p>
+ * One grocery row with status icon, item text,
+ * and quantity controls in live API mode.
+ *
+ * Official references:
+ * ListTile:
+ * https://api.flutter.dev/flutter/material/ListTile-class.html
+ * IconButton:
+ * https://api.flutter.dev/flutter/material/IconButton-class.html
+ */
 class _GroceryRow extends StatelessWidget {
   const _GroceryRow({
     required this.item,

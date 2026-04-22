@@ -2,11 +2,11 @@ package api.dto;
 
 import model.FoodItem;
 import model.Recipe;
-import service.IFoodCatalog;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Function;
 
 /**
  * 这是给 recipe detail page 用的响应 DTO。
@@ -47,7 +47,10 @@ public class RecipeDetailResponse {
     // 这个工厂方法负责把 Recipe 变成前端可直接消费的 detail response。
     // 如果前端 detail page 还想加字段，优先改这里，不要让 controller 自己拼字段。
     // insert your code here: extend response mapping carefully
-    public static RecipeDetailResponse from(Recipe recipe, List<FoodItem> inventory, IFoodCatalog foodCatalog) {
+    public static RecipeDetailResponse from(
+            Recipe recipe,
+            List<FoodItem> inventory,
+            Function<String, String> canonicalNameResolver) {
         RecipeDetailResponse r = new RecipeDetailResponse();
         r.id = recipe.getId();
         r.title = recipe.getTitle();
@@ -70,8 +73,8 @@ public class RecipeDetailResponse {
         r.missingIngredients = new ArrayList<>(recipe.getMissingIngredients());
 
         // required 和 optional 分开组装，前端展示会更清楚。
-        r.requiredIngredients = buildIngredientRows(recipe.getRequiredIngredients(), inventory, foodCatalog);
-        r.optionalIngredients = buildIngredientRows(recipe.getOptionalIngredients(), inventory, foodCatalog);
+        r.requiredIngredients = buildIngredientRows(recipe.getRequiredIngredients(), inventory, canonicalNameResolver);
+        r.optionalIngredients = buildIngredientRows(recipe.getOptionalIngredients(), inventory, canonicalNameResolver);
         return r;
     }
 
@@ -84,7 +87,7 @@ public class RecipeDetailResponse {
     private static List<RecipeIngredientStatusResponse> buildIngredientRows(
             List<Recipe.Ingredient> ingredients,
             List<FoodItem> inventory,
-            IFoodCatalog foodCatalog) {
+            Function<String, String> canonicalNameResolver) {
         List<RecipeIngredientStatusResponse> rows = new ArrayList<>();
         for (Recipe.Ingredient ingredient : ingredients) {
             RecipeIngredientStatusResponse row = new RecipeIngredientStatusResponse();
@@ -93,7 +96,7 @@ public class RecipeDetailResponse {
             row.setOptional(ingredient.isOptional());
 
             // 先在当前库存里找有没有“对应的同一种食材”。
-            FoodItem matched = findMatchingInventoryItem(ingredient.getName(), inventory, foodCatalog);
+            FoodItem matched = findMatchingInventoryItem(ingredient.getName(), inventory, canonicalNameResolver);
 
             // 把 recipe 上写的数量文本尽量解析出来，
             // 后面才能判断是“够用 / 不够用 / 完全没有”。
@@ -135,10 +138,13 @@ public class RecipeDetailResponse {
      * 这里不是生硬比原始字符串，
      * 而是先走 canonicalFoodName，尽量把别名归一化后再比较。
      */
-    private static FoodItem findMatchingInventoryItem(String ingredientName, List<FoodItem> inventory, IFoodCatalog foodCatalog) {
-        String target = normalize(foodCatalog.canonicalFoodName(ingredientName));
+    private static FoodItem findMatchingInventoryItem(
+            String ingredientName,
+            List<FoodItem> inventory,
+            Function<String, String> canonicalNameResolver) {
+        String target = normalize(canonicalNameResolver.apply(ingredientName));
         for (FoodItem item : inventory) {
-            String inv = normalize(foodCatalog.canonicalFoodName(item.getName()));
+            String inv = normalize(canonicalNameResolver.apply(item.getName()));
             if (target.equals(inv)) {
                 return item;
             }

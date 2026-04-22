@@ -18,10 +18,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 手机看「冰箱里有什么」/ HTTP fridge list for Flutter.
- * <p>GET：全部可见食材；可选 {@code category} 按食材分类筛选、{@code sort=expiry|created} 排序（在筛选后的子集上排序）。</p>
- * <p>POST：用名字加一行（走 {@link InventoryController#addItem(String)}）。</p>
- * <p>打字联想在 {@link CatalogApiController}。</p>
+ * HTTP entry layer for inventory endpoints used by the Flutter frontend.
+ * <p>
+ * Spring request mapping and request/response handling live here. Inventory actions delegate to
+ * {@link InventoryController}; catalog search stays in {@link CatalogApiController}.
  */
 @RestController
 @RequestMapping("/api/inventory")

@@ -26,10 +26,10 @@ import java.util.Scanner;
 import java.util.UUID;
 
 /**
- * Text-mode REPL for the Smart Fridge demo: inventory, preference, recommendations, grocery from missing items,
- * export JSON, checkout with session reset via injected {@link GroceryController} hook.
+ * Legacy text-mode REPL kept for demo and backward-compatibility use.
  * <p>
- * 智能冰箱演示的文本 REPL：库存、偏好、推荐、由缺失食材生成购物、导出 JSON、通过注入的 {@link GroceryController} 钩子结账并重置会话。
+ * It exercises the same internal controllers and services as the HTTP backend, but it is not the
+ * official frontend. The official product UI lives in {@code hello_flutter}.
  */
 public class ConsoleApp {
     /**

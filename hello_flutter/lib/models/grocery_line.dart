@@ -1,6 +1,12 @@
+// ignore_for_file: slash_for_doc_comments
+
 import '../utils/grocery_category_map.dart';
 
-/// One row from `GET /api/grocery/items` (mirrors Java `GroceryItem` JSON).
+/**
+ * Grocery list row model.
+ * <p>
+ * Mirrors one item from `GET /api/grocery/items`.
+ */
 class GroceryLineView {
   const GroceryLineView({
     required this.id,
@@ -20,12 +26,15 @@ class GroceryLineView {
   final String? categoryIcon;
   final String? categoryName;
 
+  /** UI category derived from the backend category metadata. */
   GroceryUiCategory get uiCategory =>
       groceryUiCategoryFromApiIcon(categoryIcon, categoryName);
 
+  /** Formatted quantity and price label for the list UI. */
   String get qtyLabel =>
       quantity <= 0 ? '0' : '$quantity × \$${price.toStringAsFixed(2)}';
 
+  /** Builds a grocery row from API JSON. */
   factory GroceryLineView.fromJson(Map<String, dynamic> json) {
     final cat = json['category'] as Map<String, dynamic>?;
     return GroceryLineView(
