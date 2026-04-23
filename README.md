@@ -27,6 +27,33 @@ Ask yourself, if you started here in the readme, would you have what you need to
 Added two last sections as reminders that are needed for homework.
 
 ## LLM Disclosure 
+Use chatGPT and cursor to fix frontend
+Because I don't build component, so I find a lot of example and open source on github and flutter official document
+I use chatgpt and search by myself to find some component, and I put them to cursor, describe the detail make it try to understand my figma frame
+I use chatGPT give me some file name and variable name, because give them a name will spend me a lot of time
+I use chatGPT generate some JavaDoc, and help me write comment, because my grammar is terrible
+I use chatGPT to write restAPI, because I don't know how to write it
 
 
 ## References
+
+Official references:
+* StatefulWidget:
+* https://api.flutter.dev/flutter/widgets/StatefulWidget-class.html
+* State:
+* https://api.flutter.dev/flutter/widgets/State-class.html
+* LayoutBuilder:
+* https://api.flutter.dev/flutter/widgets/LayoutBuilder-class.html
+* Scaffold:
+* https://api.flutter.dev/flutter/material/Scaffold-class.html
+* Drawer:
+* https://api.flutter.dev/flutter/material/Drawer-class.html
+* SafeArea:
+* https://api.flutter.dev/flutter/widgets/SafeArea-class.html
+*
+* Open source reference:
+* Flutter samples:
+* https://github.com/flutter/samples
+* material_3_demo:
+* https://github.com/flutter/samples/tree/main/material_3_demo
+  */

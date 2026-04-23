@@ -5,103 +5,6 @@ You may have multiple design documents for this project. Place them all in this 
 
 You may have multiple design documents for this project.
 
-```mermaid
-classDiagram
-    class FoodItem {
-        +String id
-        +String name
-        +String category
-        +int quantity
-        +String unit
-        +String storageLocation
-        +String createdAt
-        +String expiryDate
-        +Boolean isNew
-        +Boolean isUrgent
-    }
-
-    class FoodCategory {
-        +String id
-        +String name
-        +String icon
-    }
-
-    class FoodDatabase {
-        +String foodName
-        +int defaultExpiryDays
-        +String category
-    }
-
-    class Preference {
-        +String id
-        +String healthGoal
-    }
-
-    class Recipe {
-        +String id
-        +String title
-        +String category
-        +float matchScore
-        +float rating
-        +int cookTime
-        +int calories
-        +String description
-        +List~String~ availableIngredients
-        +List~String~ missingIngredients
-    }
-
-    class GroceryItem {
-        +String id
-        +String name
-        +String category
-        +int quantity
-        +float price
-        +Boolean collected
-    }
-
-    class InventoryController {
-        +searchSuggestions(text) FoodDatabase[]
-        +addItem(foodName) FoodItem
-        +filterByCategory(category) FoodItem[]
-        +sortByExpiry() FoodItem[]
-        +sortByCreatedTime() FoodItem[]
-    }
-
-    class PreferenceController {
-        +savePreference(healthGoal) Preference
-        +getPreference() Preference
-    }
-
-    class RecommendationController {
-        +getRecommendations(inventory, preference) Recipe[]
-        +filterByCategory(category) Recipe[]
-        +sortByMatchScore() Recipe[]
-        +sortByCookTime() Recipe[]
-    }
-
-    class GroceryController {
-        +toggleCollected(itemId) GroceryItem
-        +updateQuantity(itemId, delta) GroceryItem
-        +deleteItem(itemId) void
-        +calculateSubtotal() float
-        +calculateTax(subtotal) float
-        +calculateTotal(subtotal, tax) float
-    }
-
-    FoodItem --> FoodCategory : belongs to
-    FoodDatabase --> FoodCategory : belongs to
-    Recipe --> FoodItem : references ingredients
-    GroceryItem --> FoodItem : references
-    InventoryController --> FoodItem : manages
-    InventoryController --> FoodDatabase : queries suggestions
-    PreferenceController --> Preference : manages
-    RecommendationController --> Recipe : returns
-    RecommendationController --> Preference : reads
-    RecommendationController --> FoodItem : reads inventory
-    GroceryController --> GroceryItem : manages
-```
-
-> **Diagram note:** The diagram above is a **rough sketch** (legacy names like `FoodDatabase`, `storageLocation`). The diagram **below** matches the current codebase and PRD.
 
 ```mermaid
 classDiagram
@@ -202,7 +105,6 @@ classDiagram
     }
 
     class Recipe {
-        <<see nested types in code>>
         - id : String
         - title : String
         - recipeCategory : RecipeCategory
@@ -223,7 +125,6 @@ classDiagram
     }
 
     class Recipe_HealthTag {
-        <<enumeration nested in Recipe>>
         HIGH_PROTEIN
         LOW_CALORIE
         BLOOD_SUGAR_FRIENDLY
@@ -231,7 +132,6 @@ classDiagram
     }
 
     class Recipe_Ingredient {
-        <<static nested in Recipe>>
         - name : String
         - quantityText : String
         - optional : boolean
@@ -704,4 +604,378 @@ classDiagram
 
     TestRecommendationService --> RecipeCategory : verifies filtering on
     TestRecommendationController --> RecipeCategory : verifies filtering on
+```
+
+```mermaid
+   classDiagram
+
+    class MainDart {
+        <<entrypoint>>
+        + main() : void
+    }
+
+    class MainShell {
+        - currentDestination : AppDestination
+        + build() : Widget
+    }
+
+    class AppDestination {
+        <<enum>>
+        welcome
+        preferences
+        inventory
+        recipes
+        grocery
+        settings
+    }
+
+    class FridgeApiService {
+        + fetchPreference()
+        + savePreference(goal)
+        + fetchInventoryItems()
+        + addInventoryItem(foodName)
+        + fetchRecommendations()
+        + fetchRecipeDetail(id)
+        + addRecipeToGrocery(id)
+        + fetchGroceryItems()
+        + addGroceryLine(foodName, quantity, price)
+        + toggleGroceryCollected(id)
+        + updateGroceryQuantity(id, delta)
+        + groceryCheckout()
+        + fetchGroceryTotals()
+        + resetSession()
+    }
+
+    class WelcomeScreen {
+        + build() : Widget
+    }
+
+    class PreferencesScreen {
+        - api : FridgeApiService
+        + build() : Widget
+    }
+
+    class InventoryScreen {
+        - api : FridgeApiService
+        + build() : Widget
+    }
+
+    class RecipesScreen {
+        - api : FridgeApiService
+        + build() : Widget
+    }
+
+    class RecipeDetailScreen {
+        - api : FridgeApiService
+        + build() : Widget
+    }
+
+    class GroceryListScreen {
+        - api : FridgeApiService
+        + build() : Widget
+    }
+
+    class SettingsScreen {
+        - api : FridgeApiService
+        + build() : Widget
+    }
+
+    class AppSidebar {
+        + build() : Widget
+    }
+
+    class SmartFridgeApiApplication {
+        <<SpringBootApplication>>
+        + main(args : String[]) : void
+    }
+
+    class CorsConfig {
+        <<config>>
+    }
+
+    class FridgeBeansConfig {
+        <<config>>
+    }
+
+    class ApiExceptionHandler {
+        <<advice>>
+    }
+
+    class HomeApiController {
+        + getHomeDashboard()
+    }
+
+    class InventoryApiController {
+        + getInventory()
+        + addItem()
+        + sortInventory()
+        + filterInventory()
+    }
+
+    class PreferenceApiController {
+        + getPreference()
+        + savePreference()
+        + clearPreference()
+    }
+
+    class RecommendationApiController {
+        + getRecommendations()
+        + getRecipeDetail(id)
+        + addRecipeToGrocery(id)
+    }
+
+    class GroceryApiController {
+        + items(category, search)
+        + addLine(body)
+        + deleteLine(id)
+        + toggleCollected(id)
+        + updateQuantity(id, delta)
+        + checkout()
+        + totals()
+    }
+
+    class CatalogApiController {
+        + searchSuggestions(prefix)
+    }
+
+    class SessionApiController {
+        + resetSession()
+    }
+
+    class HomeDashboardResponse
+    class FoodItemResponse
+    class PreferenceRequest
+    class RecipeDetailResponse
+    class RecipeIngredientStatusResponse
+    class RecipeToGroceryResponse
+    class GroceryAddRequest
+
+    class InventoryController {
+        - inventoryService : IInventoryService
+        + getVisibleItems() : List~FoodItem~
+        + addItem(foodName : String) : FoodItem
+        + filterByCategory(categoryName : String) : List~FoodItem~
+        + sortByExpiry() : List~FoodItem~
+        + sortByCreatedTime() : List~FoodItem~
+    }
+
+    class PreferenceController {
+        - preferenceService : IPreferenceService
+        + savePreference(goal : HealthGoal) : Preference
+        + getPreference() : Preference
+    }
+
+    class RecommendationController {
+        - recommendationService : IRecommendationService
+        + getRecommendations(inventory : List~FoodItem~, preference : Preference) : List~Recipe~
+        + filterByRecipeCategory(categoryName : String) : List~Recipe~
+        + sortByMatchScore() : List~Recipe~
+        + sortByCookTime() : List~Recipe~
+    }
+
+    class GroceryController {
+        - groceryService : IGroceryService
+        - onCheckoutLoopEnd : Runnable
+        + getItems() : List~GroceryItem~
+        + addLine(item : GroceryItem) : void
+        + filterByCategory(categoryName : String) : List~GroceryItem~
+        + toggleCollected(itemId : String) : GroceryItem
+        + updateQuantity(itemId : String, delta : int) : GroceryItem
+        + deleteItem(itemId : String) : void
+        + calculateSubtotal() : double
+        + calculateTax(subtotal : double) : double
+        + calculateTotal(subtotal : double, tax : double) : double
+        + checkout() : void
+    }
+
+    class IFoodCatalog {
+        <<interface>>
+        + searchSuggestions(prefix : String) : List~FoodCatalogEntry~
+        + containsFood(foodName : String) : boolean
+        + getDefaultExpiryDays(foodName : String) : int
+        + resolveEntry(foodName : String)
+        + canonicalFoodName(raw : String) : String
+    }
+
+    class IInventoryService {
+        <<interface>>
+        + getAllItems() : List~FoodItem~
+        + addItem(foodName : String) : FoodItem
+        + filterByCategory(categoryName : String) : List~FoodItem~
+        + sortByExpiry() : List~FoodItem~
+        + sortByCreatedTime() : List~FoodItem~
+        + clearInventory() : void
+    }
+
+    class IPreferenceService {
+        <<interface>>
+        + savePreference(goal : HealthGoal) : Preference
+        + getPreference() : Preference
+        + clearPreference() : void
+    }
+
+    class IRecommendationService {
+        <<interface>>
+        + getRecommendations(inventory : List~FoodItem~, preference : Preference) : List~Recipe~
+        + filterByRecipeCategory(categoryName : String) : List~Recipe~
+        + sortByMatchScore() : List~Recipe~
+        + sortByCookTime() : List~Recipe~
+        + clearRecommendations() : void
+    }
+
+    class IGroceryService {
+        <<interface>>
+        + getItems() : List~GroceryItem~
+        + toggleCollected(itemId : String) : GroceryItem
+        + updateQuantity(itemId : String, delta : int) : GroceryItem
+        + deleteItem(itemId : String) : void
+        + calculateSubtotal() : double
+        + calculateTax(subtotal : double) : double
+        + calculateTotal(subtotal : double, tax : double) : double
+        + checkout() : void
+        + clearGrocery() : void
+    }
+
+    class FoodCatalog {
+        - entries : List~FoodCatalogEntry~
+    }
+
+    class InventoryService {
+        - items : List~FoodItem~
+        - foodCatalog : IFoodCatalog
+    }
+
+    class PreferenceService {
+        - currentPreference : Preference
+    }
+
+    class RecommendationService {
+        - recipeTemplates : List~Recipe~
+        - foodCatalog : IFoodCatalog
+        - currentRecommendations : List~Recipe~
+    }
+
+    class GroceryService {
+        - groceryItems : List~GroceryItem~
+        - TAX_RATE : double
+    }
+
+    class InventoryManager
+    class SessionReset
+
+    class JsonFoodCatalogLoader
+    class JsonRecipeLoader
+    class DemoInventoryLoader
+    class FoodCatalogJsonFile
+    class RecipeJsonFile
+
+    class HealthGoal {
+        <<enumeration>>
+        MUSCLE_BUILDING
+        FAT_LOSS
+        BLOOD_SUGAR_CARE
+    }
+
+    class FoodCategory
+    class RecipeCategory
+    class FoodCatalogEntry
+    class FoodItem
+    class Preference
+    class Recipe
+    class GroceryItem
+    class Recipe_HealthTag
+    class Recipe_Ingredient
+
+    MainDart --> MainShell : starts
+    MainShell --> AppDestination : uses
+    MainShell --> AppSidebar : uses
+    MainShell --> WelcomeScreen : shows
+    MainShell --> PreferencesScreen : shows
+    MainShell --> InventoryScreen : shows
+    MainShell --> RecipesScreen : shows
+    MainShell --> GroceryListScreen : shows
+    MainShell --> SettingsScreen : shows
+
+    WelcomeScreen --> FridgeApiService : may call
+    PreferencesScreen --> FridgeApiService : uses
+    InventoryScreen --> FridgeApiService : uses
+    RecipesScreen --> FridgeApiService : uses
+    RecipeDetailScreen --> FridgeApiService : uses
+    GroceryListScreen --> FridgeApiService : uses
+    SettingsScreen --> FridgeApiService : uses
+
+    FridgeApiService --> HomeApiController : HTTP
+    FridgeApiService --> InventoryApiController : HTTP
+    FridgeApiService --> PreferenceApiController : HTTP
+    FridgeApiService --> RecommendationApiController : HTTP
+    FridgeApiService --> GroceryApiController : HTTP
+    FridgeApiService --> CatalogApiController : HTTP
+    FridgeApiService --> SessionApiController : HTTP
+
+    SmartFridgeApiApplication --> CorsConfig : loads
+    SmartFridgeApiApplication --> FridgeBeansConfig : loads
+    SmartFridgeApiApplication --> ApiExceptionHandler : uses
+
+    HomeApiController --> InventoryController : aggregates
+    HomeApiController --> PreferenceController : aggregates
+    HomeApiController --> RecommendationController : aggregates
+    HomeApiController --> GroceryController : aggregates
+    HomeApiController --> HomeDashboardResponse : returns
+
+    InventoryApiController --> InventoryController : uses
+    InventoryApiController --> FoodItemResponse : returns
+
+    PreferenceApiController --> PreferenceController : uses
+    PreferenceApiController --> PreferenceRequest : accepts
+
+    RecommendationApiController --> RecommendationController : uses
+    RecommendationApiController --> RecipeDetailResponse : returns
+    RecommendationApiController --> RecipeIngredientStatusResponse : returns
+    RecommendationApiController --> RecipeToGroceryResponse : returns
+
+    GroceryApiController --> GroceryController : uses
+    GroceryApiController --> IFoodCatalog : uses
+    GroceryApiController --> GroceryAddRequest : accepts
+
+    CatalogApiController --> IFoodCatalog : uses
+    SessionApiController --> SessionReset : uses
+
+    InventoryController --> IInventoryService : uses
+    PreferenceController --> IPreferenceService : uses
+    RecommendationController --> IRecommendationService : uses
+    GroceryController --> IGroceryService : uses
+
+    FoodCatalog ..|> IFoodCatalog
+    InventoryService ..|> IInventoryService
+    PreferenceService ..|> IPreferenceService
+    RecommendationService ..|> IRecommendationService
+    GroceryService ..|> IGroceryService
+
+    InventoryService --> IFoodCatalog : uses
+    InventoryService --> InventoryManager : uses
+    RecommendationService --> IFoodCatalog : normalizes names
+    RecommendationService --> Preference : reads
+    RecommendationService --> FoodItem : reads
+    RecommendationService --> Recipe : computes
+    GroceryService --> GroceryItem : manages
+
+    JsonFoodCatalogLoader --> FoodCatalogJsonFile : reads
+    JsonFoodCatalogLoader --> FoodCatalogEntry : loads
+    JsonRecipeLoader --> RecipeJsonFile : reads
+    JsonRecipeLoader --> Recipe : loads
+    DemoInventoryLoader --> FoodItem : loads
+
+    FoodCatalog --> FoodCatalogEntry : stores
+    FoodItem --> FoodCategory : belongs to
+    FoodCatalogEntry --> FoodCategory : classified as
+    GroceryItem --> FoodCategory : classified as
+    Preference --> HealthGoal : selected
+    Recipe --> RecipeCategory : belongs to
+    Recipe --> Recipe_HealthTag : uses
+    Recipe --> Recipe_Ingredient : contains
+
+    SessionReset --> PreferenceService : clears
+    SessionReset --> InventoryService : clears
+    SessionReset --> RecommendationService : clears
+    SessionReset --> GroceryService : clears
 ```
