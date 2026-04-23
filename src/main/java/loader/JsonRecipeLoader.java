@@ -15,18 +15,37 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Loads {@code recipes.json} into {@link Recipe#loaded} templates (no runtime scores yet).
+ * Loads {@code recipes.json} into {@link Recipe} templates using {@link Recipe#loaded}.
  * <p>
+ * The loaded recipes contain only static data from JSON — no runtime scores,
+ * availability lists, or match results are computed here. Those are added later
+ * by the recommendation service via {@link Recipe#withComputed}.
+ * </p>
  */
 public final class JsonRecipeLoader {
+    /**
+     * Shared Jackson mapper instance for JSON parsing.
+     */
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
+    /**
+     * Private constructor — this is a utility class and should not be instantiated.
+     */
     private JsonRecipeLoader() {
     }
 
     /**
-     * Parses recipes array; unknown health tag strings are skipped; empty tags default to {@link Recipe.HealthTag#BALANCED}.
+     * Loads and parses recipes from the given file path or classpath resource.
      * <p>
+     * First attempts to load the file as a classpath resource; if not found,
+     * falls back to reading it directly from the file system path.
+     * Unknown health tag strings are silently skipped. If no valid tags are found,
+     * the recipe defaults to {@link Recipe.HealthTag#BALANCED}.
+     * </p>
+     *
+     * @param pathOrResource classpath resource path (e.g. "recipes.json") or file system path
+     * @return list of recipe templates with no computed fields
+     * @throws IOException if the file cannot be read or parsed
      */
     public static List<Recipe> loadFromFile(String pathOrResource) throws IOException {
         InputStream in = JsonRecipeLoader.class.getResourceAsStream(
@@ -63,8 +82,16 @@ public final class JsonRecipeLoader {
     }
 
     /**
-     * Same as {@link #loadFromFile(String)} with unchecked exception for callers.
+     * Same as {@link #loadFromFile(String)} but wraps any {@link IOException}
+     * in an unchecked {@link IllegalStateException}.
      * <p>
+     * Use this when the caller cannot handle checked exceptions
+     * (e.g. during application startup or Spring bean initialization).
+     * </p>
+     *
+     * @param pathOrResource classpath resource path or file system path
+     * @return list of recipe templates with no computed fields
+     * @throws IllegalStateException if the file cannot be read or parsed
      */
     public static List<Recipe> loadFromFileSafe(String pathOrResource) {
         try {
@@ -75,8 +102,14 @@ public final class JsonRecipeLoader {
     }
 
     /**
-     * Maps DTO list to {@link Recipe.Ingredient} list; skips null names.
+     * Converts a list of {@link IngredientDto} objects into {@link Recipe.Ingredient} instances.
      * <p>
+     * Entries with a {@code null} name are silently skipped.
+     * A {@code null} {@code quantityText} is replaced with an empty string.
+     * </p>
+     *
+     * @param list the raw DTO list from JSON, may be {@code null}
+     * @return list of {@link Recipe.Ingredient}, or an empty list if input is null
      */
     private static List<Recipe.Ingredient> mapIngredients(List<IngredientDto> list) {
         if (list == null) {
@@ -94,8 +127,14 @@ public final class JsonRecipeLoader {
     }
 
     /**
-     * Parses string tags into enum set; defaults to {@link Recipe.HealthTag#BALANCED} if none valid.
+     * Parses a list of raw health tag strings into a list of {@link Recipe.HealthTag} enum values.
      * <p>
+     * Unrecognized tag strings are silently ignored.
+     * If no valid tags are found, defaults to {@link Recipe.HealthTag#BALANCED}.
+     * </p>
+     *
+     * @param raw list of raw tag strings from JSON, may be {@code null}
+     * @return list of valid {@link Recipe.HealthTag} values, never empty
      */
     private static List<Recipe.HealthTag> parseHealthTags(List<String> raw) {
         Set<Recipe.HealthTag> set = EnumSet.noneOf(Recipe.HealthTag.class);
@@ -117,11 +156,19 @@ public final class JsonRecipeLoader {
         return new ArrayList<>(set);
     }
 
+    /**
+     * Top-level JSON structure mapping the {@code recipes} array.
+     * Fields are populated by Jackson via reflection.
+     */
     @SuppressWarnings("unused")
     private static class RecipeFile {
         public List<RecipeDto> recipes;
     }
 
+    /**
+     * JSON representation of a single recipe entry.
+     * Fields are populated by Jackson via reflection.
+     */
     @SuppressWarnings("unused")
     private static class RecipeDto {
         public String id;
@@ -136,6 +183,10 @@ public final class JsonRecipeLoader {
         public String description;
     }
 
+    /**
+     * JSON representation of a recipe category.
+     * Fields are populated by Jackson via reflection.
+     */
     @SuppressWarnings("unused")
     private static class CategoryDto {
         public String id;
@@ -143,6 +194,10 @@ public final class JsonRecipeLoader {
         public String icon;
     }
 
+    /**
+     * JSON representation of a single ingredient line on a recipe.
+     * Fields are populated by Jackson via reflection.
+     */
     @SuppressWarnings("unused")
     private static class IngredientDto {
         public String name;

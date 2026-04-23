@@ -6,31 +6,56 @@ import model.Preference;
 import java.util.UUID;
 
 /**
- * Holds at most one {@link Preference} in memory for the current session.
+ * In-memory implementation of {@link IPreferenceService}.
  * <p>
+ * Holds at most one {@link Preference} per session. The preference is reset
+ * when {@link #clearPreference()} is called or the application restarts.
+ * </p>
  */
 public class PreferenceService implements IPreferenceService {
-    /** Current preference or null if unset. */
+    /**
+     * Current preference or null if unset.
+     */
     private Preference currentPreference;
 
-    /** Creates an empty preference service. */
+    /**
+     * Creates an empty preference service.
+     */
     public PreferenceService() {
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Saves the user's selected health goal as the current preference.
+     * <p>
+     * Creates a new {@link Preference} with a generated ID and replaces
+     * any previously saved preference.
+     * </p>
+     *
+     * @param goal the health goal selected by the user
+     * @return the newly created {@link Preference}
+     */
     @Override
     public Preference savePreference(HealthGoal goal) {
         currentPreference = new Preference(UUID.randomUUID().toString(), goal);
         return currentPreference;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Returns the current user preference.
+     *
+     * @return the current {@link Preference}, or {@code null} if none has been set
+     */
     @Override
     public Preference getPreference() {
         return currentPreference;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Clears the current preference, resetting it to {@code null}.
+     * <p>
+     * Call this when the user logs out or starts a new session.
+     * </p>
+     */
     @Override
     public void clearPreference() {
         currentPreference = null;

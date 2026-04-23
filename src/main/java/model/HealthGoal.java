@@ -1,9 +1,13 @@
 package model;
 
 /**
- * User health objective selected for the session; drives recipe tag alignment in scoring.
+ * Represents the health goal a user selects on the Preference Setup page.
  * <p>
- * 用户在本会话选择的健康目标；用于推荐打分中与菜谱 {@code healthTags} 的对齐。
+ * Used by the recommendation service to align recipe health tags with the
+ * user's goal and award preference alignment bonus points during scoring.
+ * Each goal maps to a preferred {@link Recipe.HealthTag} with {@code BALANCED}
+ * as a fallback if no exact tag match is found.
+ * </p>
  */
 public enum HealthGoal {
     /**
