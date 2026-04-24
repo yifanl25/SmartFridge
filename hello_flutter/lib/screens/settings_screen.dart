@@ -1,10 +1,35 @@
+// ignore_for_file: slash_for_doc_comments
+
 import 'package:flutter/material.dart';
 
 import '../models/health_goal.dart';
 import '../services/fridge_api_service.dart';
 import '../theme/smart_fridge_tokens.dart';
 
-/// Health goal from PRD; synced with Spring `PUT /api/preference`.
+/**
+ * Settings screen.
+ * <p>
+ * Settings page for viewing and changing the health goal.
+ * Supports live API mode and local-only mode.
+ *
+ * Official references:
+ * StatefulWidget:
+ * https://api.flutter.dev/flutter/widgets/StatefulWidget-class.html
+ * State:
+ * https://api.flutter.dev/flutter/widgets/State-class.html
+ * CustomScrollView:
+ * https://api.flutter.dev/flutter/widgets/CustomScrollView-class.html
+ * SliverList:
+ * https://api.flutter.dev/flutter/widgets/SliverList-class.html
+ * ScaffoldMessenger:
+ * https://api.flutter.dev/flutter/material/ScaffoldMessenger-class.html
+ *
+ * Open-source reference:
+ * Flutter samples:
+ * https://github.com/flutter/samples
+ * material_3_demo:
+ * https://github.com/flutter/samples/tree/main/material_3_demo
+ */
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key, this.useLiveApi = true});
 
@@ -14,6 +39,11 @@ class SettingsScreen extends StatefulWidget {
   State<SettingsScreen> createState() => _SettingsScreenState();
 }
 
+/**
+ * State for SettingsScreen.
+ * <p>
+ * Stores the current health goal, loading state, and error text.
+ */
 class _SettingsScreenState extends State<SettingsScreen> {
   HealthGoal? _current;
   bool _loading = true;
@@ -29,6 +59,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
+  /**
+   * Loads current health goal from server.
+   * <p>
+   * Loads the current health goal from the backend.
+   * On failure, stores the error and falls back to the default goal.
+   */
   Future<void> _load() async {
     setState(() {
       _loading = true;
@@ -51,6 +87,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
+  /**
+   * Saves selected health goal.
+   * <p>
+   * In demo mode, updates local state only.
+   * In live mode, saves to the backend and shows feedback with a SnackBar.
+   *
+   * Official references:
+   * SnackBar:
+   * https://api.flutter.dev/flutter/material/SnackBar-class.html
+   * ScaffoldMessenger:
+   * https://api.flutter.dev/flutter/material/ScaffoldMessenger-class.html
+   */
   Future<void> _save(HealthGoal goal) async {
     if (!widget.useLiveApi) {
       setState(() => _current = goal);
@@ -65,7 +113,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
       );
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$e')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('$e')),
+      );
     }
   }
 
@@ -116,7 +166,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         padding: const EdgeInsets.all(12),
                         child: Text(
                           'Could not read preference. Is `./gradlew bootRun` running?\n$_error',
-                          style: TextStyle(color: Colors.orange.shade900, fontSize: 13),
+                          style: TextStyle(
+                            color: Colors.orange.shade900,
+                            fontSize: 13,
+                          ),
                         ),
                       ),
                     ),
@@ -166,6 +219,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 }
 
+/**
+ * Goal selection tile.
+ * <p>
+ * Single health goal row with selected state, title, subtitle, and tap action.
+ *
+ * Official references:
+ * Material:
+ * https://api.flutter.dev/flutter/material/Material-class.html
+ * InkWell:
+ * https://api.flutter.dev/flutter/material/InkWell-class.html
+ * Row:
+ * https://api.flutter.dev/flutter/widgets/Row-class.html
+ * Column:
+ * https://api.flutter.dev/flutter/widgets/Column-class.html
+ */
 class _GoalTile extends StatelessWidget {
   const _GoalTile({
     required this.title,

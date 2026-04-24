@@ -2,6 +2,7 @@ package api.web;
 
 import api.dto.RecipeDetailResponse;
 import api.dto.RecipeToGroceryResponse;
+import controller.CatalogController;
 import controller.GroceryController;
 import controller.InventoryController;
 import controller.PreferenceController;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import service.IFoodCatalog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,24 +29,20 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
- * REST controller for recipe recommendations and recipe-related actions.
+ * HTTP entry layer for recommendation, recipe-detail, and recipe-to-grocery endpoints.
  * <p>
- * Exposes three endpoints:
- * <ul>
- *   <li>GET  /api/recommendations          — filtered and sorted recommendation list</li>
- *   <li>GET  /api/recommendations/{id}     — recipe detail page data</li>
- *   <li>POST /api/recommendations/{id}/grocery — add missing ingredients to grocery list</li>
- * </ul>
+ * Spring routing stays here. Cross-module actions delegate to the existing internal controller
+ * layer so the HTTP API and the legacy Java demo share one backend call chain.
  */
 @RestController
 @RequestMapping("/api/recommendations")
 public class RecommendationApiController {
 
+    private final CatalogController catalogController;
     private final InventoryController inventoryController;
     private final PreferenceController preferenceController;
     private final RecommendationController recommendationController;
     private final GroceryController groceryController;
-    private final IFoodCatalog foodCatalog;
 
     /**
      * Constructs the controller with all required dependencies.
@@ -58,16 +54,16 @@ public class RecommendationApiController {
      * @param foodCatalog              resolves and normalizes food names
      */
     public RecommendationApiController(
+            CatalogController catalogController,
             InventoryController inventoryController,
             PreferenceController preferenceController,
             RecommendationController recommendationController,
-            GroceryController groceryController,
-            IFoodCatalog foodCatalog) {
+            GroceryController groceryController) {
+        this.catalogController = catalogController;
         this.inventoryController = inventoryController;
         this.preferenceController = preferenceController;
         this.recommendationController = recommendationController;
         this.groceryController = groceryController;
-        this.foodCatalog = foodCatalog;
     }
 
     /**
@@ -133,7 +129,9 @@ public class RecommendationApiController {
             return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.ok(RecipeDetailResponse.from(recipe, inventory, foodCatalog));
+        // 真正把 recipe 组装成 detail response 的重活，
+        // 放在 DTO 的 from(...) 里做，避免 controller 太臃肿。
+        return ResponseEntity.ok(RecipeDetailResponse.from(recipe, inventory, catalogController::canonicalFoodName));
     }
 
     /**
@@ -175,7 +173,9 @@ public class RecommendationApiController {
                 continue;
             }
 
-            String canonical = foodCatalog.canonicalFoodName(ingredient.getName());
+            // 先尽量把名字统一成 catalog 里的标准写法，
+            // 这样不容易因为别名不同而产生重复项。
+            String canonical = catalogController.canonicalFoodName(ingredient.getName());
 
             int neededQty = parseQuantityAsPositiveInt(ingredient.getQuantityText());
 
@@ -220,9 +220,9 @@ public class RecommendationApiController {
      * @return true if the ingredient is missing from the user's inventory
      */
     private boolean isMissingRequiredIngredient(Recipe recipe, Recipe.Ingredient ingredient) {
-        String target = norm(foodCatalog.canonicalFoodName(ingredient.getName()));
+        String target = norm(catalogController.canonicalFoodName(ingredient.getName()));
         return recipe.getMissingIngredients().stream()
-                .map(foodCatalog::canonicalFoodName)
+                .map(catalogController::canonicalFoodName)
                 .map(RecommendationApiController::norm)
                 .anyMatch(target::equals);
     }
@@ -239,7 +239,7 @@ public class RecommendationApiController {
     private GroceryItem findExistingGroceryItem(String canonicalName) {
         String key = norm(canonicalName);
         return groceryController.getItems().stream()
-                .filter(item -> norm(foodCatalog.canonicalFoodName(item.getName())).equals(key))
+                .filter(item -> norm(catalogController.canonicalFoodName(item.getName())).equals(key))
                 .findFirst()
                 .orElse(null);
     }
@@ -280,11 +280,11 @@ public class RecommendationApiController {
      * @return a matching {@link FoodCatalogEntry}, or {@code null} if none found
      */
     private FoodCatalogEntry resolveEntry(String foodName) {
-        Optional<FoodCatalogEntry> direct = foodCatalog.resolveEntry(foodName);
+        Optional<FoodCatalogEntry> direct = catalogController.resolveEntry(foodName);
         if (direct.isPresent()) {
             return direct.get();
         }
-        return foodCatalog.searchSuggestions(foodName).stream().findFirst().orElse(null);
+        return catalogController.searchSuggestions(foodName).stream().findFirst().orElse(null);
     }
 
 

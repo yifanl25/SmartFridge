@@ -19,6 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
  *   <li>GET /api/preference — returns the current preference</li>
  *   <li>PUT /api/preference — saves a new health goal selection</li>
  * </ul>
+ * HTTP entry layer for preference endpoints used by the Flutter frontend.
+ * <p>
+ * Spring routing stays here. Preference changes delegate to {@link PreferenceController}, which
+ * keeps the internal coordination layer separate from the HTTP boundary.
  */
 @RestController
 @RequestMapping("/api/preference")

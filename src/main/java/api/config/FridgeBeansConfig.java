@@ -1,5 +1,6 @@
 package api.config;
 
+import controller.CatalogController;
 import controller.GroceryController;
 import controller.InventoryController;
 import controller.PreferenceController;
@@ -25,8 +26,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 把「冰箱程序」需要的 Java 对象一个个造出来，给 Spring 用 / Builds the same objects as the console app, for HTTP.
- * <p>和 {@link ui.SmartFridgeApp} 很像，但是给网页接口跑的那一份。</p>
+ * Spring bean wiring for the official HTTP backend.
+ * <p>
+ * This configuration intentionally preserves the existing controller/service split used by the
+ * legacy Java demo, so the Spring Boot API and the console flow share the same internal modules.
  */
 @Configuration
 public class FridgeBeansConfig {
@@ -41,11 +44,12 @@ public class FridgeBeansConfig {
     }
 
     @Bean
+    public CatalogController catalogController(IFoodCatalog foodCatalog) {
+        return new CatalogController(foodCatalog);
+    }
+
+    @Bean
     public InventoryService inventoryService(IFoodCatalog foodCatalog) {
-        // 小差别 / Small gap: 控制台 SmartFridgeApp 里有个开关 LOAD_DEMO_INVENTORY，开了会从 data.json 塞演示食材。
-        // Console can preload demo food from data.json; HTTP 这边<strong>还没</strong>做同样的事。
-        // 想让两边一开始一样，就在这里抄那段逻辑；不想就写 README 说明 / Copy seed logic here, or document the difference.
-        // INSERT YOUR CODE HERE
         return new InventoryService(foodCatalog);
     }
 
@@ -86,9 +90,6 @@ public class FridgeBeansConfig {
             IPreferenceService preferenceService,
             InventoryService inventoryService,
             IRecommendationService recommendationService) {
-        // 结账后会跑 SessionReset = 整局清空（一次 demo 一圈）/ After checkout, SessionReset clears everything (one loop).
-        // 想改「只清购物车」要先全队同意再动这里 / Change wiring only if whole team agrees.
-        // INSERT YOUR CODE HERE
         return new GroceryController(
                 groceryService,
                 () -> SessionReset.clearAll(

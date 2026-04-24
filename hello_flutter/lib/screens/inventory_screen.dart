@@ -1,3 +1,5 @@
+// ignore_for_file: slash_for_doc_comments
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -6,9 +8,32 @@ import '../models/inventory_models.dart';
 import '../services/fridge_api_service.dart';
 import '../theme/smart_fridge_tokens.dart';
 
-/// PRD: main inventory — "My Fridge" with search, filters, sort, grid, add flow.
-///
-/// Set [useLiveApi] to load from Spring Boot (`./gradlew bootRun`).
+/**
+ * Inventory screen.
+ * <p>
+ * Main fridge page with search, filters, sorting, and item cards.
+ * Supports live API mode and local demo mode.
+ *
+ * Official references:
+ * StatefulWidget:
+ * https://api.flutter.dev/flutter/widgets/StatefulWidget-class.html
+ * State:
+ * https://api.flutter.dev/flutter/widgets/State-class.html
+ * Scaffold:
+ * https://api.flutter.dev/flutter/material/Scaffold-class.html
+ * RefreshIndicator:
+ * https://api.flutter.dev/flutter/material/RefreshIndicator-class.html
+ * CustomScrollView:
+ * https://api.flutter.dev/flutter/widgets/CustomScrollView-class.html
+ * SliverGrid:
+ * https://api.flutter.dev/flutter/widgets/SliverGrid-class.html
+ *
+ * Open-source reference:
+ * Flutter samples:
+ * https://github.com/flutter/samples
+ * material_3_demo:
+ * https://github.com/flutter/samples/tree/main/material_3_demo
+ */
 class InventoryScreen extends StatefulWidget {
   const InventoryScreen({super.key, this.useLiveApi = true});
 
@@ -18,92 +43,114 @@ class InventoryScreen extends StatefulWidget {
   State<InventoryScreen> createState() => _InventoryScreenState();
 }
 
+/**
+ * State for InventoryScreen.
+ * <p>
+ * Stores search text, selected category, active filters, sort mode,
+ * loading state, API error state, and inventory data.
+ */
 class _InventoryScreenState extends State<InventoryScreen> {
   final TextEditingController _search = TextEditingController();
 
   FoodCategory _category = FoodCategory.all;
-  final Set<_FilterTag> _activeFilters = {_FilterTag.expiry, _FilterTag.newItems};
+  final Set<_FilterTag> _activeFilters = {
+    _FilterTag.expiry,
+    _FilterTag.newItems,
+  };
   InventorySort _sort = InventorySort.expiry;
 
   late List<InventoryItem> _items;
   bool _loading = false;
   String? _apiError;
 
+  /**
+   * Demo seed data.
+   * <p>
+   * Used in demo mode and as a fallback when the API is unavailable.
+   */
   static List<InventoryItem> _seed() => [
-        const InventoryItem(
-          id: '1',
-          name: 'Whole Milk',
-          category: FoodCategory.dairy,
-          quantityLabel: '1 L',
-          daysLeft: 0,
-          badge: ItemBadge.urgent,
-        ),
-        const InventoryItem(
-          id: '2',
-          name: 'Baby Spinach',
-          category: FoodCategory.vegetables,
-          quantityLabel: '150 g',
-          daysLeft: 1,
-          badge: ItemBadge.urgent,
-        ),
-        const InventoryItem(
-          id: '3',
-          name: 'Greek Yogurt',
-          category: FoodCategory.dairy,
-          quantityLabel: '500 g',
-          daysLeft: 2,
-          isNew: true,
-          badge: ItemBadge.newItem,
-        ),
-        const InventoryItem(
-          id: '4',
-          name: 'Chicken Breast',
-          category: FoodCategory.meat,
-          quantityLabel: '400 g',
-          daysLeft: 2,
-        ),
-        const InventoryItem(
-          id: '5',
-          name: 'Orange Juice',
-          category: FoodCategory.beverages,
-          quantityLabel: '1 L',
-          daysLeft: 4,
-        ),
-        const InventoryItem(
-          id: '6',
-          name: 'Brown Rice',
-          category: FoodCategory.grains,
-          quantityLabel: '1 kg',
-          daysLeft: 7,
-          isNew: true,
-          badge: ItemBadge.newItem,
-        ),
-        const InventoryItem(
-          id: '7',
-          name: 'Frozen Peas',
-          category: FoodCategory.frozen,
-          quantityLabel: '400 g',
-          daysLeft: 14,
-        ),
-        const InventoryItem(
-          id: '8',
-          name: 'Apples',
-          category: FoodCategory.fruits,
-          quantityLabel: '6 pcs',
-          daysLeft: 5,
-        ),
-      ];
+    const InventoryItem(
+      id: '1',
+      name: 'Whole Milk',
+      category: FoodCategory.dairy,
+      quantityLabel: '1 L',
+      daysLeft: 0,
+      badge: ItemBadge.urgent,
+    ),
+    const InventoryItem(
+      id: '2',
+      name: 'Baby Spinach',
+      category: FoodCategory.vegetables,
+      quantityLabel: '150 g',
+      daysLeft: 1,
+      badge: ItemBadge.urgent,
+    ),
+    const InventoryItem(
+      id: '3',
+      name: 'Greek Yogurt',
+      category: FoodCategory.dairy,
+      quantityLabel: '500 g',
+      daysLeft: 2,
+      isNew: true,
+      badge: ItemBadge.newItem,
+    ),
+    const InventoryItem(
+      id: '4',
+      name: 'Chicken Breast',
+      category: FoodCategory.meat,
+      quantityLabel: '400 g',
+      daysLeft: 2,
+    ),
+    const InventoryItem(
+      id: '5',
+      name: 'Orange Juice',
+      category: FoodCategory.beverages,
+      quantityLabel: '1 L',
+      daysLeft: 4,
+    ),
+    const InventoryItem(
+      id: '6',
+      name: 'Brown Rice',
+      category: FoodCategory.grains,
+      quantityLabel: '1 kg',
+      daysLeft: 7,
+      isNew: true,
+      badge: ItemBadge.newItem,
+    ),
+    const InventoryItem(
+      id: '7',
+      name: 'Frozen Peas',
+      category: FoodCategory.frozen,
+      quantityLabel: '400 g',
+      daysLeft: 14,
+    ),
+    const InventoryItem(
+      id: '8',
+      name: 'Apples',
+      category: FoodCategory.fruits,
+      quantityLabel: '6 pcs',
+      daysLeft: 5,
+    ),
+  ];
 
   @override
   void initState() {
     super.initState();
-    _items = widget.useLiveApi ? <InventoryItem>[] : List<InventoryItem>.from(_seed());
+    _items = widget.useLiveApi
+        ? <InventoryItem>[]
+        : List<InventoryItem>.from(_seed());
     _search.addListener(() => setState(() {}));
     if (widget.useLiveApi) {
       _reloadFromApi();
     }
   }
 
+  /**
+   * Reload inventory from API.
+   * <p>
+   * Loads inventory from the backend.
+   * On failure, stores the error and falls back to demo data.
+   */
   Future<void> _reloadFromApi() async {
     setState(() {
       _loading = true;
@@ -132,6 +179,11 @@ class _InventoryScreenState extends State<InventoryScreen> {
     super.dispose();
   }
 
+  /**
+   * Filtered and sorted inventory list.
+   * <p>
+   * Applies search, category, filters, and sorting to the current items.
+   */
   List<InventoryItem> get _filtered {
     Iterable<InventoryItem> q = _items;
 
@@ -162,13 +214,26 @@ class _InventoryScreenState extends State<InventoryScreen> {
       case InventorySort.expiry:
         list.sort((a, b) => a.daysLeft.compareTo(b.daysLeft));
       case InventorySort.name:
-        list.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+        list.sort(
+              (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+        );
     }
     return list;
   }
 
+  /**
+   * Expiring soon count.
+   * <p>
+   * Counts items with 3 days or less remaining.
+   */
   int get _expiringSoonCount => _items.where((e) => e.daysLeft <= 3).length;
 
+  /**
+   * Open add-item flow.
+   * <p>
+   * In live mode, opens the catalog dialog and adds the selected item through the API.
+   * In demo mode, opens a simple text input and appends a local item.
+   */
   Future<void> _openAddItem() async {
     if (widget.useLiveApi) {
       final name = await showDialog<String>(
@@ -177,7 +242,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
       );
       if (name == null || name.trim().isEmpty || !mounted) return;
       try {
-        final added = await FridgeApiService.instance.addInventoryItem(name.trim());
+        final added =
+        await FridgeApiService.instance.addInventoryItem(name.trim());
         if (!mounted) return;
         setState(() {
           _items = [..._items, added];
@@ -198,7 +264,10 @@ class _InventoryScreenState extends State<InventoryScreen> {
         backgroundColor: SfColors.whiteCard,
         title: Text(
           'Add item',
-          style: TextStyle(color: SfColors.brown, fontWeight: FontWeight.w800),
+          style: TextStyle(
+            color: SfColors.brown,
+            fontWeight: FontWeight.w800,
+          ),
         ),
         content: TextField(
           controller: nameCtrl,
@@ -212,7 +281,10 @@ class _InventoryScreenState extends State<InventoryScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text('Cancel', style: TextStyle(color: SfColors.brownLabel)),
+            child: Text(
+              'Cancel',
+              style: TextStyle(color: SfColors.brownLabel),
+            ),
           ),
           FilledButton(
             onPressed: () {
@@ -273,8 +345,11 @@ class _InventoryScreenState extends State<InventoryScreen> {
                     padding: const EdgeInsets.all(12),
                     child: Text(
                       'API unavailable — showing demo data. '
-                      'Start backend: ./gradlew bootRun. $_apiError',
-                      style: TextStyle(color: Colors.orange.shade900, fontSize: 13),
+                          'Start backend: ./gradlew bootRun. $_apiError',
+                      style: TextStyle(
+                        color: Colors.orange.shade900,
+                        fontSize: 13,
+                      ),
                     ),
                   ),
                 ),
@@ -312,17 +387,20 @@ class _InventoryScreenState extends State<InventoryScreen> {
               ),
             ),
           ),
-          SliverToBoxAdapter(child: _CategoryStrip(
-            selected: _category,
-            onSelect: (c) => setState(() => _category = c),
-          )),
+          SliverToBoxAdapter(
+            child: _CategoryStrip(
+              selected: _category,
+              onSelect: (c) => setState(() => _category = c),
+            ),
+          ),
           SliverPadding(
             padding: const EdgeInsets.fromLTRB(28, 8, 28, 12),
             sliver: SliverToBoxAdapter(
               child: _FilterSortRow(
                 resultCount: filtered.length,
                 activeFilters: _activeFilters,
-                onRemoveFilter: (f) => setState(() => _activeFilters.remove(f)),
+                onRemoveFilter: (f) =>
+                    setState(() => _activeFilters.remove(f)),
                 sort: _sort,
                 onSort: (s) => setState(() => _sort = s),
               ),
@@ -336,8 +414,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
                 final cols = w >= 1100
                     ? 3
                     : w >= 720
-                        ? 2
-                        : 1;
+                    ? 2
+                    : 1;
                 return SliverGrid(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: cols,
@@ -346,7 +424,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                     mainAxisExtent: 268,
                   ),
                   delegate: SliverChildBuilderDelegate(
-                    (context, index) {
+                        (context, index) {
                       if (index == 0) {
                         return _AddItemCard(onTap: _openAddItem);
                       }
@@ -377,7 +455,24 @@ class _InventoryScreenState extends State<InventoryScreen> {
   }
 }
 
-/// PRD: pick a canonical name from `GET /api/catalog/suggestions` before POST inventory.
+/**
+ * Catalog add dialog.
+ * <p>
+ * Dialog for adding an item from the catalog.
+ * Fetches name suggestions and returns the selected canonical name.
+ *
+ * Official references:
+ * AlertDialog:
+ * https://api.flutter.dev/flutter/material/AlertDialog-class.html
+ * TextField:
+ * https://api.flutter.dev/flutter/material/TextField-class.html
+ * ListView.builder:
+ * https://api.flutter.dev/flutter/widgets/ListView/ListView.builder.html
+ *
+ * Open-source reference:
+ * material_3_demo:
+ * https://github.com/flutter/samples/tree/main/material_3_demo
+ */
 class _CatalogAddDialog extends StatefulWidget {
   const _CatalogAddDialog();
 
@@ -385,6 +480,11 @@ class _CatalogAddDialog extends StatefulWidget {
   State<_CatalogAddDialog> createState() => _CatalogAddDialogState();
 }
 
+/**
+ * State for _CatalogAddDialog.
+ * <p>
+ * Stores input text, debounce timer, suggestions, and loading state.
+ */
 class _CatalogAddDialogState extends State<_CatalogAddDialog> {
   final TextEditingController _ctrl = TextEditingController();
   Timer? _debounce;
@@ -397,11 +497,21 @@ class _CatalogAddDialogState extends State<_CatalogAddDialog> {
     _ctrl.addListener(_onChanged);
   }
 
+  /**
+   * Debounced input listener.
+   * <p>
+   * Delays the suggestion request to avoid calling the API on every keystroke.
+   */
   void _onChanged() {
     _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 320), _fetch);
   }
 
+  /**
+   * Fetch suggestion names from catalog API.
+   * <p>
+   * Loads catalog suggestions for the current query.
+   */
   Future<void> _fetch() async {
     final q = _ctrl.text.trim();
     if (q.isEmpty) {
@@ -410,7 +520,8 @@ class _CatalogAddDialogState extends State<_CatalogAddDialog> {
     }
     setState(() => _loading = true);
     try {
-      final list = await FridgeApiService.instance.fetchCatalogSuggestionNames(q);
+      final list =
+      await FridgeApiService.instance.fetchCatalogSuggestionNames(q);
       if (!mounted) return;
       setState(() {
         _suggestions = list;
@@ -439,7 +550,10 @@ class _CatalogAddDialogState extends State<_CatalogAddDialog> {
       backgroundColor: SfColors.whiteCard,
       title: Text(
         'Add from catalog',
-        style: TextStyle(color: SfColors.brown, fontWeight: FontWeight.w800),
+        style: TextStyle(
+          color: SfColors.brown,
+          fontWeight: FontWeight.w800,
+        ),
       ),
       content: SizedBox(
         width: 360,
@@ -462,7 +576,10 @@ class _CatalogAddDialogState extends State<_CatalogAddDialog> {
             else
               Text(
                 'Suggestions from server',
-                style: TextStyle(fontSize: 11, color: SfColors.brownMuted),
+                style: TextStyle(
+                  fontSize: 11,
+                  color: SfColors.brownMuted,
+                ),
               ),
             const SizedBox(height: 6),
             Expanded(
@@ -472,7 +589,10 @@ class _CatalogAddDialogState extends State<_CatalogAddDialog> {
                   final s = _suggestions[i];
                   return ListTile(
                     dense: true,
-                    title: Text(s, style: TextStyle(color: SfColors.brown)),
+                    title: Text(
+                      s,
+                      style: TextStyle(color: SfColors.brown),
+                    ),
                     onTap: () {
                       _ctrl.text = s;
                       setState(() => _suggestions = []);
@@ -487,7 +607,10 @@ class _CatalogAddDialogState extends State<_CatalogAddDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: Text('Cancel', style: TextStyle(color: SfColors.brownLabel)),
+          child: Text(
+            'Cancel',
+            style: TextStyle(color: SfColors.brownLabel),
+          ),
         ),
         FilledButton(
           onPressed: () {
@@ -505,10 +628,7 @@ class _CatalogAddDialogState extends State<_CatalogAddDialog> {
 
 enum _FilterTag { expiry, newItems }
 
-enum InventorySort {
-  expiry,
-  name,
-}
+enum InventorySort { expiry, name }
 
 extension on _FilterTag {
   String get label {
@@ -521,6 +641,17 @@ extension on _FilterTag {
   }
 }
 
+/**
+ * Header title block.
+ * <p>
+ * Shows the page title and the expiring summary.
+ *
+ * Official references:
+ * Column:
+ * https://api.flutter.dev/flutter/widgets/Column-class.html
+ * Text:
+ * https://api.flutter.dev/flutter/widgets/Text-class.html
+ */
 class _HeaderTitle extends StatelessWidget {
   const _HeaderTitle({
     required this.totalItems,
@@ -558,6 +689,19 @@ class _HeaderTitle extends StatelessWidget {
   }
 }
 
+/**
+ * Search bar module.
+ * <p>
+ * Search field with a trailing action button.
+ *
+ * Official references:
+ * TextField:
+ * https://api.flutter.dev/flutter/material/TextField-class.html
+ * FilledButton:
+ * https://api.flutter.dev/flutter/material/FilledButton-class.html
+ * InputDecoration:
+ * https://api.flutter.dev/flutter/material/InputDecoration-class.html
+ */
 class _SearchBar extends StatelessWidget {
   const _SearchBar({required this.controller});
 
@@ -600,6 +744,17 @@ class _SearchBar extends StatelessWidget {
   }
 }
 
+/**
+ * Horizontal category strip.
+ * <p>
+ * Horizontal scroller for category selection.
+ *
+ * Official references:
+ * SingleChildScrollView:
+ * https://api.flutter.dev/flutter/widgets/SingleChildScrollView-class.html
+ * Row:
+ * https://api.flutter.dev/flutter/widgets/Row-class.html
+ */
 class _CategoryStrip extends StatelessWidget {
   const _CategoryStrip({
     required this.selected,
@@ -642,6 +797,19 @@ class _CategoryStrip extends StatelessWidget {
   }
 }
 
+/**
+ * Category chip.
+ * <p>
+ * Single category button with selected styling.
+ *
+ * Official references:
+ * Material:
+ * https://api.flutter.dev/flutter/material/Material-class.html
+ * InkWell:
+ * https://api.flutter.dev/flutter/material/InkWell-class.html
+ * Ink:
+ * https://api.flutter.dev/flutter/material/Ink-class.html
+ */
 class _CategoryChip extends StatelessWidget {
   const _CategoryChip({
     required this.category,
@@ -700,6 +868,20 @@ class _CategoryChip extends StatelessWidget {
   }
 }
 
+/**
+ * Filter and sort row.
+ * <p>
+ * Shows the result summary, active filters, and sort control.
+ * Stacks vertically on narrow screens.
+ *
+ * Official references:
+ * LayoutBuilder:
+ * https://api.flutter.dev/flutter/widgets/LayoutBuilder-class.html
+ * Wrap:
+ * https://api.flutter.dev/flutter/widgets/Wrap-class.html
+ * DropdownButton:
+ * https://api.flutter.dev/flutter/material/DropdownButton-class.html
+ */
 class _FilterSortRow extends StatelessWidget {
   const _FilterSortRow({
     required this.resultCount,
@@ -746,10 +928,7 @@ class _FilterSortRow extends StatelessWidget {
               ),
               const SizedBox(width: 12),
             ],
-            _SortDropdown(
-              value: sort,
-              onChanged: onSort,
-            ),
+            _SortDropdown(value: sort, onChanged: onSort),
           ],
         );
         if (narrow) {
@@ -786,6 +965,11 @@ class _FilterSortRow extends StatelessWidget {
   }
 }
 
+/**
+ * Removable filter chip.
+ * <p>
+ * Active filter chip with a remove action.
+ */
 class _RemovableChip extends StatelessWidget {
   const _RemovableChip({required this.label, required this.onRemove});
 
@@ -822,6 +1006,17 @@ class _RemovableChip extends StatelessWidget {
   }
 }
 
+/**
+ * Sort dropdown control.
+ * <p>
+ * Sort picker for expiry or name order.
+ *
+ * Official references:
+ * DropdownButtonHideUnderline:
+ * https://api.flutter.dev/flutter/material/DropdownButtonHideUnderline-class.html
+ * DropdownButton:
+ * https://api.flutter.dev/flutter/material/DropdownButton-class.html
+ */
 class _SortDropdown extends StatelessWidget {
   const _SortDropdown({required this.value, required this.onChanged});
 
@@ -860,6 +1055,19 @@ class _SortDropdown extends StatelessWidget {
   }
 }
 
+/**
+ * Add-item card.
+ * <p>
+ * Special first grid card used to start the add-item flow.
+ *
+ * Official references:
+ * Material:
+ * https://api.flutter.dev/flutter/material/Material-class.html
+ * InkWell:
+ * https://api.flutter.dev/flutter/material/InkWell-class.html
+ * Ink:
+ * https://api.flutter.dev/flutter/material/Ink-class.html
+ */
 class _AddItemCard extends StatelessWidget {
   const _AddItemCard({required this.onTap});
 
@@ -906,6 +1114,21 @@ class _AddItemCard extends StatelessWidget {
   }
 }
 
+/**
+ * Inventory item card.
+ * <p>
+ * Displays one inventory item with badge, icon, meta text, and expiry status.
+ *
+ * Official references:
+ * Material:
+ * https://api.flutter.dev/flutter/material/Material-class.html
+ * InkWell:
+ * https://api.flutter.dev/flutter/material/InkWell-class.html
+ * Stack:
+ * https://api.flutter.dev/flutter/widgets/Stack-class.html
+ * Positioned:
+ * https://api.flutter.dev/flutter/widgets/Positioned-class.html
+ */
 class _InventoryCard extends StatelessWidget {
   const _InventoryCard({required this.item});
 
@@ -999,6 +1222,12 @@ class _InventoryCard extends StatelessWidget {
   }
 }
 
+/**
+ * Item badge.
+ * <p>
+ * Status badge shown at the top-left of an inventory card.
+ * Supports urgent and new item states.
+ */
 class _ItemBadge extends StatelessWidget {
   const _ItemBadge({required this.badge});
 

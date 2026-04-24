@@ -8,15 +8,11 @@ import service.IRecommendationService;
 import java.util.List;
 
 /**
- * 这个 controller 是 recommendation 模块中间那一层。
- *
- * 大白话：
- * - service 负责推荐算法和缓存
- * - API 负责对外暴露 HTTP
- * - controller 就负责把两边接起来
- *
- * 另外，这里也顺手补了“按 id 取一条 recipe”这个动作，
- * 方便 recipe detail endpoint 使用。
+ * Internal coordination layer for recommendation use cases.
+ * <p>
+ * The HTTP layer calls into this facade, and the actual scoring/cache logic stays in
+ * {@link IRecommendationService}. This preserves the older controller/service split without
+ * making {@code controller} itself responsible for HTTP routing.
  */
 public class RecommendationController {
     // 真正负责推荐逻辑的是 recommendationService。

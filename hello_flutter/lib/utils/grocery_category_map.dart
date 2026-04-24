@@ -1,4 +1,10 @@
-/// Maps catalog category metadata to grocery list filter chips.
+// ignore_for_file: slash_for_doc_comments
+
+/**
+ * Grocery UI categories.
+ * <p>
+ * Used by grocery list filters.
+ */
 enum GroceryUiCategory {
   produce,
   protein,
@@ -8,6 +14,7 @@ enum GroceryUiCategory {
   snacks,
 }
 
+/** Labels for grocery UI categories. */
 extension GroceryUiCategoryX on GroceryUiCategory {
   String get label {
     switch (this) {
@@ -27,6 +34,11 @@ extension GroceryUiCategoryX on GroceryUiCategory {
   }
 }
 
+/**
+ * Maps backend category metadata to a grocery UI category.
+ * <p>
+ * Uses the API icon first and falls back to the category name.
+ */
 GroceryUiCategory groceryUiCategoryFromApiIcon(String? icon, String? name) {
   final i = icon?.toLowerCase() ?? '';
   final n = name?.toLowerCase() ?? '';

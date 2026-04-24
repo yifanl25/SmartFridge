@@ -1,14 +1,20 @@
-/// Primary app areas (sidebar). Matches PRD navigation map.
+// ignore_for_file: slash_for_doc_comments
+
+/**
+ * Primary app destinations.
+ * <p>
+ * Used by the sidebar and main shell navigation.
+ */
 enum AppDestination {
-  /// Inventory home — "My Fridge".
+  /** Inventory home. */
   inventory,
 
-  /// Recommended recipes.
+  /** Recommended recipes. */
   recipes,
 
-  /// Shopping / grocery list.
+  /** Grocery list. */
   grocery,
 
-  /// App settings.
+  /** App settings. */
   settings,
 }

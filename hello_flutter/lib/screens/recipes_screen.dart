@@ -1,3 +1,5 @@
+// ignore_for_file: slash_for_doc_comments
+
 import 'package:flutter/material.dart';
 
 import '../models/recipe_recommendation.dart';
@@ -5,7 +7,33 @@ import '../services/fridge_api_service.dart';
 import '../theme/smart_fridge_tokens.dart';
 import 'recipe_detail_screen.dart';
 
-/// PRD: Recommended recipes — matched to fridge & preferences; card → detail.
+/**
+ * Recipes screen.
+ * <p>
+ * Shows recipe recommendations that match the fridge and user preference.
+ * Supports search, meal slots, sub filters, saved items, and detail navigation.
+ * Supports live API mode and local demo mode.
+ *
+ * Official references:
+ * StatefulWidget:
+ * https://api.flutter.dev/flutter/widgets/StatefulWidget-class.html
+ * State:
+ * https://api.flutter.dev/flutter/widgets/State-class.html
+ * Scaffold:
+ * https://api.flutter.dev/flutter/material/Scaffold-class.html
+ * CustomScrollView:
+ * https://api.flutter.dev/flutter/widgets/CustomScrollView-class.html
+ * SliverGrid:
+ * https://api.flutter.dev/flutter/widgets/SliverGrid-class.html
+ * MaterialPageRoute:
+ * https://api.flutter.dev/flutter/material/MaterialPageRoute-class.html
+ *
+ * Open-source reference:
+ * Flutter samples:
+ * https://github.com/flutter/samples
+ * material_3_demo:
+ * https://github.com/flutter/samples/tree/main/material_3_demo
+ */
 class RecipesScreen extends StatefulWidget {
   const RecipesScreen({super.key, this.useLiveApi = true});
 
@@ -15,6 +43,12 @@ class RecipesScreen extends StatefulWidget {
   State<RecipesScreen> createState() => _RecipesScreenState();
 }
 
+/**
+ * State for RecipesScreen.
+ * <p>
+ * Stores search text, selected meal slot, active sub filter,
+ * saved recipe ids, loading state, API error, and recipe data.
+ */
 class _RecipesScreenState extends State<RecipesScreen> {
   final TextEditingController _search = TextEditingController();
 
@@ -26,6 +60,11 @@ class _RecipesScreenState extends State<RecipesScreen> {
   bool _loading = false;
   String? _apiError;
 
+  /**
+   * Demo recipe catalog.
+   * <p>
+   * Local demo recipes used in demo mode and as API fallback data.
+   */
   static List<RecipeRecommendation> _buildCatalog() {
     const base = <RecipeRecommendation>[
       RecipeRecommendation(
@@ -136,6 +175,12 @@ class _RecipesScreenState extends State<RecipesScreen> {
     _search.addListener(() => setState(() {}));
   }
 
+  /**
+   * Loads recipe recommendations from API.
+   * <p>
+   * Loads recipes from the backend.
+   * On failure, falls back to the demo catalog and stores the error.
+   */
   Future<void> _loadRecipes() async {
     setState(() {
       _loading = true;
@@ -164,6 +209,12 @@ class _RecipesScreenState extends State<RecipesScreen> {
     super.dispose();
   }
 
+  /**
+   * Filtered recipe list.
+   * <p>
+   * Applies search, meal slot, and sub filter to the current catalog.
+   * The result is sorted by match percent in descending order.
+   */
   List<RecipeRecommendation> get _filtered {
     Iterable<RecipeRecommendation> q = _catalog;
 
@@ -190,6 +241,17 @@ class _RecipesScreenState extends State<RecipesScreen> {
     return list;
   }
 
+  /**
+   * Opens recipe detail page.
+   * <p>
+   * Opens the recipe detail screen for the selected recipe.
+   *
+   * Official references:
+   * Navigator:
+   * https://api.flutter.dev/flutter/widgets/Navigator-class.html
+   * MaterialPageRoute:
+   * https://api.flutter.dev/flutter/material/MaterialPageRoute-class.html
+   */
   void _openRecipe(RecipeRecommendation r) {
     Navigator.of(context).push<void>(
       MaterialPageRoute<void>(
@@ -228,9 +290,11 @@ class _RecipesScreenState extends State<RecipesScreen> {
                     padding: const EdgeInsets.all(12),
                     child: Text(
                       'API unavailable — showing demo recipes. '
-                      './gradlew bootRun · $_apiError',
-                      style:
-                          TextStyle(color: Colors.orange.shade900, fontSize: 13),
+                          './gradlew bootRun · $_apiError',
+                      style: TextStyle(
+                        color: Colors.orange.shade900,
+                        fontSize: 13,
+                      ),
                     ),
                   ),
                 ),
@@ -241,68 +305,70 @@ class _RecipesScreenState extends State<RecipesScreen> {
             sliver: SliverToBoxAdapter(
               child: wide
                   ? Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Recommended Recipes',
-                                style: TextStyle(
-                                  fontSize: 32,
-                                  fontWeight: FontWeight.w800,
-                                  color: SfColors.brown,
-                                  height: 1.1,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                subtitle,
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: SfColors.brownMuted,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: 420,
-                          child: _RecipeSearchRow(controller: _search),
-                        ),
-                      ],
-                    )
-                  : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           'Recommended Recipes',
                           style: TextStyle(
-                            fontSize: 28,
+                            fontSize: 32,
                             fontWeight: FontWeight.w800,
                             color: SfColors.brown,
+                            height: 1.1,
                           ),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           subtitle,
                           style: TextStyle(
-                            fontSize: 14,
+                            fontSize: 15,
                             color: SfColors.brownMuted,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
-                        const SizedBox(height: 16),
-                        _RecipeSearchRow(controller: _search),
                       ],
                     ),
+                  ),
+                  SizedBox(
+                    width: 420,
+                    child: _RecipeSearchRow(controller: _search),
+                  ),
+                ],
+              )
+                  : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Recommended Recipes',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w800,
+                      color: SfColors.brown,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: SfColors.brownMuted,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  _RecipeSearchRow(controller: _search),
+                ],
+              ),
             ),
           ),
-          SliverToBoxAdapter(child: _MealSlotStrip(
-            selected: _slot,
-            onSelect: (s) => setState(() => _slot = s),
-          )),
+          SliverToBoxAdapter(
+            child: _MealSlotStrip(
+              selected: _slot,
+              onSelect: (s) => setState(() => _slot = s),
+            ),
+          ),
           SliverPadding(
             padding: const EdgeInsets.fromLTRB(28, 16, 28, 8),
             sliver: SliverToBoxAdapter(
@@ -375,8 +441,8 @@ class _RecipesScreenState extends State<RecipesScreen> {
                 final cols = w >= 1100
                     ? 3
                     : w >= 720
-                        ? 2
-                        : 1;
+                    ? 2
+                    : 1;
                 return SliverGrid(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: cols,
@@ -385,7 +451,7 @@ class _RecipesScreenState extends State<RecipesScreen> {
                     mainAxisExtent: 312,
                   ),
                   delegate: SliverChildBuilderDelegate(
-                    (context, index) {
+                        (context, index) {
                       final r = filtered[index];
                       final saved = _savedIds.contains(r.id);
                       return _RecipeCard(
@@ -418,6 +484,19 @@ class _RecipesScreenState extends State<RecipesScreen> {
   }
 }
 
+/**
+ * Recipe search row.
+ * <p>
+ * Top search area with a text field, search button, and avatar placeholder.
+ *
+ * Official references:
+ * TextField:
+ * https://api.flutter.dev/flutter/material/TextField-class.html
+ * FilledButton:
+ * https://api.flutter.dev/flutter/material/FilledButton-class.html
+ * CircleAvatar:
+ * https://api.flutter.dev/flutter/material/CircleAvatar-class.html
+ */
 class _RecipeSearchRow extends StatelessWidget {
   const _RecipeSearchRow({required this.controller});
 
@@ -466,6 +545,17 @@ class _RecipeSearchRow extends StatelessWidget {
   }
 }
 
+/**
+ * Meal slot horizontal strip.
+ * <p>
+ * Horizontal selector for meal slots such as breakfast, lunch, and dinner.
+ *
+ * Official references:
+ * SingleChildScrollView:
+ * https://api.flutter.dev/flutter/widgets/SingleChildScrollView-class.html
+ * Row:
+ * https://api.flutter.dev/flutter/widgets/Row-class.html
+ */
 class _MealSlotStrip extends StatelessWidget {
   const _MealSlotStrip({
     required this.selected,
@@ -507,6 +597,19 @@ class _MealSlotStrip extends StatelessWidget {
   }
 }
 
+/**
+ * Meal slot orb.
+ * <p>
+ * Single meal slot button with a circular icon and label.
+ *
+ * Official references:
+ * InkWell:
+ * https://api.flutter.dev/flutter/material/InkWell-class.html
+ * Container:
+ * https://api.flutter.dev/flutter/widgets/Container-class.html
+ * Column:
+ * https://api.flutter.dev/flutter/widgets/Column-class.html
+ */
 class _SlotOrb extends StatelessWidget {
   const _SlotOrb({
     required this.slot,
@@ -562,6 +665,24 @@ class _SlotOrb extends StatelessWidget {
   }
 }
 
+/**
+ * Recipe card.
+ * <p>
+ * Shows one recipe with match score, save state, icon, title,
+ * rating, ingredient tags, prep time, and calories.
+ *
+ * Official references:
+ * Material:
+ * https://api.flutter.dev/flutter/material/Material-class.html
+ * InkWell:
+ * https://api.flutter.dev/flutter/material/InkWell-class.html
+ * Stack:
+ * https://api.flutter.dev/flutter/widgets/Stack-class.html
+ * Positioned:
+ * https://api.flutter.dev/flutter/widgets/Positioned-class.html
+ * IconButton:
+ * https://api.flutter.dev/flutter/material/IconButton-class.html
+ */
 class _RecipeCard extends StatelessWidget {
   const _RecipeCard({
     required this.recipe,
@@ -682,25 +803,25 @@ class _RecipeCard extends StatelessWidget {
                           .take(3)
                           .map(
                             (t) => Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 4,
-                              ),
-                              decoration: BoxDecoration(
-                                color: SfColors.chipBgLight,
-                                borderRadius:
-                                    BorderRadius.circular(SfRadii.pill),
-                              ),
-                              child: Text(
-                                t,
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w600,
-                                  color: SfColors.brown,
-                                ),
-                              ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: SfColors.chipBgLight,
+                            borderRadius:
+                            BorderRadius.circular(SfRadii.pill),
+                          ),
+                          child: Text(
+                            t,
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
+                              color: SfColors.brown,
                             ),
-                          )
+                          ),
+                        ),
+                      )
                           .toList(),
                     ),
                     const Spacer(),
