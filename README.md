@@ -47,3 +47,21 @@ then built on and modified. It also helped us identify additional classes needed
 Finally, we used LLM to generate edge cases for unit tests and to understand how to integrate external APIs.
 
 ## References
+Official references:
+* StatefulWidget:
+* https://api.flutter.dev/flutter/widgets/StatefulWidget-class.html
+* State:
+* https://api.flutter.dev/flutter/widgets/State-class.html
+* LayoutBuilder:
+* https://api.flutter.dev/flutter/widgets/LayoutBuilder-class.html
+* Scaffold:
+* https://api.flutter.dev/flutter/material/Scaffold-class.html
+* Drawer:
+* https://api.flutter.dev/flutter/material/Drawer-class.html
+* SafeArea:
+* https://api.flutter.dev/flutter/widgets/SafeArea-class.html
+* Open source reference:
+* Flutter samples:
+* https://github.com/flutter/samples
+* material_3_demo:
+* https://github.com/flutter/samples/tree/main/material_3_demo
