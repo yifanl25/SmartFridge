@@ -44,6 +44,15 @@ public class RecommendationApiController {
     private final RecommendationController recommendationController;
     private final GroceryController groceryController;
 
+    /**
+     * Constructs the controller with all required dependencies.
+     *
+     * @param inventoryController      provides the current fridge inventory
+     * @param preferenceController     provides the current user preference
+     * @param recommendationController scores and sorts recipe recommendations
+     * @param groceryController        manages the grocery list
+     * @param foodCatalog              resolves and normalizes food names
+     */
     public RecommendationApiController(
             CatalogController catalogController,
             InventoryController inventoryController,
@@ -58,33 +67,31 @@ public class RecommendationApiController {
     }
 
     /**
-     * 返回推荐列表。
+     * Returns a filtered and sorted list of recipe recommendations.
+     * <p>
+     * Scores are recalculated on every request based on the latest inventory
+     * and preference state, so changes made by the user are immediately reflected.
+     * <p>
+     * Supported query parameters:
+     * <ul>
+     *   <li>{@code sort} — {@code "cookTime"} sorts by fastest cook time;
+     *       any other value sorts by match score; omitting keeps default order.</li>
+     *   <li>{@code category} — filters results to recipes whose category name
+     *       contains the given string (case-insensitive, partial match).</li>
+     * </ul>
      *
-     * 大白话：
-     * - 先根据“当前库存 + 当前偏好”重新算一遍推荐
-     * - 然后如果前端传了 sort，就按指定方式排
-     * - 如果传了 category，就再做一次分类过滤
-     *
-     * 支持的 query param：
-     * - category：按菜谱分类过滤
-     * - sort：score 或 cookTime
+     * @param category optional recipe category filter (e.g. "Breakfast")
+     * @param sort     optional sort mode: {@code "cookTime"} or {@code "score"}
+     * @return filtered and sorted list of recipes
      */
     @GetMapping
-    // ===== teammate note =====
-    // 这里是推荐列表接口的主入口。
-    // 后面如果有人要继续补“更多筛选条件 / 更多排序方式”，优先改这里。
-    // insert your code here: add more query params or branch rules for recommendation list
     public List<Recipe> list(
             @RequestParam(value = "category", required = false) String category,
             @RequestParam(value = "sort", required = false) String sort) {
-        // 每次请求都尽量基于“当前会话里的最新状态”来算推荐，
-        // 这样前端改了库存或偏好后，这里能马上跟上。
         List<FoodItem> inventory = inventoryController.getVisibleItems();
         Preference preference = preferenceController.getPreference();
         List<Recipe> base = recommendationController.getRecommendations(inventory, preference);
 
-        // sort 不传就保持当前推荐顺序。
-        // 传 cookTime 就按做饭时间排序；其他值默认按 score。
         if (sort != null && !sort.isBlank()) {
             if ("cookTime".equalsIgnoreCase(sort)) {
                 base = recommendationController.sortByCookTime();
@@ -93,12 +100,10 @@ public class RecommendationApiController {
             }
         }
 
-        // category 不传就直接返回整包推荐。
         if (category == null || category.isBlank()) {
             return base;
         }
 
-        // 这里做的是“包含匹配”，不是必须完全相等。
         String needle = category.trim().toLowerCase(Locale.ROOT);
         return base.stream()
                 .filter(r -> r.getRecipeCategory().getName().toLowerCase(Locale.ROOT).contains(needle))
@@ -106,17 +111,16 @@ public class RecommendationApiController {
     }
 
     /**
-     * 返回某一道菜的详情。
+     * Returns the full detail of a single recipe by its ID.
+     * <p>
+     * Used by the Recipe Detail page. Returns the recipe's fields along with
+     * ingredient availability status based on the current inventory.
+     * Returns 404 if no recipe with the given ID is found.
      *
-     * 大白话：
-     * 这个接口就是给 recipe detail page 用的。
-     * 它会把菜谱本身信息 + ingredient status 一起打包返回。
+     * @param id the recipe ID from the URL path
+     * @return 200 with {@link RecipeDetailResponse}, or 404 if not found
      */
     @GetMapping("/{id}")
-    // ===== teammate note =====
-    // 这里是 recipe detail page 的后端入口。
-    // 后面如果前端还想多拿字段，比如 nutrition、badge、替代食材等，优先从这里往下接。
-    // insert your code here: extend detail response fields without breaking current API shape
     public ResponseEntity<RecipeDetailResponse> detail(@PathVariable String id) {
         List<FoodItem> inventory = inventoryController.getVisibleItems();
         Preference preference = preferenceController.getPreference();
@@ -131,20 +135,24 @@ public class RecommendationApiController {
     }
 
     /**
-     * 把某道菜里“当前缺失的必需食材”加入 grocery list。
+     * Adds all missing required ingredients of a recipe to the grocery list.
+     * <p>
+     * This closes the core PRD loop: recommendation → recipe detail → grocery planning.
+     * <p>
+     * Two key behaviors:
+     * <ul>
+     *   <li>Parses quantity from the ingredient's quantity text (e.g. "2 count" → 2).</li>
+     *   <li>If the grocery list already contains the same item, merges the quantity
+     *       instead of inserting a duplicate row.</li>
+     * </ul>
+     * Optional ingredients are never added to the grocery list.
+     * Returns 404 if the recipe ID is not found.
      *
-     * 这就是你 PRD 里很重要的那条闭环：
-     * recommendation -> recipe detail -> grocery planning
-     *
-     * 这里做了两件比较实用的事：
-     * 1. 尝试从 quantityText 里解析出数量
-     * 2. 如果 grocery 里已经有同名食材，不重复插新行，而是合并数量
+     * @param id the recipe ID from the URL path
+     * @return 200 with {@link RecipeToGroceryResponse} summarizing added and merged items,
+     * or 404 if not found
      */
     @PostMapping("/{id}/grocery")
-    // ===== teammate note =====
-    // 这是 recommendation -> grocery 的关键闭环。
-    // 如果组员后面要做“按真实缺口数量加入”“保留 recipe 来源”“支持 unit”，优先从这个方法继续补。
-    // insert your code here: improve recipe-to-grocery merge rules, quantity parsing, and unit handling
     public ResponseEntity<RecipeToGroceryResponse> addMissingIngredientsToGrocery(@PathVariable String id) {
         List<FoodItem> inventory = inventoryController.getVisibleItems();
         Preference preference = preferenceController.getPreference();
@@ -153,8 +161,6 @@ public class RecommendationApiController {
             return ResponseEntity.notFound().build();
         }
 
-        // 这个 response 主要是给前端一个交代：
-        // 到底新加了几条，哪些是合并进旧条目的。
         RecipeToGroceryResponse response = new RecipeToGroceryResponse();
         response.setRecipeId(recipe.getId());
         response.setRecipeTitle(recipe.getTitle());
@@ -162,10 +168,7 @@ public class RecommendationApiController {
         List<GroceryItem> added = new ArrayList<>();
         List<String> merged = new ArrayList<>();
 
-        // 这里只处理 required ingredients。
-        // optional ingredients 就算缺，也不强行塞进购物清单。
         for (Recipe.Ingredient ingredient : recipe.getRequiredIngredients()) {
-            // 如果这项并不缺，就直接跳过。
             if (!isMissingRequiredIngredient(recipe, ingredient)) {
                 continue;
             }
@@ -174,21 +177,15 @@ public class RecommendationApiController {
             // 这样不容易因为别名不同而产生重复项。
             String canonical = catalogController.canonicalFoodName(ingredient.getName());
 
-            // quantityText 可能写成 "2 count"、"1 clove" 之类，
-            // 这里尽量取出一个正整数；实在读不出来就默认 1。
             int neededQty = parseQuantityAsPositiveInt(ingredient.getQuantityText());
 
-            // 先看购物清单里是不是已经有这一项了。
             GroceryItem existing = findExistingGroceryItem(canonical);
             if (existing != null) {
-                // 已经有了就不再插入新行，而是把数量往上加。
                 groceryController.updateQuantity(existing.getId(), neededQty);
                 merged.add(existing.getName());
                 continue;
             }
 
-            // grocery item 还是需要 category，
-            // 所以尽量从 catalog 里解析；找不到就先扔 Misc。
             FoodCatalogEntry entry = resolveEntry(canonical);
             FoodCategory category = entry == null
                     ? new FoodCategory("misc", "Misc", "box")
@@ -213,15 +210,15 @@ public class RecommendationApiController {
     }
 
     /**
-     * 判断某个 required ingredient 是否真的属于“缺失项”。
+     * Returns true if the given required ingredient is in the recipe's missing ingredients list.
+     * <p>
+     * Compares canonical names rather than raw strings to avoid mismatches
+     * caused by aliases (e.g. "milk" vs "whole milk").
      *
-     * 注意这里不是看 ingredient 名字原文，
-     * 而是先走 canonicalFoodName 再比较，尽量减少别名误差。
+     * @param recipe     the scored recipe
+     * @param ingredient the ingredient to check
+     * @return true if the ingredient is missing from the user's inventory
      */
-    // ===== teammate note =====
-    // 这个方法专门负责判断“这项到底算不算缺”。
-    // 如果以后 missingIngredients 的算法改了，或者要区分 optional / required / substitute，先看这里。
-    // insert your code here: refine missing-ingredient rule if PRD changes
     private boolean isMissingRequiredIngredient(Recipe recipe, Recipe.Ingredient ingredient) {
         String target = norm(catalogController.canonicalFoodName(ingredient.getName()));
         return recipe.getMissingIngredients().stream()
@@ -231,10 +228,13 @@ public class RecommendationApiController {
     }
 
     /**
-     * 在当前 grocery list 里找有没有“同一种东西”。
+     * Finds an existing grocery item whose canonical name matches the given name.
+     * <p>
+     * Uses canonical name comparison to avoid duplicates caused by name variants
+     * (e.g. "milk", "whole milk", "dairy milk").
      *
-     * 这里也是统一名字后再比，
-     * 否则 milk / whole milk / dairy milk 之类很容易重复。
+     * @param canonicalName the normalized food name to search for
+     * @return the matching {@link GroceryItem}, or {@code null} if not found
      */
     private GroceryItem findExistingGroceryItem(String canonicalName) {
         String key = norm(canonicalName);
@@ -245,17 +245,18 @@ public class RecommendationApiController {
     }
 
     /**
-     * 把 recipe 里的数量文本尽量读成正整数。
+     * Parses a quantity text string into a positive integer.
+     * <p>
+     * Examples:
+     * <ul>
+     *   <li>"2 count" → 2</li>
+     *   <li>"1.5 cup" → 2 (rounded up)</li>
+     *   <li>unreadable or null → 1</li>
+     * </ul>
      *
-     * 例子：
-     * - "2 count" -> 2
-     * - "1.5 cup" -> 2（向上取整）
-     * - 读不出来 -> 1
+     * @param quantityText the raw quantity string from the recipe ingredient
+     * @return a positive integer quantity, defaulting to 1 if parsing fails
      */
-    // ===== teammate note =====
-    // 现在这里只做了一个很保守的数量解析。
-    // 像 0.5、1-2、2 cups 这种复杂写法，如果后面要更准，就继续扩这里。
-    // insert your code here: support richer quantity text parsing
     private int parseQuantityAsPositiveInt(String quantityText) {
         if (quantityText == null || quantityText.isBlank()) {
             return 1;
@@ -270,11 +271,13 @@ public class RecommendationApiController {
     }
 
     /**
-     * 尽量把食材名解析成 catalog entry。
+     * Resolves a food name to a {@link FoodCatalogEntry}.
+     * <p>
+     * First attempts a direct lookup; if that fails, falls back to the first
+     * suggestion returned by the catalog search.
      *
-     * 顺序是：
-     * 1. 直接 resolve
-     * 2. resolve 不到就用 suggestion 顶一个
+     * @param foodName the food name to resolve
+     * @return a matching {@link FoodCatalogEntry}, or {@code null} if none found
      */
     private FoodCatalogEntry resolveEntry(String foodName) {
         Optional<FoodCatalogEntry> direct = catalogController.resolveEntry(foodName);
@@ -284,8 +287,12 @@ public class RecommendationApiController {
         return catalogController.searchSuggestions(foodName).stream().findFirst().orElse(null);
     }
 
+
     /**
-     * 做统一化比较用的小工具：去首尾空格 + 转小写。
+     * Normalizes a string for comparison by trimming whitespace and converting to lowercase.
+     *
+     * @param s the string to normalize
+     * @return normalized string, or empty string if input is null
      */
     private static String norm(String s) {
         return s == null ? "" : s.trim().toLowerCase(Locale.ROOT);

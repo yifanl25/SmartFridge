@@ -1,22 +1,33 @@
 package model;
 
 /**
- * Recipe-side taxonomy (e.g. Quick Meals); not interchangeable with {@link FoodCategory}.
+ * Represents a recipe category (e.g. Breakfast, Dinner, Quick Meals).
  * <p>
- * 菜谱侧分类（如快手菜）；与食材分类 {@link FoodCategory} 不可混用。
+ * This is the recipe-side taxonomy and is not interchangeable with {@link FoodCategory},
+ * which classifies food ingredients. Recipe categories are used to group and filter
+ * recipes on the recommendation page.
+ * </p>
  */
 public class RecipeCategory {
-    /** Stable id from recipes JSON. / 来自菜谱 JSON 的稳定 id。 */
+    /**
+     * Stable identifier from the recipes JSON file.
+     */
     private final String id;
-    /** Display label on recommendation cards and filters. / 推荐卡片与筛选上的显示标签。 */
+    /**
+     * Display label on recommendation cards and filters.
+     */
     private final String name;
-    /** Decorative icon key for recipe UI. / 菜谱界面装饰图标键。 */
+    /**
+     * Decorative icon key for recipe UI.
+     */
     private final String icon;
 
     /**
-     * Creates an immutable recipe category from JSON.
-     * <p>
-     * 根据 JSON 创建不可变菜谱分类。
+     * Constructs an immutable recipe category loaded from JSON.
+     *
+     * @param id   stable category identifier
+     * @param name display label shown in the UI
+     * @param icon icon key for the recipe UI
      */
     public RecipeCategory(String id, String name, String icon) {
         this.id = id;
@@ -24,17 +35,29 @@ public class RecipeCategory {
         this.icon = icon;
     }
 
-    /** Returns category id. / 返回分类 id。 */
+    /**
+     * Returns the stable category identifier.
+     *
+     * @return category ID
+     */
     public String getId() {
         return id;
     }
 
-    /** Returns display name. / 返回显示名称。 */
+    /**
+     * Returns the display name shown on recommendation cards and filters.
+     *
+     * @return category display name
+     */
     public String getName() {
         return name;
     }
 
-    /** Returns icon token. / 返回图标 token。 */
+    /**
+     * Returns the icon key used for decorative display in the recipe UI.
+     *
+     * @return icon key string
+     */
     public String getIcon() {
         return icon;
     }

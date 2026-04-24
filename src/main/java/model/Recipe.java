@@ -4,34 +4,52 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Recipe aggregate: static fields from JSON plus runtime-computed match score and ingredient availability.
- * {@link HealthTag} and {@link Ingredient} are static nested types to keep recipe vocabulary in one place.
+ * Represents a recipe with both static data loaded from JSON and runtime-computed fields.
  * <p>
- * 菜谱聚合：来自 JSON 的静态字段 + 运行时计算的匹配分与食材可用性。
- * {@link HealthTag} 与 {@link Ingredient} 为静态嵌套类型，便于将菜谱相关类型收敛在同一源文件。
+ * This class is immutable — all fields are {@code final}. It follows a two-step lifecycle:
+ * <ol>
+ *   <li>{@link #loaded} — creates a template from JSON with no computed fields</li>
+ *   <li>{@link #withComputed} — returns a new copy with match score and ingredient availability filled in</li>
+ * </ol>
+ * {@link HealthTag} and {@link Ingredient} are nested types to keep all recipe-related
+ * vocabulary in one place.
+ * </p>
  */
 public class Recipe {
 
     /**
-     * Tags used for preference-alignment scoring (not the same as {@link HealthGoal} on {@link Preference}).
+     * Health positioning tags used for preference-alignment scoring.
      * <p>
-     * 用于「偏好对齐」打分的标签（与用户偏好中的 {@link HealthGoal} 不是同一概念）。
+     * These are recipe-side labels and are not the same as the user-side {@link HealthGoal}
+     * on {@link Preference}. The recommendation service maps each {@link HealthGoal}
+     * to its corresponding tag to calculate alignment bonus points.
+     * </p>
      */
     public enum HealthTag {
-        /** High protein positioning. / 高蛋白定位。 */
+        /**
+         * High protein positioning.
+         */
         HIGH_PROTEIN,
-        /** Low calorie positioning. / 低卡定位。 */
+        /**
+         * Low calorie positioning.
+         */
         LOW_CALORIE,
-        /** Blood-sugar friendly positioning. / 控糖友好定位。 */
+        /**
+         * Blood-sugar friendly positioning.
+         */
         BLOOD_SUGAR_FRIENDLY,
-        /** Neutral / balanced fallback alignment. / 中性/平衡型回落对齐。 */
+        /**
+         * Neutral / balanced fallback alignment.
+         */
         BALANCED
     }
 
     /**
-     * One ingredient line on a recipe; lines with {@code optional==true} are excluded from main coverage score.
+     * Represents a single ingredient line on a recipe.
      * <p>
-     * 菜谱中的一行配料；{@code optional==true} 的行不计入主匹配分覆盖率。
+     * Lines where {@code optional} is {@code true} are excluded from the required
+     * ingredient coverage score, so missing optional ingredients do not penalize the recipe.
+     * </p>
      */
     public static final class Ingredient {
         private final String name;
@@ -39,9 +57,11 @@ public class Recipe {
         private final boolean optional;
 
         /**
-         * @param name         ingredient name / 食材名
-         * @param quantityText human-readable quantity / 人类可读用量文案
-         * @param optional     whether excluded from required coverage / 是否从必选覆盖中排除
+         * Constructs an ingredient line.
+         *
+         * @param name         the ingredient name
+         * @param quantityText human-readable quantity (e.g. "2 cloves", "1 cup")
+         * @param optional     {@code true} if this ingredient is excluded from coverage scoring
          */
         public Ingredient(String name, String quantityText, boolean optional) {
             this.name = name;
@@ -49,42 +69,125 @@ public class Recipe {
             this.optional = optional;
         }
 
-        /** Returns ingredient name. / 返回食材名。 */
+        /**
+         * Returns the ingredient name.
+         *
+         * @return ingredient name
+         */
         public String getName() {
             return name;
         }
 
-        /** Returns quantity text. / 返回用量文案。 */
+        /**
+         * Returns the human-readable quantity text.
+         *
+         * @return quantity text (e.g. "2 cloves")
+         */
         public String getQuantityText() {
             return quantityText;
         }
 
-        /** Returns whether this line is optional for scoring. / 是否可选（不参与主分覆盖）。 */
+        /**
+         * Returns whether this ingredient is optional for scoring purposes.
+         *
+         * @return {@code true} if excluded from required coverage score
+         */
         public boolean isOptional() {
             return optional;
         }
     }
 
+    /**
+     * Unique recipe identifier from JSON.
+     */
     private final String id;
+
+    /**
+     * Display title of the recipe.
+     */
     private final String title;
+
+    /**
+     * The recipe's category (e.g. Breakfast, Dinner) — not the same as food category.
+     */
     private final RecipeCategory recipeCategory;
+
+    /**
+     * Health tags used for preference alignment scoring.
+     */
     private final List<HealthTag> healthTags;
+
+    /**
+     * Required ingredient lines — used for coverage scoring.
+     */
     private final List<Ingredient> requiredIngredients;
+
+    /**
+     * Optional ingredient lines — excluded from coverage scoring.
+     */
     private final List<Ingredient> optionalIngredients;
+
+    /**
+     * Computed match score (0.0 before scoring, up to 100.0 after).
+     */
     private final double matchScore;
+
+    /**
+     * Star-style rating from JSON data.
+     */
     private final double rating;
+
+    /**
+     * Total cook time in minutes.
+     */
     private final int cookTime;
+
+    /**
+     * Estimated calorie count per serving.
+     */
     private final int calories;
+
+    /**
+     * Short description of the recipe.
+     */
     private final String description;
+
+    /**
+     * Names of required ingredients found in the user's inventory (computed at runtime).
+     */
     private final List<String> availableIngredients;
+
+    /**
+     * Names of required ingredients not found in the user's inventory (computed at runtime).
+     */
     private final List<String> missingIngredients;
-    /** PRD tie-break: required ingredients matched by urgent inventory items. / PRD 决胜：由临期库存匹配到的必选食材数。 */
+
+    /**
+     * Number of required ingredients matched by urgent (expiring soon) inventory items — used for tie-breaking.
+     */
     private final int urgentMatchedCount;
 
     /**
-     * Full constructor including computed fields (used internally and by {@link #withComputed}).
+     * Full constructor used internally and by {@link #withComputed}.
      * <p>
-     * 包含计算字段的完整构造（内部及 {@link #withComputed} 使用）。
+     * Prefer using {@link #loaded} to create recipes from JSON,
+     * and {@link #withComputed} to attach scored results.
+     * </p>
+     *
+     * @param id                   recipe ID
+     * @param title                recipe title
+     * @param recipeCategory       recipe category
+     * @param healthTags           health positioning tags
+     * @param requiredIngredients  required ingredient lines
+     * @param optionalIngredients  optional ingredient lines
+     * @param matchScore           computed match score (0.0 to 100.0)
+     * @param rating               star rating from JSON
+     * @param cookTime             cook time in minutes
+     * @param calories             estimated calories per serving
+     * @param description          recipe description
+     * @param availableIngredients names of ingredients found in inventory
+     * @param missingIngredients   names of ingredients not found in inventory
+     * @param urgentMatchedCount   number of required ingredients matched by urgent items
      */
     public Recipe(
             String id,
@@ -118,9 +221,24 @@ public class Recipe {
     }
 
     /**
-     * Factory for JSON-loaded templates before scoring (match score 0, empty availability lists).
+     * Factory method for creating a recipe template loaded from JSON.
      * <p>
-     * 打分前的 JSON 模板工厂（匹配分为 0，可用/缺失列表为空）。
+     * The computed fields ({@code matchScore}, {@code availableIngredients},
+     * {@code missingIngredients}, {@code urgentMatchedCount}) are set to their
+     * empty defaults. Call {@link #withComputed} to attach scored results later.
+     * </p>
+     *
+     * @param id                  recipe ID
+     * @param title               recipe title
+     * @param recipeCategory      recipe category
+     * @param healthTags          health positioning tags
+     * @param requiredIngredients required ingredient lines
+     * @param optionalIngredients optional ingredient lines
+     * @param rating              star rating from JSON
+     * @param cookTime            cook time in minutes
+     * @param calories            estimated calories per serving
+     * @param description         recipe description
+     * @return a recipe template with no computed fields
      */
     public static Recipe loaded(
             String id,
@@ -151,9 +269,18 @@ public class Recipe {
     }
 
     /**
-     * Returns a copy with computed match fields (immutable outer recipe).
+     * Returns a new immutable copy of this recipe with the computed fields attached.
      * <p>
-     * 返回带计算匹配字段的拷贝（外层菜谱仍不可变语义）。
+     * All static fields (id, title, category, tags, ingredients, rating, cookTime,
+     * calories, description) are copied from the original. Only the scoring-related
+     * fields are replaced with the provided values.
+     * </p>
+     *
+     * @param matchScore           the computed match score (0.0 to 100.0)
+     * @param availableIngredients names of required ingredients found in inventory
+     * @param missingIngredients   names of required ingredients not found in inventory
+     * @param urgentMatchedCount   number of required ingredients matched by urgent items
+     * @return a new Recipe with computed fields filled in
      */
     public Recipe withComputed(
             double matchScore,
@@ -177,72 +304,135 @@ public class Recipe {
                 urgentMatchedCount);
     }
 
-    /** Returns recipe id. / 返回菜谱 id。 */
+    /**
+     * Returns the recipe ID.
+     *
+     * @return recipe ID
+     */
     public String getId() {
         return id;
     }
 
-    /** Returns title. / 返回标题。 */
+    /**
+     * Returns the recipe title.
+     *
+     * @return recipe title
+     */
     public String getTitle() {
         return title;
     }
 
-    /** Returns recipe category (not food category). / 返回菜谱分类（非食材分类）。 */
+    /**
+     * Returns the recipe category (e.g. Breakfast, Dinner).
+     * Note: this is not the same as a food ingredient category.
+     *
+     * @return recipe category
+     */
     public RecipeCategory getRecipeCategory() {
         return recipeCategory;
     }
 
-    /** Returns a defensive copy of health tags. / 返回健康标签的防御性拷贝。 */
+    /**
+     * Returns a defensive copy of the recipe's health tags.
+     *
+     * @return list of health tags
+     */
     public List<HealthTag> getHealthTags() {
         return new ArrayList<>(healthTags);
     }
 
-    /** Returns a defensive copy of required ingredient lines. / 返回必选配料行的防御性拷贝。 */
+    /**
+     * Returns a defensive copy of the required ingredient lines.
+     * These are used for coverage scoring and grocery list generation.
+     *
+     * @return list of required ingredients
+     */
     public List<Ingredient> getRequiredIngredients() {
         return new ArrayList<>(requiredIngredients);
     }
 
-    /** Returns a defensive copy of optional ingredient lines. / 返回可选配料行的防御性拷贝。 */
+    /**
+     * Returns a defensive copy of the optional ingredient lines.
+     * These are excluded from coverage scoring.
+     *
+     * @return list of optional ingredients
+     */
     public List<Ingredient> getOptionalIngredients() {
         return new ArrayList<>(optionalIngredients);
     }
 
-    /** Returns computed match score (0 before scoring). / 返回计算后的匹配分（打分前为 0）。 */
+    /**
+     * Returns the computed match score.
+     * Returns 0.0 if {@link #withComputed} has not been called yet.
+     *
+     * @return match score between 0.0 and 100.0
+     */
     public double getMatchScore() {
         return matchScore;
     }
 
-    /** Returns star-style rating from JSON. / 返回 JSON 中的星级类评分。 */
+    /**
+     * Returns the star-style rating from JSON.
+     *
+     * @return rating value
+     */
     public double getRating() {
         return rating;
     }
 
-    /** Returns cook time in minutes. / 返回烹饪时间（分钟）。 */
+    /**
+     * Returns the total cook time in minutes.
+     *
+     * @return cook time in minutes
+     */
     public int getCookTime() {
         return cookTime;
     }
 
-    /** Returns calories estimate. / 返回热量估算。 */
+    /**
+     * Returns the estimated calorie count per serving.
+     *
+     * @return calories per serving
+     */
     public int getCalories() {
         return calories;
     }
 
-    /** Returns description text. / 返回描述文案。 */
+    /**
+     * Returns the recipe description text.
+     *
+     * @return description
+     */
     public String getDescription() {
         return description;
     }
 
-    /** Returns matched required ingredient names (runtime). / 返回已匹配的必选食材名（运行时）。 */
+    /**
+     * Returns the names of required ingredients found in the user's inventory.
+     * Returns an empty list before {@link #withComputed} is called.
+     *
+     * @return list of available ingredient names
+     */
     public List<String> getAvailableIngredients() {
         return new ArrayList<>(availableIngredients);
     }
 
-    /** Returns missing required ingredient names (runtime). / 返回缺失的必选食材名（运行时）。 */
+    /**
+     * Returns the names of required ingredients not found in the user's inventory.
+     * Returns an empty list before {@link #withComputed} is called.
+     *
+     * @return list of missing ingredient names
+     */
     public List<String> getMissingIngredients() {
         return new ArrayList<>(missingIngredients);
     }
 
-    /** Returns urgent-match count for tie-break. / 返回临期匹配计数用于决胜。 */
+    /**
+     * Returns the number of required ingredients matched by urgent (expiring soon) inventory items.
+     * Used as a tie-breaker in recommendation sorting.
+     *
+     * @return urgent match count
+     */
     public int getUrgentMatchedCount() {
         return urgentMatchedCount;
     }
