@@ -1,46 +1,46 @@
 package api.dto;
 
 /**
- * 这个类代表 recipe detail 页面里“某一条 ingredient 的状态”。
+ * This class represents the status of a single ingredient in the recipe detail page.
  *
- * 大白话：
- * 一道菜通常会列很多食材，
- * 前端需要知道每一条食材：
- * - 叫什么
- * - 需要多少
- * - 是不是 optional
- * - 冰箱里有没有
- * - 当前库存多少
- * - 还差多少
- * - 属于哪个库存分类
+ * In simple terms:
+ * A recipe usually contains multiple ingredients.
+ * The frontend needs to know, for each ingredient:
+ * - its name
+ * - required quantity
+ * - whether it is optional
+ * - whether it exists in the fridge
+ * - current stock amount
+ * - shortage amount
+ * - inventory category
  *
- * 这些小字段就都放在这里。
+ * All of this information is encapsulated in this DTO.
  */
 public class RecipeIngredientStatusResponse {
-    // 食材名，比如 Milk / Egg / Garlic
+    // Ingredient name (e.g., Milk / Egg / Garlic)
     private String name;
 
-    // 菜谱里原始写的数量文本，比如 "2 count"、"1 clove"
+    // Original quantity text from recipe (e.g., "2 count", "1 clove")
     private String quantityText;
 
-    // 这条是不是可选食材。
-    // true 的话，缺了也不一定要买。
+    // Whether this ingredient is optional.
+    // If true, missing it does not prevent cooking.
     private boolean optional;
 
-    // 当前冰箱里有没有找到对应食材。
+    // Whether this ingredient exists in the current fridge inventory.
     private boolean inFridge;
 
-    // 前端展示用的状态词。
-    // 常见值：from current fridge / partially available / need to buy / optional
+    // Status used for frontend display.
+    // Like: from current fridge / partially available / need to buy / optional
     private String status;
 
-    // 当前库存文本，比如 "1 count"
+    // Current stock in the fridge (e.g., "1 count")
     private String currentStockText;
 
-    // 还差多少，比如 "2 count"
+    // Missing quantity needed (e.g., "2 count")
     private String shortageText;
 
-    // 这项库存属于哪个分类，比如 Dairy / Produce
+    // Category of the ingredient in inventory (e.g., Dairy / Produce)
     private String inventoryCategory;
 
     public String getName() {

@@ -5,14 +5,14 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * TDD：用户偏好快照（对应 {@link Preference}，会话级、无持久化）。
+ * TDD：User preference.（Maps to: {@link Preference}）
  */
 public class TestPreference {
     /**
-     * 测试功能：不可变偏好对象持有 id 与 {@link HealthGoal}。
-     * 验证点：getter 返回值正确。
+     * Test：immutable preference object stores id and {@link HealthGoal}.
+     * Verification：getter returns correctly.
      * <p>
-     * 对应源码 / Maps to: {@link Preference#Preference(String, HealthGoal)}，{@link Preference#getId()}，{@link Preference#getHealthGoal()}
+     * Maps to: {@link Preference#Preference(String, HealthGoal)}，{@link Preference#getId()}，{@link Preference#getHealthGoal()}
      */
     @Test
     void testConstructorAndGetters() {

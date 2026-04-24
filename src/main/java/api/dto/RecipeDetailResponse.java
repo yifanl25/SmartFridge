@@ -9,18 +9,17 @@ import java.util.Locale;
 import java.util.function.Function;
 
 /**
- * 这是给 recipe detail page 用的响应 DTO。
+ * Response DTO for the recipe detail page.
  *
- * 大白话：
- * 前端点开某一道菜的时候，
- * 它想一次拿到：
- * - 菜谱本身信息
- * - 匹配率
- * - 哪些食材已经有
- * - 哪些食材还缺
- * - 每一条 ingredient 的库存状态
+ * In simple terms:
+ * When the user opens a recipe, the frontend needs a complete view including:
+ * - basic recipe information
+ * - match score and percentage
+ * - which ingredients are available
+ * - which ingredients are missing
+ * - inventory status for each ingredient
  *
- * 这些信息就是由这个类打包出来的。
+ * This class aggregates and delivers all of that data.
  */
 public class RecipeDetailResponse {
     private String id;
@@ -39,13 +38,15 @@ public class RecipeDetailResponse {
     private List<RecipeIngredientStatusResponse> optionalIngredients;
 
     /**
-     * 把你系统里的 Recipe + 当前库存，转成前端能直接吃的 detail response。
+     * Builds a detail response from a Recipe and current inventory.
      *
-     * 这个静态工厂方法就是整个 detail 组装的入口。
+     * This static factory method is the main entry point for assembling
+     * all data required by the frontend detail page.
      */
     // ===== teammate note =====
-    // 这个工厂方法负责把 Recipe 变成前端可直接消费的 detail response。
-    // 如果前端 detail page 还想加字段，优先改这里，不要让 controller 自己拼字段。
+    // This method transforms a Recipe into a frontend-ready detail response.
+    // If the detail page requires additional fields, extend the mapping here
+    // instead of constructing them in the controller.
     // insert your code here: extend response mapping carefully
     public static RecipeDetailResponse from(
             Recipe recipe,
@@ -57,7 +58,7 @@ public class RecipeDetailResponse {
         r.category = recipe.getRecipeCategory().getName();
         r.matchScore = recipe.getMatchScore();
 
-        // 匹配率 = 已满足的 required ingredients / 全部 required ingredients。
+        // Match percentage = matched required ingredients / total required ingredients.
         int totalRequired = recipe.getRequiredIngredients().size();
         int matchedRequired = recipe.getAvailableIngredients().size();
         r.matchPercent = totalRequired == 0 ? 0 : (int) Math.round((double) matchedRequired * 100.0 / totalRequired);
@@ -68,21 +69,21 @@ public class RecipeDetailResponse {
         r.description = recipe.getDescription();
         r.urgentMatchedCount = recipe.getUrgentMatchedCount();
 
-        // 这两个 list 是现成结果，直接拷一份给 response。
+        // These lists are already computed in the Recipe model, so we create defensive copies for the response.
         r.availableIngredients = new ArrayList<>(recipe.getAvailableIngredients());
         r.missingIngredients = new ArrayList<>(recipe.getMissingIngredients());
 
-        // required 和 optional 分开组装，前端展示会更清楚。
+        // Build required and optional ingredient rows separately, to provide clearer structure for frontend rendering.
         r.requiredIngredients = buildIngredientRows(recipe.getRequiredIngredients(), inventory, canonicalNameResolver);
         r.optionalIngredients = buildIngredientRows(recipe.getOptionalIngredients(), inventory, canonicalNameResolver);
         return r;
     }
 
     /**
-     * 把一组 ingredient 转成“带库存状态说明”的 response 行。
+     * Convert a list of ingredients into response rows with inventory status.
      *
-     * 这部分就是从你组员的 recipe-detail 逻辑里抽出来，
-     * 但改成适合你当前模型的版本。
+     * This part is extracted from your teammate’s recipe-detail logic,
+     * but adapted to fit the current model design.
      */
     private static List<RecipeIngredientStatusResponse> buildIngredientRows(
             List<Recipe.Ingredient> ingredients,
@@ -95,23 +96,22 @@ public class RecipeDetailResponse {
             row.setQuantityText(ingredient.getQuantityText());
             row.setOptional(ingredient.isOptional());
 
-            // 先在当前库存里找有没有“对应的同一种食材”。
+            // Try to find a matching ingredient in the current inventory.
             FoodItem matched = findMatchingInventoryItem(ingredient.getName(), inventory, canonicalNameResolver);
 
-            // 把 recipe 上写的数量文本尽量解析出来，
-            // 后面才能判断是“够用 / 不够用 / 完全没有”。
+            // Parse quantity text from recipe.
+            // Used to determine: sufficient / insufficient / missing.
             QuantitySpec recipeQty = QuantitySpec.parse(ingredient.getQuantityText());
             row.setInFridge(matched != null);
 
             if (matched != null) {
-                // 找到了库存项，先把当前库存信息写回去。
+                // If matched in inventory, set current stock info.
                 row.setCurrentStockText(matched.getQuantity() + " " + matched.getUnit());
                 row.setInventoryCategory(matched.getCategory().getName());
 
                 QuantitySpec stockQty = QuantitySpec.of(matched.getQuantity(), matched.getUnit());
 
-                // 只有当单位一致，而且库存数量比菜谱需要量少时，
-                // 才认定为 partially available。
+                // Only if units match and stock is less than required, mark as partially available
                 if (isSameUnit(recipeQty.unit(), stockQty.unit()) && stockQty.amount() < recipeQty.amount()) {
                     row.setStatus("partially available");
                     row.setShortageText(formatAmount(recipeQty.amount() - stockQty.amount(), recipeQty.unit()));
@@ -119,11 +119,11 @@ public class RecipeDetailResponse {
                     row.setStatus("from current fridge");
                 }
             } else if (ingredient.isOptional()) {
-                // optional ingredient 缺了也没关系，状态写 optional。
+                // Optional ingredient missing is acceptable.
                 row.setStatus("optional");
                 row.setShortageText(ingredient.getQuantityText());
             } else {
-                // required ingredient 不在库存里，就是真缺，要买。
+                // Required ingredient missing from inventory
                 row.setStatus("need to buy");
                 row.setShortageText(ingredient.getQuantityText());
             }
@@ -133,10 +133,10 @@ public class RecipeDetailResponse {
     }
 
     /**
-     * 在库存里找和 ingredient 对应的食材。
+     * Find a matching food item in inventory.
      *
-     * 这里不是生硬比原始字符串，
-     * 而是先走 canonicalFoodName，尽量把别名归一化后再比较。
+     * Instead of comparing raw strings,
+     * we normalize names using canonical mapping first.
      */
     private static FoodItem findMatchingInventoryItem(
             String ingredientName,
@@ -153,10 +153,9 @@ public class RecipeDetailResponse {
     }
 
     /**
-     * 判断两个单位能不能算“同一种单位”。
+     * Check whether two units are considered equivalent.
      *
-     * 比如 count / counts / pc / pcs，
-     * 这里都会先归成 count 再比较。
+     * For example: count / counts / pc / pcs are normalized into "count".
      */
     private static boolean isSameUnit(String a, String b) {
         String left = canonicalUnit(a);
@@ -165,7 +164,7 @@ public class RecipeDetailResponse {
     }
 
     /**
-     * 把一些常见单位写法统一一下，避免因为复数或缩写不同而判断失败。
+     * Normalize unit variations to avoid mismatches.
      */
     private static String canonicalUnit(String raw) {
         String u = normalize(raw);
@@ -179,9 +178,9 @@ public class RecipeDetailResponse {
     }
 
     /**
-     * 把数量格式化成更好读的文本。
+     * Format quantity into a human-readable string.
      *
-     * 例子：
+     * Examples:
      * - 2.0 -> 2
      * - 1.25 -> 1.25
      */
@@ -194,14 +193,14 @@ public class RecipeDetailResponse {
     }
 
     /**
-     * 文本统一化工具：去空格 + 转小写。
+     * Normalize text: trim + lowercase.
      */
     private static String normalize(String s) {
         return s == null ? "" : s.trim().toLowerCase(Locale.ROOT);
     }
 
     /**
-     * 把“数量 + 单位”临时装在一起，便于比较（Java 11：不用 record）。
+     * Helper class to store quantity + unit for comparison.
      */
     private static final class QuantitySpec {
         private final double amount;
@@ -221,8 +220,8 @@ public class RecipeDetailResponse {
         }
 
         /**
-         * 尽量从 quantityText 里解析出数值和单位。
-         * 读不出来时，默认按 1 count 处理。
+         * Parse quantity text into numeric value and unit.
+         * Default is 1 count if parsing fails.
          */
         static QuantitySpec parse(String quantityText) {
             if (quantityText == null || quantityText.isBlank()) {
@@ -233,14 +232,14 @@ public class RecipeDetailResponse {
             try {
                 amt = Double.parseDouble(parts[0]);
             } catch (NumberFormatException ignored) {
-                // 读不出数字就继续用默认值 1。
+                // fallback to default value
             }
             String u = parts.length > 1 ? parts[1] : "count";
             return new QuantitySpec(amt, u);
         }
 
         /**
-         * 从库存里的 quantity + unit 造一个 QuantitySpec。
+         * Create QuantitySpec from inventory data.
          */
         static QuantitySpec of(int amount, String unit) {
             return new QuantitySpec(amount, unit == null || unit.isBlank() ? "count" : unit);

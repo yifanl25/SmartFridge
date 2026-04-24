@@ -43,32 +43,32 @@ public class GroceryApiController {
     }
 
     /**
-     * 返回购物清单。
+     * Returns the grocery list.
      *
-     * 支持两个可选 query：
-     * - category：先按分类过滤
-     * - search：再按名字关键字过滤
+     * Supports two optional query：
+     * - category：filter items by category first
+     * - search：then filter by name keyword
      */
     @GetMapping("/items")
     // ===== teammate note =====
-    // 这里是 grocery list 的查询入口。
-    // 后面如果要补 sort、分页、只看已买/未买，也是在这里继续加 query 逻辑。
+    // Entry point for querying the grocery list.
+    // If we later add sorting, pagination, or filters like collectedOnly, extend the query logic here.
     // insert your code here: add more filters like sort/collectedOnly/pagination
     public List<GroceryItem> items(
             @RequestParam(value = "category", required = false) String category,
             @RequestParam(value = "search", required = false) String search) {
 
-        // 先处理分类。
+        // First handle category filtering.
         List<GroceryItem> base = (category == null || category.isBlank())
                 ? groceryController.getItems()
                 : groceryController.filterByCategory(category);
 
-        // 如果没有 search，就直接把当前结果返回。
+        // If no search term, return current results.
         if (search == null || search.isBlank()) {
             return base;
         }
 
-        // 再按名字做一次包含匹配。
+        // Then filter by name using substring matching.
         String needle = search.trim().toLowerCase();
         return base.stream()
                 .filter(item -> item.getName().toLowerCase().contains(needle))
@@ -76,17 +76,17 @@ public class GroceryApiController {
     }
 
     /**
-     * 手动加一条 grocery item。
+     * Manually add a grocery item.
      *
-     * 这里会尽量先走 food catalog：
-     * - 能识别就用标准名字和标准分类
-     * - 实在识别不了，就先塞进 Misc
+     * The system attempts to resolve the item using the food catalog:
+     * - If recognized, use canonical name and category
+     * - Otherwise, fall back to a default "Misc" category
      */
     @PostMapping("/items")
     // ===== teammate note =====
-    // 这里处理“手动加购物项”。
-    // 现在是尽量走 catalog，不行就丢到 Misc。
-    // 如果你们后面决定严格禁止自由输入，或者要校验 price/unit，就从这里改。
+    // Handles manual addition of grocery items.
+    // Currently tries catalog resolution first; otherwise falls back to Misc.
+    // If we later enforce stricter validation or restrict free input, update this endpoint accordingly.
     // insert your code here: tighten validation or align this endpoint with final PRD rules
     public ResponseEntity<GroceryItem> addLine(@RequestBody GroceryAddRequest body) {
         if (body == null || body.getFoodName() == null || body.getFoodName().isBlank()) {
@@ -95,13 +95,13 @@ public class GroceryApiController {
 
         Optional<FoodCatalogEntry> resolved = catalogController.resolveEntry(body.getFoodName().trim());
 
-        // 精确解析不到，再退一步用 suggestion。
+        // If exact match not found, try suggestion.
         FoodCatalogEntry entry = resolved.orElseGet(
                 () -> catalogController.searchSuggestions(body.getFoodName().trim()).stream()
                         .findFirst()
                         .orElse(null));
 
-        // 再找不到，就临时归到 Misc。
+        // If still not found, assign to Misc category.
         if (entry == null) {
             FoodCategory misc = new FoodCategory("misc", "Misc", "box");
             entry = new FoodCatalogEntry(body.getFoodName().trim(), 3, misc);
@@ -111,9 +111,9 @@ public class GroceryApiController {
         String id = UUID.randomUUID().toString();
         String name = catalogController.canonicalFoodName(body.getFoodName().trim());
 
-        // 数量和价格做最基本保护：
-        // - quantity 最少 0
-        // - price 不能是负数
+        // Basic validation:
+        // - quantity must be >= 0
+        // - price must not be negative
         int qty = Math.max(0, body.getQuantity());
         double price = body.getPrice() >= 0 ? body.getPrice() : 0.0;
 
@@ -123,15 +123,15 @@ public class GroceryApiController {
     }
 
     /**
-     * 删除一条购物项。
+     * Delete a grocery item.
      *
-     * 删除前先确认这条 id 真的存在，
-     * 不然就回 404。
+     * Verifies that the item exists before deleting;
+     * otherwise returns 404.
      */
     @DeleteMapping("/items/{id}")
     // ===== teammate note =====
-    // 这里是删除购物项。
-    // 如果后面要做“软删除 / undo / 批量删除”，可以从这个方法扩。
+    // Handles deletion of a grocery item.
+    // Can be extended for soft delete, undo, or batch deletion in the future.
     // insert your code here: extend delete behavior if needed
     public ResponseEntity<Void> deleteLine(@PathVariable String id) {
         boolean exists = groceryController.getItems().stream().anyMatch(i -> i.getId().equals(id));
@@ -143,7 +143,7 @@ public class GroceryApiController {
     }
 
     /**
-     * 切换某一项是否已买。
+     * Toggle whether an item has been collected (purchased).
      */
     @PatchMapping("/items/{id}/collected")
     public ResponseEntity<GroceryItem> toggleCollected(@PathVariable String id) {
@@ -151,16 +151,16 @@ public class GroceryApiController {
     }
 
     /**
-     * 按 delta 修改数量。
+     * Update quantity using a delta value.
      *
-     * 例子：
-     * - delta=1 代表加 1
-     * - delta=-1 代表减 1
+     * For example:
+     * - delta=1 increment by 1
+     * - delta=-1 decrement by 1
      */
     @PatchMapping("/items/{id}/quantity")
     // ===== teammate note =====
-    // 这里现在是按 delta 改数量。
-    // 如果前端最后改成“直接传目标数量”而不是 +1/-1，就要改这里和 controller/service 一起对齐。
+    // Currently updates quantity using delta.
+    // If the frontend switches to setting an absolute value instead, update this method along with controller/service logic.
     // insert your code here: support setQuantity mode if UI changes
     public ResponseEntity<GroceryItem> updateQuantity(
             @PathVariable String id,
@@ -169,9 +169,9 @@ public class GroceryApiController {
     }
 
     /**
-     * 结账。
+     * Checkout operation.
      *
-     * 当前动作最终会走到 groceryController.checkout()。
+     * Delegates to groceryController.checkout().
      */
     @PostMapping("/checkout")
     public void checkout() {
@@ -179,9 +179,9 @@ public class GroceryApiController {
     }
 
     /**
-     * 返回金额汇总。
+     * Returns aggregated totals.
      *
-     * 前端常用这三个值：
+     * Common values used by frontend:
      * - subtotal
      * - tax
      * - total

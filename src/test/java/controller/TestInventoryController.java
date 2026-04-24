@@ -14,7 +14,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * TDD：库存页控制器委托（对应 {@link InventoryController} → {@link IInventoryService}）。
+ * TDD：InventoryController delegation tests.（Maps to: {@link InventoryController} → {@link IInventoryService}）。
  */
 public class TestInventoryController {
     private InventoryController inventoryController;
@@ -28,10 +28,9 @@ public class TestInventoryController {
     }
 
     /**
-     * 测试功能：获取当前可见库存列表（全部项）。
-     * 验证点：初始为空。
+     * Test: Retrieve all inventory items and the initial status should be empty.
      * <p>
-     * 对应源码 / Maps to: {@link InventoryController#getVisibleItems()} → {@link InventoryService#getAllItems()}
+     * Maps to: {@link InventoryController#getVisibleItems()} → {@link InventoryService#getAllItems()}
      */
     @Test
     void testGetVisibleItemsDelegatesToInventoryService() {
@@ -39,10 +38,9 @@ public class TestInventoryController {
     }
 
     /**
-     * 测试功能：添加食材（目录解析名）。
-     * 验证点：名称与目录一致。
+     * Test: AddItem and returns item name matches the catalog.
      * <p>
-     * 对应源码 / Maps to: {@link InventoryController#addItem(String)} → {@link InventoryService#addItem(String)}
+     * Maps to: {@link InventoryController#addItem(String)} → {@link InventoryService#addItem(String)}
      */
     @Test
     void testAddItemDelegatesToInventoryService() {
@@ -50,10 +48,9 @@ public class TestInventoryController {
     }
 
     /**
-     * 测试功能：按食材分类筛选。
-     * 验证点：筛选结果条数正确。
+     * Test: Filter items by catrgory and filtered result size is correct.
      * <p>
-     * 对应源码 / Maps to: {@link InventoryController#filterByCategory(String)} → {@link InventoryService#filterByCategory(String)}
+     * Maps to: {@link InventoryController#filterByCategory(String)} → {@link InventoryService#filterByCategory(String)}
      */
     @Test
     void testFilterByCategoryDelegatesToInventoryService() {
@@ -62,10 +59,9 @@ public class TestInventoryController {
     }
 
     /**
-     * 测试功能：按过期日排序展示。
-     * 验证点：委托服务并返回列表。
+     * Test: Sorts items by expiry date and delegates to service and returns list.
      * <p>
-     * 对应源码 / Maps to: {@link InventoryController#sortByExpiry()} → {@link InventoryService#sortByExpiry()}
+     * Maps to: {@link InventoryController#sortByExpiry()} → {@link InventoryService#sortByExpiry()}
      */
     @Test
     void testSortByExpiryDelegatesToInventoryService() {
@@ -74,10 +70,9 @@ public class TestInventoryController {
     }
 
     /**
-     * 测试功能：按创建/入库时间排序。
-     * 验证点：委托服务并返回列表。
+     * Test: Sorts item by Created time and delegates to service and returns list.
      * <p>
-     * 对应源码 / Maps to: {@link InventoryController#sortByCreatedTime()} → {@link InventoryService#sortByCreatedTime()}
+     * Maps to: {@link InventoryController#sortByCreatedTime()} → {@link InventoryService#sortByCreatedTime()}
      */
     @Test
     void testSortByCreatedTimeDelegatesToInventoryService() {

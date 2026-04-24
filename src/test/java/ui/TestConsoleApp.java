@@ -20,7 +20,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 /**
- * TDD：文本控制台命令行入口（对应 {@link ConsoleApp}，可选演示路径）。
+ * TDD：Console-based CLI entry point.(Maps to: {@link ConsoleApp}，optional demo flow).
  */
 public class TestConsoleApp {
     private ConsoleApp consoleApp;
@@ -43,10 +43,10 @@ public class TestConsoleApp {
     }
 
     /**
-     * 测试功能：{@link ConsoleApp#start()} 非阻塞启动（仅打印提示）。
-     * 验证点：不抛异常。
+     * Test：{@link ConsoleApp#start()} initializes without blocking(only prints instructions).
+     * Verification: No exception is thrown.
      * <p>
-     * 对应源码 / Maps to: {@link ConsoleApp#start()}
+     * Maps to: {@link ConsoleApp#start()}
      */
     @Test
     void testStartInitializesConsoleFlow() {
@@ -54,10 +54,10 @@ public class TestConsoleApp {
     }
 
     /**
-     * 测试功能：解析 {@code add <name>}，委托库存添加。
-     * 验证点：不抛异常。
+     * Test：Parses {@code add <name>} and delegates to inventory logic.
+     * Verification: No exception is thrown.
      * <p>
-     * 对应源码 / Maps to: {@link ConsoleApp#processCommand(String)} → {@link controller.InventoryController#addItem(String)}
+     * Maps to: {@link ConsoleApp#processCommand(String)} → {@link controller.InventoryController#addItem(String)}
      */
     @Test
     void testProcessCommandRoutesInventoryCommand() {
@@ -65,10 +65,10 @@ public class TestConsoleApp {
     }
 
     /**
-     * 测试功能：解析 {@code goal <goal>}，保存健康目标偏好。
-     * 验证点：不抛异常。
+     * Test: Parses {@code goal <goal>} and stores user health preference.
+     * Verification: No exception is thrown.
      * <p>
-     * 对应源码 / Maps to: {@link ConsoleApp#processCommand(String)} → {@link controller.PreferenceController#savePreference(model.HealthGoal)}
+     * Maps to: {@link ConsoleApp#processCommand(String)} → {@link controller.PreferenceController#savePreference(model.HealthGoal)}
      */
     @Test
     void testProcessCommandRoutesPreferenceCommand() {
@@ -76,10 +76,10 @@ public class TestConsoleApp {
     }
 
     /**
-     * 测试功能：未知命令（如 {@code noop}）的容错。
-     * 验证点：不抛异常。
+     * Test：handle unknown commands(Like: {@code noop}).
+     * Verification: No exception is thrown.
      * <p>
-     * 对应源码 / Maps to: {@link ConsoleApp#processCommand(String)}（noop 分支无下游调用）
+     * Maps to: {@link ConsoleApp#processCommand(String)}
      */
     @Test
     void testProcessCommandRoutesRecommendationCommand() {
@@ -87,10 +87,10 @@ public class TestConsoleApp {
     }
 
     /**
-     * 测试功能：解析 {@code checkout}，触发购物结账与会话重置钩子。
-     * 验证点：不抛异常。
+     * Test：Parese {@code checkout}and trigger grocery checkout and session resets.
+     * Verification: No exception is thrown.
      * <p>
-     * 对应源码 / Maps to: {@link ConsoleApp#processCommand(String)} → {@link controller.GroceryController#checkout()}
+     * Maps to: {@link ConsoleApp#processCommand(String)} → {@link controller.GroceryController#checkout()}
      */
     @Test
     void testProcessCommandRoutesGroceryCommand() {
@@ -98,10 +98,10 @@ public class TestConsoleApp {
     }
 
     /**
-     * 测试功能：空输入 {@code null} 的健壮性。
-     * 验证点：不抛异常。
+     * Test：handle null input safely. {@code null}
+     * Verification: No exception is thrown.
      * <p>
-     * 对应源码 / Maps to: {@link ConsoleApp#processCommand(String)}（null 早退）
+     * Maps to: {@link ConsoleApp#processCommand(String)}
      */
     @Test
     void testProcessCommandHandlesInvalidInput() {

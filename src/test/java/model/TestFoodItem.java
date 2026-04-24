@@ -9,14 +9,14 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * TDD：库存食材项模型（对应 {@link FoodItem}，「新入库」与「临期」规则）。
+ * TDD：Inventory food item.(Maps to: {@link FoodItem}，including "newly added" and "near expiry" rules).
  */
 public class TestFoodItem {
     /**
-     * 测试功能：构造与访问器；「新」标签（创建日为今天时视为新）。
-     * 验证点：字段一致且 {@link FoodItem#isNew()} 为 true。
+     * Test: Constructor and getter; "new item" flag when created today.
+     * Verification：All fields match input and {@link FoodItem#isNew()} returns true。
      * <p>
-     * 对应源码 / Maps to: {@link FoodItem#FoodItem(String, String, FoodCategory, int, String, String, String)}，
+     * Maps to: {@link FoodItem#FoodItem(String, String, FoodCategory, int, String, String, String)}，
      * {@link FoodItem#getId()}, {@link FoodItem#getName()}, {@link FoodItem#getCategory()}, {@link FoodItem#getQuantity()},
      * {@link FoodItem#getUnit()}, {@link FoodItem#isNew()}
      */
@@ -42,10 +42,10 @@ public class TestFoodItem {
     }
 
     /**
-     * 测试功能：「紧急/临期」标签——过期日为当天。
-     * 验证点：{@link FoodItem#isUrgent()} 为 true。
+     * Test: "urgent / near expiry" flag when expiry date is today.
+     * Verification：{@link FoodItem#isUrgent()} returns true。
      * <p>
-     * 对应源码 / Maps to: {@link FoodItem#FoodItem(String, String, FoodCategory, int, String, String, String)}，{@link FoodItem#isUrgent()}
+     * Maps to: {@link FoodItem#FoodItem(String, String, FoodCategory, int, String, String, String)}，{@link FoodItem#isUrgent()}
      */
     @Test
     void testIsUrgentWhenExpiryIsToday() {
@@ -56,10 +56,10 @@ public class TestFoodItem {
     }
 
     /**
-     * 测试功能：过期日晚于今天时不标为紧急。
-     * 验证点：{@link FoodItem#isUrgent()} 为 false。
+     * Test：Item is not urgent when expiry date is in the future.
+     * Verification：{@link FoodItem#isUrgent()} returns false。
      * <p>
-     * 对应源码 / Maps to: {@link FoodItem#FoodItem(String, String, FoodCategory, int, String, String, String)}，{@link FoodItem#isUrgent()}
+     * Maps to: {@link FoodItem#FoodItem(String, String, FoodCategory, int, String, String, String)}，{@link FoodItem#isUrgent()}
      */
     @Test
     void testIsNotUrgentWhenExpiryIsFuture() {

@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
- * TDD：会话内偏好存储（对应 {@link PreferenceService}，无持久化）。
+ * TDD：Preference stores in session.(Maps to: {@link PreferenceService}，no persistence).
  */
 public class TestPreferenceService {
     private PreferenceService preferenceService;
@@ -21,10 +21,10 @@ public class TestPreferenceService {
     }
 
     /**
-     * 测试功能：保存 {@link HealthGoal} 供推荐评分使用。
-     * 验证点：返回对象携带同一枚举值。
+     * Test：Stores {@link HealthGoal} for recommendation scoring.
+     * Verification: Returned object contains the same enum value.
      * <p>
-     * 对应源码 / Maps to: {@link PreferenceService#savePreference(HealthGoal)}
+     * Maps to: {@link PreferenceService#savePreference(HealthGoal)}
      */
     @Test
     void testSavePreferenceStoresGoal() {
@@ -32,10 +32,10 @@ public class TestPreferenceService {
     }
 
     /**
-     * 测试功能：读取当前会话最近一次保存的偏好。
-     * 验证点：与最后一次写入一致。
+     * Test: Retrieves the most recently saved preference in the session.
+     * Verification: Matches the last saved value.
      * <p>
-     * 对应源码 / Maps to: {@link PreferenceService#getPreference()}
+     * Maps to: {@link PreferenceService#getPreference()}
      */
     @Test
     void testGetPreferenceReturnsSavedGoal() {
@@ -44,10 +44,10 @@ public class TestPreferenceService {
     }
 
     /**
-     * 测试功能：结账/会话重置时清除偏好。
-     * 验证点：{@code getPreference()} 为 {@code null}。
+     * Test: Clears preference on checkout or session reset.
+     * Verification: {@code getPreference()} returns {@code null}.
      * <p>
-     * 对应源码 / Maps to: {@link PreferenceService#clearPreference()}, {@link PreferenceService#getPreference()}
+     * Maps to: {@link PreferenceService#clearPreference()}, {@link PreferenceService#getPreference()}
      */
     @Test
     void testClearPreferenceRemovesCurrentPreference() {

@@ -1,10 +1,10 @@
 package api.dto;
 
 /**
- * POST 购物车时发来的 JSON / JSON body when adding a grocery line.
+ * POST cart sends JSON / JSON body when adding a grocery line.
  */
 public class GroceryAddRequest {
-    // PRD 要加新字段再改这里；别为了「好看」乱加没用的键 / Add fields only when PRD says so.
+    // Add fields only when PRD says so.
     // INSERT YOUR CODE HERE
 
     private String foodName;

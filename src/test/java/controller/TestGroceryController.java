@@ -13,24 +13,61 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * TDD：购物清单控制器委托（对应 {@link GroceryController} → {@link IGroceryService}）。
+ * TDD：GroceryController delegation tests.（ Maps to: {@link GroceryController} → {@link IGroceryService}）。
  */
 public class TestGroceryController {
     private GroceryController groceryController;
     private IGroceryService groceryService;
+    private FoodCategory cat;
 
     @BeforeEach
     void setUp() {
-        FoodCategory cat = new FoodCategory("c1", "Dairy", "milk");
+        cat = new FoodCategory("c1", "Dairy", "milk");
         groceryService = new GroceryService(List.of(new GroceryItem("1", "Milk", cat, 2, 3.0, false)));
         groceryController = new GroceryController(groceryService);
     }
 
     /**
-     * 测试功能：切换行「已采购」状态。
-     * 验证点：委托服务并反映在新状态上。
+     * Test: getItems() delegates to service and returns current list.
+     */
+    @Test
+    void testGetItemsReturnCurrentList() {
+        assertEquals(1,groceryController.getItems().size());
+    }
+
+    /**
+     * Test: addLine() delegates to service and increases list size.
+     */
+    @Test
+    void testAddLineDelegatesToGroceryService() {
+        FoodCategory cat2 = new FoodCategory("c2", "Produce", "leaf");
+        groceryController.addLine(new GroceryItem("2", "Spinach", cat2, 1, 1.5, false));
+        assertEquals(2, groceryController.getItems().size());
+    }
+
+    /**
+     * Tests filterByCategory() delegates to service and returns matching items.
+     */
+    @Test
+    void testFilterByGroceryDelegatesToGroceryService() {
+        List<GroceryItem> result = groceryController.filterByCategory("Dairy");
+        assertEquals(1, result.size());
+        assertEquals("Milk", result.get(0).getName());
+    }
+
+    /**
+     * Tests filterByCategory() returns empty list for non-matching category.
+     */
+    @Test
+    void testFilterByCategoryReturnsEmptyForNonMatchingCategory() {
+        List<GroceryItem> result = groceryController.filterByCategory("Produce");
+        assertEquals(0, result.size());
+    }
+
+    /**
+     * Tests ToggleCollected delegates to service and the updated state is reflected.
      * <p>
-     * 对应源码 / Maps to: {@link GroceryController#toggleCollected(String)} → {@link GroceryService#toggleCollected(String)}
+     * Maps to: {@link GroceryController#toggleCollected(String)} → {@link GroceryService#toggleCollected(String)}
      */
     @Test
     void testToggleCollectedDelegatesToGroceryService() {
@@ -38,10 +75,9 @@ public class TestGroceryController {
     }
 
     /**
-     * 测试功能：调整购物行数量。
-     * 验证点：委托服务后数量正确。
+     * Tests UpdateQuantity delegates to service and the quantity is correct.
      * <p>
-     * 对应源码 / Maps to: {@link GroceryController#updateQuantity(String, int)} → {@link GroceryService#updateQuantity(String, int)}
+     * Maps to: {@link GroceryController#updateQuantity(String, int)} → {@link GroceryService#updateQuantity(String, int)}
      */
     @Test
     void testUpdateQuantityDelegatesToGroceryService() {
@@ -49,10 +85,9 @@ public class TestGroceryController {
     }
 
     /**
-     * 测试功能：删除购物行。
-     * 验证点：底层服务列表被清空。
+     * Tests DeleteItem delegates to service and service list is cleared.
      * <p>
-     * 对应源码 / Maps to: {@link GroceryController#deleteItem(String)} → {@link GroceryService#deleteItem(String)}
+     * Maps to: {@link GroceryController#deleteItem(String)} → {@link GroceryService#deleteItem(String)}
      */
     @Test
     void testDeleteItemDelegatesToGroceryService() {
@@ -61,10 +96,9 @@ public class TestGroceryController {
     }
 
     /**
-     * 测试功能：计算小计（仅已勾选行）。
-     * 验证点：委托服务，数值与 PRD 示例一致。
+     * Tests CalculateSubtotal(only checked items) delegates to service and result matches PRD example.
      * <p>
-     * 对应源码 / Maps to: {@link GroceryController#calculateSubtotal()} → {@link GroceryService#calculateSubtotal()}
+     * Maps to: {@link GroceryController#calculateSubtotal()} → {@link GroceryService#calculateSubtotal()}
      */
     @Test
     void testCalculateSubtotalDelegatesToGroceryService() {
@@ -75,10 +109,9 @@ public class TestGroceryController {
     }
 
     /**
-     * 测试功能：按给定小计计算税额。
-     * 验证点：委托服务，8% 税率。
+     * Tests CalculateTax delegates to service based on 8% tax rate.
      * <p>
-     * 对应源码 / Maps to: {@link GroceryController#calculateTax(double)} → {@link GroceryService#calculateTax(double)}
+     * Maps to: {@link GroceryController#calculateTax(double)} → {@link GroceryService#calculateTax(double)}
      */
     @Test
     void testCalculateTaxDelegatesToGroceryService() {
@@ -86,10 +119,9 @@ public class TestGroceryController {
     }
 
     /**
-     * 测试功能：小计 + 税 = 总额。
-     * 验证点：委托服务，结果正确。
+     * Tests calculateTotal delegates to service and calculate correctly.
      * <p>
-     * 对应源码 / Maps to: {@link GroceryController#calculateTotal(double, double)} → {@link GroceryService#calculateTotal(double, double)}
+     * Maps to: {@link GroceryController#calculateTotal(double, double)} → {@link GroceryService#calculateTotal(double, double)}
      */
     @Test
     void testCalculateTotalDelegatesToGroceryService() {
@@ -97,10 +129,9 @@ public class TestGroceryController {
     }
 
     /**
-     * 测试功能：结账（本控制器默认仅清空购物服务；完整会话重置由带 Runnable 的构造协调）。
-     * 验证点：购物列表被清空。
+     * Test Checkout delegates to service and ensures grocery list is cleared.
      * <p>
-     * 对应源码 / Maps to: {@link GroceryController#checkout()} → {@link GroceryService#checkout()}
+     * Maps to: {@link GroceryController#checkout()} → {@link GroceryService#checkout()}
      */
     @Test
     void testCheckoutDelegatesToGroceryService() {

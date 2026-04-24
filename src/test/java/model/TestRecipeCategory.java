@@ -5,14 +5,14 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * TDD：菜谱分类（对应 {@link RecipeCategory}，与食材 {@link FoodCategory} 分离）。
+ * TDD：Recipe category test. (Maps to: {@link RecipeCategory}，separated from food categories{@link FoodCategory}).
  */
 public class TestRecipeCategory {
     /**
-     * 测试功能：菜谱分组标签的 id、名称、图标。
-     * 验证点：不可变字段经 getter 读出。
+     * Test: recipe grouping label id, name, and icon.
+     * Verification: immutable fields are correctly returned via getters.
      * <p>
-     * 对应源码 / Maps to: {@link RecipeCategory#RecipeCategory(String, String, String)}，
+     * Maps to: {@link RecipeCategory#RecipeCategory(String, String, String)}，
      * {@link RecipeCategory#getId()}，{@link RecipeCategory#getName()}，{@link RecipeCategory#getIcon()}
      */
     @Test

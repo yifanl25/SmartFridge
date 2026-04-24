@@ -5,25 +5,23 @@ import model.GroceryItem;
 import java.util.List;
 
 /**
- * 这是 grocery 模块的 service 接口。
+ * This is the service interface for the grocery module.
  *
- * 大白话：
- * 只要是“购物清单应该会做的事”，
- * 都先在这里列出来，
- * 然后具体由 GroceryService 去实现。
+ * It defines all the operations that a grocery list should support,
+ * while the actual implementation is handled by GroceryService.
  *
- * 这样 controller / api 只依赖接口，
- * 分层会更清楚。
+ * This allows the controller/API layer to depend only on the interface,
+ * resulting in a cleaner layered architecture.
  */
 public interface IGroceryService {
 
     /**
-     * 取当前购物清单全部行。
+     * Gets all rows which are currently on the session grocery list.
      */
     List<GroceryItem> getItems();
 
     /**
-     * 加一条购物项。
+     * Adds one item row to the grocery list.
      */
     void addLine(GroceryItem item);
 
@@ -35,55 +33,55 @@ public interface IGroceryService {
     List<GroceryItem> filterByCategory(String categoryName);
 
     /**
-     * 按名字关键字搜索。
-     * <p>Teammate note: 这个接口是给 grocery 名字搜索用的。
-     * insert your code here: keep interface in sync if search rule changes</p>
+     * Filter the items whose category matches the given category name.
+     * <p>Teammate note: 这个接口是给 grocery 分类筛选用的。
+     * insert your code here: keep interface in sync if service rule changes</p>
      */
     List<GroceryItem> searchByName(String keyword);
 
     /**
-     * 切换某行是否已买。
+     * Toggles whether a specific item has been collected.
      *
-     * 这里会返回改完后的那一行，
-     * 方便上层直接拿去回给前端。
+     * Returns the updated item,
+     * so the upper layer can directly send it back to the frontend.
      */
     GroceryItem toggleCollected(String itemId);
 
     /**
-     * 按增量修改数量。
+     * Updates the quantity by a given delta.
      */
     GroceryItem updateQuantity(String itemId, int delta);
 
     /**
-     * 删除一条购物项。
+     * Removes the specified item from the grocery list.
      */
     void deleteItem(String itemId);
 
     /**
-     * 计算小计。
+     * Calculates the subtotal.
      *
-     * 规则：只统计 collected 的项，
-     * 每项金额 = 数量 * 单价。
+     * Rule: only includes items that have been collected,
+     * and for each item, the amount is quantity * unit price.
      */
     double calculateSubtotal();
 
     /**
-     * 计算税额。
+     * Calculates the tax.
      */
     double calculateTax(double subtotal);
 
     /**
-     * 计算总额。
+     * Calculates the final total from subtotal and tax.
      */
     double calculateTotal(double subtotal, double tax);
 
     /**
-     * checkout 时，购物模块自己要做的收尾动作。
+     * Finalization steps performed by the grocery module during checkout.
      */
     void checkout();
 
     /**
-     * 直接清空购物清单。
+     * Clears all items from the grocery list immediately.
      */
     void clearGrocery();
 }

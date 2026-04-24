@@ -4,6 +4,7 @@
 plugins {
     id 'application'
     id 'idea'
+    id 'jacoco'
     id 'org.springframework.boot' version '2.7.18'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 }
@@ -51,4 +52,18 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    '**/SmartFridgeApiApplication.class',
+                    '**/Main.class',
+                    'api/SmartFridgeApiApplication.class',
+                    'ui/Main.class'
+            ])
+        }))
+    }
 }

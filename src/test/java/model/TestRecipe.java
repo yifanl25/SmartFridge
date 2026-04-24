@@ -7,14 +7,14 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * TDD：菜谱领域模型与 JSON 模板字段（对应 {@link Recipe}、嵌套 {@link Recipe.HealthTag}/{@link Recipe.Ingredient}）。
+ * TDD：Recipe and JSON maps.(Maps to: {@link Recipe}、including: {@link Recipe.HealthTag}/{@link Recipe.Ingredient}).
  */
 public class TestRecipe {
     /**
-     * 测试功能：{@link Recipe#loaded(...)} 工厂与访问器。
-     * 验证点：静态字段、嵌套类型、计算前 matchScore 为 0、列表初始为空。
+     * Test：{@link Recipe#loaded(...)} method and getter.
+     * Verification：static fields, types, initial matchScore equals 0, and ingredient lists are empty.
      * <p>
-     * 对应源码 / Maps to: {@link Recipe#loaded(String, String, RecipeCategory, java.util.List, java.util.List, java.util.List, double, int, int, String)}，
+     * Maps to: {@link Recipe#loaded(String, String, RecipeCategory, java.util.List, java.util.List, java.util.List, double, int, int, String)}，
      * {@link Recipe#getId()}, {@link Recipe#getTitle()}, {@link Recipe#getRecipeCategory()}, {@link Recipe#getMatchScore()},
      * {@link Recipe#getRating()}, {@link Recipe#getCookTime()}, {@link Recipe#getCalories()}, {@link Recipe#getDescription()},
      * {@link Recipe#getRequiredIngredients()}, {@link Recipe#getAvailableIngredients()}, {@link Recipe#getMissingIngredients()}

@@ -1,5 +1,7 @@
 package controller;
 
+import model.HealthGoal;
+import model.Preference;
 import model.Recipe;
 import model.RecipeCategory;
 import service.FoodCatalog;
@@ -11,10 +13,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * TDD：推荐页/控制器边界（对应 {@link RecommendationController} → {@link IRecommendationService}）。
+ * TDD：RecommendationController tests.（Maps to: {@link RecommendationController} → {@link IRecommendationService}）。
  */
 public class TestRecommendationController {
     private RecommendationController recommendationController;
@@ -40,10 +42,40 @@ public class TestRecommendationController {
     }
 
     /**
-     * 测试功能：根据库存与偏好计算推荐列表。
-     * 验证点：委托服务并返回预期条数。
+     * Tests filterByRecipeCategory() returns empty list for non-matching category.
+     */
+    @Test
+    void testFilterByRecipeCategoryReturnsEmptyForNonMatchingCategory() {
+        recommendationController.getRecommendations(List.of(), null);
+        List<Recipe> result = recommendationController.filterByRecipeCategory("nonexistent");
+        assertEquals(0, result.size());
+    }
+
+    /**
+     * Tests sortByMatchScore() with a preference set returns ordered list.
+     */
+    @Test
+    void testSortByMatchScoreWithPreferenceReturnsNonEmptyList() {
+        Preference pref = new Preference("p1", HealthGoal.FAT_LOSS);
+        recommendationController.getRecommendations(List.of(), pref);
+        List<Recipe> result = recommendationController.sortByMatchScore();
+        assertFalse(result.isEmpty());
+    }
+
+
+    /**
+     * Tests getRecommendationById() and returns null when id does not exist.
+     */
+    @Test
+    void testGetRecommendationByIdReturnsNullForUnknownId() {
+        Recipe result = recommendationController.getRecommendationById(List.of(), null, "999");
+        assertNull(result);
+    }
+
+    /**
+     * Test: GetRecommendations by recommendation and inventory, delegates to service and returns expected result size.
      * <p>
-     * 对应源码 / Maps to: {@link RecommendationController#getRecommendations(java.util.List, model.Preference)} → {@link RecommendationService#getRecommendations(java.util.List, model.Preference)}
+     * Maps to: {@link RecommendationController#getRecommendations(java.util.List, model.Preference)} → {@link RecommendationService#getRecommendations(java.util.List, model.Preference)}
      */
     @Test
     void testGetRecommendationsDelegatesToRecommendationService() {
@@ -51,10 +83,10 @@ public class TestRecommendationController {
     }
 
     /**
-     * 测试功能：按菜谱分类（{@link RecipeCategory}）筛选当前推荐结果。
-     * 验证点：先刷新推荐再筛选，条数符合。
+     * Test：Filter recommendations ByRecipeCategory({@link RecipeCategory}).
+     * Verification: after refreshing recommendations, filtered result size is correct.
      * <p>
-     * 对应源码 / Maps to: {@link RecommendationController#filterByRecipeCategory(String)} → {@link RecommendationService#filterByRecipeCategory(String)}
+     * Maps to: {@link RecommendationController#filterByRecipeCategory(String)} → {@link RecommendationService#filterByRecipeCategory(String)}
      */
     @Test
     void testFilterByRecipeCategoryDelegatesToRecommendationService() {
@@ -63,10 +95,9 @@ public class TestRecommendationController {
     }
 
     /**
-     * 测试功能：按匹配分排序当前推荐列表。
-     * 验证点：委托服务且返回非空列表。
+     * Tests: Sorts current recommendations by match score and returns non-empty list.
      * <p>
-     * 对应源码 / Maps to: {@link RecommendationController#sortByMatchScore()} → {@link RecommendationService#sortByMatchScore()}
+     * Maps to: {@link RecommendationController#sortByMatchScore()} → {@link RecommendationService#sortByMatchScore()}
      */
     @Test
     void testSortByMatchScoreDelegatesToRecommendationService() {
@@ -75,10 +106,9 @@ public class TestRecommendationController {
     }
 
     /**
-     * 测试功能：按烹饪时间排序当前推荐列表。
-     * 验证点：委托服务且返回非空列表。
+     * Test: Sorts current recommendations by cook time and returns non-empty list.
      * <p>
-     * 对应源码 / Maps to: {@link RecommendationController#sortByCookTime()} → {@link RecommendationService#sortByCookTime()}
+     * Maps to: {@link RecommendationController#sortByCookTime()} → {@link RecommendationService#sortByCookTime()}
      */
     @Test
     void testSortByCookTimeDelegatesToRecommendationService() {

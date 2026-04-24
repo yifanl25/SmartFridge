@@ -9,9 +9,10 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
- * TDD：购物清单会话状态与计价规则（对应 {@link GroceryService}，PRD 小计/税/结账）。
+ * TDD：Grocery list and pricing rules(Maps to: {@link GroceryService}，including PRD subtotal, tax, and checkout logic).
  */
 public class TestGroceryService {
     private GroceryService groceryService;
@@ -24,10 +25,10 @@ public class TestGroceryService {
     }
 
     /**
-     * 测试功能：读取当前购物清单全部行。
-     * 验证点：与构造时注入条数一致。
+     * Test : Retrieves all grocery items in the current list.
+     * Verification: Matches the number of items initialized.
      * <p>
-     * 对应源码 / Maps to: {@link GroceryService#getItems()}
+     * Maps to: {@link GroceryService#getItems()}
      */
     @Test
     void testGetItemsReturnsCurrentGroceryItems() {
@@ -35,10 +36,10 @@ public class TestGroceryService {
     }
 
     /**
-     * 测试功能：向购物清单追加一行（缺失食材导入等场景）。
-     * 验证点：{@code addLine} 后条数 +1。
+     * Test: append a new item to the grocery list(e.g., importing missing ingredients).
+     * Verification: list size increases by 1 after {@code addLine}.
      * <p>
-     * 对应源码 / Maps to: {@link GroceryService#addLine(GroceryItem)}、{@link GroceryService#getItems()}
+     * Maps to: {@link GroceryService#addLine(GroceryItem)}、{@link GroceryService#getItems()}
      */
     @Test
     void testAddLineAppendsRow() {
@@ -48,10 +49,10 @@ public class TestGroceryService {
     }
 
     /**
-     * 测试功能：切换「已采购」勾选状态。
-     * 验证点：仅影响该行 collected 标志。
+     * Test: Toggles "collected" (purchased) status.
+     * Verification: Only the target item's collected flag is updated.
      * <p>
-     * 对应源码 / Maps to: {@link GroceryService#toggleCollected(String)}
+     * Maps to: {@link GroceryService#toggleCollected(String)}
      */
     @Test
     void testToggleCollectedUpdatesState() {
@@ -59,10 +60,10 @@ public class TestGroceryService {
     }
 
     /**
-     * 测试功能：按增量修改购物行数量。
-     * 验证点：数量在合法范围内更新。
+     * Test: Updates item quantity using a delta.
+     * Verification: Quantity is updated within valid bounds.
      * <p>
-     * 对应源码 / Maps to: {@link GroceryService#updateQuantity(String, int)}
+     * Maps to: {@link GroceryService#updateQuantity(String, int)}
      */
     @Test
     void testUpdateQuantityChangesAmount() {
@@ -70,10 +71,10 @@ public class TestGroceryService {
     }
 
     /**
-     * 测试功能：从购物清单删除一行。
-     * 验证点：删除后列表为空。
+     * Test: Deletes an item from the grocery list.
+     * Verification: List becomes empty after deletion.
      * <p>
-     * 对应源码 / Maps to: {@link GroceryService#deleteItem(String)}、{@link GroceryService#getItems()}
+     * Maps to: {@link GroceryService#deleteItem(String)}、{@link GroceryService#getItems()}
      */
     @Test
     void testDeleteItemRemovesItem() {
@@ -82,10 +83,10 @@ public class TestGroceryService {
     }
 
     /**
-     * 测试功能：小计 = Σ(单价×数量)，且仅统计已勾选「已采购」的行。
-     * 验证点：2×3.0=6.0。
+     * Test: subtotal = Σ(price × quantity), counting only collected items.
+     * Verification: 2 × 3.0 = 6.0.
      * <p>
-     * 对应源码 / Maps to: {@link GroceryService#calculateSubtotal()}
+     * Maps to: {@link GroceryService#calculateSubtotal()}
      */
     @Test
     void testCalculateSubtotalUsesCollectedItems() {
@@ -96,10 +97,10 @@ public class TestGroceryService {
     }
 
     /**
-     * 测试功能：税额 = 小计 × 8%。
-     * 验证点：6.0 → 0.48。
+     * Test: tax = subtotal × 8%.
+     * Verification: 6.0 → 0.48.
      * <p>
-     * 对应源码 / Maps to: {@link GroceryService#calculateTax(double)}
+     * Maps to: {@link GroceryService#calculateTax(double)}
      */
     @Test
     void testCalculateTaxUsesEightPercent() {
@@ -107,10 +108,10 @@ public class TestGroceryService {
     }
 
     /**
-     * 测试功能：应付总额 = 小计 + 税。
-     * 验证点：6.0 + 0.48 = 6.48。
+     * Test: total = subtotal + tax.
+     * Verification: 6.0 + 0.48 = 6.48.
      * <p>
-     * 对应源码 / Maps to: {@link GroceryService#calculateTotal(double, double)}
+     * Maps to: {@link GroceryService#calculateTotal(double, double)}
      */
     @Test
     void testCalculateTotalAddsSubtotalAndTax() {
@@ -118,10 +119,10 @@ public class TestGroceryService {
     }
 
     /**
-     * 测试功能：结账时清空本模块购物清单（完整会话重置由上层协调）。
-     * 验证点：{@code checkout} 后条数为 0。
+     * Test: Checkout clears the grocery list(full session reset handled at a higher level).
+     * Verification: List size is 0 after checkout.
      * <p>
-     * 对应源码 / Maps to: {@link GroceryService#checkout()}、{@link GroceryService#getItems()}
+     * Maps to: {@link GroceryService#checkout()}、{@link GroceryService#getItems()}
      */
     @Test
     void testCheckoutClearsGroceryItems() {
@@ -130,14 +131,50 @@ public class TestGroceryService {
     }
 
     /**
-     * 测试功能：会话重置时直接清空购物清单。
-     * 验证点：{@code clearGrocery} 后无行。
+     * Test: Clears grocery list directly (session reset).
+     * Verification: List is empty after {@code clearGrocery}.
      * <p>
-     * 对应源码 / Maps to: {@link GroceryService#clearGrocery()}
+     * Maps to: {@link GroceryService#clearGrocery()}
      */
     @Test
     void testClearGroceryRemovesAllItems() {
         groceryService.clearGrocery();
         assertEquals(0, groceryService.getItems().size());
+    }
+
+    /** Test: null category returns all items */
+    @Test
+    void testFilterByCategoryReturnsAllForNullCategory() {
+        assertEquals(1, groceryService.filterByCategory(null).size());
+    }
+
+    /** Test: "All" keyword returns all items */
+    @Test
+    void testFilterByCategoryReturnsAllForAllKeyword() {
+        assertEquals(1, groceryService.filterByCategory("All").size());
+    }
+
+    /** Test: quantity floor at zero when delta is negative */
+    @Test
+    void testUpdateQuantityFloorIsZero() {
+        assertEquals(0, groceryService.updateQuantity("1", -999).getQuantity());
+    }
+
+    /** Test: uncollected items are excluded from subtotal */
+    @Test
+    void testCalculateSubtotalExcludesUncollectedItems() {
+        assertEquals(0.0, groceryService.calculateSubtotal());
+    }
+
+    /** Test: null keyword returns all items */
+    @Test
+    void testSearchByNameReturnsAllForNullKeyword() {
+        assertEquals(1, groceryService.searchByName(null).size());
+    }
+
+    /** Test: blank keyword returns all items */
+    @Test
+    void testSearchByNameReturnsAllForBlankKeyword() {
+        assertEquals(1, groceryService.searchByName("   ").size());
     }
 }

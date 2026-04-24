@@ -13,7 +13,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * TDD：推荐算法、排序与筛选（对应 {@link RecommendationService}，PRD 打分与 tie-break）。
+ * TDD：Recommendation logic, sorting, and filtering.(Maps to: {@link RecommendationService}，including PRD scoring and tie-break).
  */
 public class TestRecommendationService {
     private RecommendationService recommendationService;
@@ -49,10 +49,10 @@ public class TestRecommendationService {
     }
 
     /**
-     * 测试功能：综合库存与偏好生成带分推荐列表。
-     * 验证点：返回全部模板菜谱条数（本 fixture 为 2）。
+     * Test: Generates recommendation list based on inventory and user preference.
+     * Verification: Returns all template recipes (2 in this fixture).
      * <p>
-     * 对应源码 / Maps to: {@link RecommendationService#getRecommendations(java.util.List, model.Preference)}
+     * Maps to: {@link RecommendationService#getRecommendations(java.util.List, model.Preference)}
      */
     @Test
     void testGetRecommendationsUsesInventoryAndPreference() {
@@ -60,10 +60,10 @@ public class TestRecommendationService {
     }
 
     /**
-     * 测试功能：按菜谱分类名称（子串）筛选当前推荐缓存。
-     * 验证点：{@code quick} 匹配两条 fixture。
+     * Test: Filters current recommendations by recipe category (substring match).
+     * Verification: 'Quick' matches both recipes in this fixture.
      * <p>
-     * 对应源码 / Maps to: {@link RecommendationService#filterByRecipeCategory(String)}
+     * Maps to: {@link RecommendationService#filterByRecipeCategory(String)}
      */
     @Test
     void testFilterByRecipeCategoryReturnsMatchingRecipes() {
@@ -72,10 +72,10 @@ public class TestRecommendationService {
     }
 
     /**
-     * 测试功能：按匹配分降序排列当前推荐。
-     * 验证点：分高者 {@code A} 在首位。
+     * Test: Sorts current recommendations by match score in descending order.
+     * Verification: Higher-scored recipe "A" appears first.
      * <p>
-     * 对应源码 / Maps to: {@link RecommendationService#sortByMatchScore()}
+     * Maps to: {@link RecommendationService#sortByMatchScore()}
      */
     @Test
     void testSortByMatchScoreOrdersDescending() {
@@ -84,10 +84,10 @@ public class TestRecommendationService {
     }
 
     /**
-     * 测试功能：按烹饪时间升序排列当前推荐（时间短优先）。
-     * 验证点：10 分钟菜谱 {@code A} 在 20 分钟 {@code B} 之前。
+     * Test: Sorts current recommendations by cooking time in ascending order.
+     * Verification: 10-minute recipe "A" appears before 20-minute recipe "B".
      * <p>
-     * 对应源码 / Maps to: {@link RecommendationService#sortByCookTime()}
+     * Maps to: {@link RecommendationService#sortByCookTime()}
      */
     @Test
     void testSortByCookTimeOrdersAscending() {
@@ -96,10 +96,10 @@ public class TestRecommendationService {
     }
 
     /**
-     * 测试功能：清空当前推荐缓存（结账/会话重置链路）。
-     * 验证点：清空后再排序结果为空。
+     * Test: Clears current recommendation cache (checkout/session reset flow).
+     * Verification: After clearing, sorting returns an empty list.
      * <p>
-     * 对应源码 / Maps to: {@link RecommendationService#clearRecommendations()}, {@link RecommendationService#sortByCookTime()}
+     * Maps to: {@link RecommendationService#clearRecommendations()}, {@link RecommendationService#sortByCookTime()}
      */
     @Test
     void testClearRecommendationsRemovesCurrentResults() {
