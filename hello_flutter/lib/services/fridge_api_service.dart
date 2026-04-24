@@ -1,3 +1,5 @@
+// ignore_for_file: slash_for_doc_comments
+
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
@@ -10,16 +12,21 @@ import '../models/recipe_recommendation.dart';
 import '../utils/inventory_json.dart';
 import '../utils/recipe_json.dart';
 
-/// Calls the Spring Boot API in `finalproject-i-love-java` (`./gradlew bootRun`).
-///
-/// 组员分块待办（仅说明）：`lib/team_module_backlog.dart`。
+/**
+ * API service for SmartFridge.
+ * <p>
+ * This is the Flutter-side HTTP boundary. It talks to the Spring Boot
+ * `api/web` controller layer and does not call internal Java controller classes directly.
+ */
 class FridgeApiService {
   FridgeApiService._();
 
   static final FridgeApiService instance = FridgeApiService._();
 
+  /** Active API base URL. */
   String get baseUrl => defaultSmartFridgeApiBase();
 
+  /** Builds a request URI from a path and optional query parameters. */
   Uri _u(String path, [Map<String, String>? query]) {
     final root =
         baseUrl.endsWith('/') ? baseUrl.substring(0, baseUrl.length - 1) : baseUrl;
@@ -27,6 +34,7 @@ class FridgeApiService {
     return Uri.parse('$root$p').replace(queryParameters: query);
   }
 
+  /** Loads inventory items from the API. */
   Future<List<InventoryItem>> fetchInventory() async {
     final res = await http.get(_u('/api/inventory'));
     if (res.statusCode != 200) {
@@ -38,6 +46,7 @@ class FridgeApiService {
         .toList();
   }
 
+  /** Adds one inventory item by food name. */
   Future<InventoryItem> addInventoryItem(String foodName) async {
     final res = await http.post(
       _u('/api/inventory'),
@@ -51,7 +60,7 @@ class FridgeApiService {
     return inventoryItemFromJson(map);
   }
 
-  /// Prefix search for add-item flow (PRD: pick from catalog).
+  /** Loads catalog suggestions for the add-item flow. */
   Future<List<String>> fetchCatalogSuggestionNames(String prefix) async {
     final q = prefix.trim();
     if (q.isEmpty) return const [];
@@ -66,6 +75,7 @@ class FridgeApiService {
         .toList();
   }
 
+  /** Saves the selected health goal. */
   Future<void> savePreference(HealthGoal goal) async {
     final api = _healthGoalApi(goal);
     final res = await http.put(
@@ -78,7 +88,7 @@ class FridgeApiService {
     }
   }
 
-  /// Returns null if the session has no saved preference yet.
+  /** Loads the current health goal. Returns null when unset. */
   Future<HealthGoal?> fetchPreference() async {
     final res = await http.get(_u('/api/preference'));
     if (res.statusCode == 404) {
@@ -98,6 +108,7 @@ class FridgeApiService {
     return _parseHealthGoal(raw);
   }
 
+  /** Parses an API health goal string into the app enum. */
   HealthGoal? _parseHealthGoal(String? raw) {
     if (raw == null || raw.isEmpty) return null;
     switch (raw.toUpperCase()) {
@@ -112,6 +123,7 @@ class FridgeApiService {
     }
   }
 
+  /** Converts the app enum to the API health goal string. */
   String _healthGoalApi(HealthGoal goal) {
     switch (goal) {
       case HealthGoal.muscleBuilding:
@@ -123,6 +135,7 @@ class FridgeApiService {
     }
   }
 
+  /** Loads recipe recommendations from the API. */
   Future<List<RecipeRecommendation>> fetchRecommendations() async {
     final res = await http.get(_u('/api/recommendations'));
     if (res.statusCode != 200) {
@@ -134,6 +147,7 @@ class FridgeApiService {
         .toList();
   }
 
+  /** Loads grocery list items from the API. */
   Future<List<GroceryLineView>> fetchGroceryItems() async {
     final res = await http.get(_u('/api/grocery/items'));
     if (res.statusCode != 200) {
@@ -145,6 +159,7 @@ class FridgeApiService {
         .toList();
   }
 
+  /** Adds one grocery line item. */
   Future<GroceryLineView> addGroceryLine({
     required String foodName,
     int quantity = 1,
@@ -167,6 +182,7 @@ class FridgeApiService {
     );
   }
 
+  /** Toggles the collected state of one grocery line. */
   Future<GroceryLineView> toggleGroceryCollected(String id) async {
     final res = await http.patch(_u('/api/grocery/items/$id/collected'));
     if (res.statusCode != 200) {
@@ -177,6 +193,7 @@ class FridgeApiService {
     );
   }
 
+  /** Updates the quantity of one grocery line by delta. */
   Future<GroceryLineView> updateGroceryQuantity(String id, int delta) async {
     final res = await http.patch(
       _u('/api/grocery/items/$id/quantity', {'delta': '$delta'}),
@@ -189,6 +206,7 @@ class FridgeApiService {
     );
   }
 
+  /** Performs grocery checkout. */
   Future<void> groceryCheckout() async {
     final res = await http.post(_u('/api/grocery/checkout'));
     if (res.statusCode != 200 && res.statusCode != 204) {
@@ -196,6 +214,7 @@ class FridgeApiService {
     }
   }
 
+  /** Loads subtotal, tax, and total for the grocery list. */
   Future<({double subtotal, double tax, double total})> fetchGroceryTotals() async {
     final res = await http.get(_u('/api/grocery/totals'));
     if (res.statusCode != 200) {
@@ -210,6 +229,7 @@ class FridgeApiService {
   }
 }
 
+/** Exception returned by the API service. */
 class FridgeApiException implements Exception {
   FridgeApiException(this.message, this.body);
   final String message;

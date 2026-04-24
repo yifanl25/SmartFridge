@@ -5,6 +5,7 @@
       <excludeFolder url="file://$MODULE_DIR$/../../hello_flutter/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/../../hello_flutter/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/../../hello_flutter/build" />
+      <excludeFolder url="file://$MODULE_DIR$/../../Module01" />
     </content>
   </component>
 </module>

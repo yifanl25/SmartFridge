@@ -1,9 +1,10 @@
 package ui;
 
 /**
- * Gradle {@code application} plugin entry class; forwards to {@link SmartFridgeApp#main(String[])}.
+ * Legacy Java console/demo entry used by Gradle {@code run}.
  * <p>
- * Gradle {@code application} 插件配置的入口类；转发到 {@link SmartFridgeApp#main(String[])}。
+ * The official product frontend is {@code hello_flutter}; this class remains only for backward
+ * compatibility with the older console flow.
  */
 public class Main {
 

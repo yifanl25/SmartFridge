@@ -1,5 +1,8 @@
+// ignore_for_file: slash_for_doc_comments
+
 import 'package:flutter/material.dart';
 
+/** Meal slots used by recipe filters and cards. */
 enum RecipeMealSlot {
   all,
   breakfast,
@@ -10,6 +13,7 @@ enum RecipeMealSlot {
   soup,
 }
 
+/** Labels and icons for recipe meal slots. */
 extension RecipeMealSlotX on RecipeMealSlot {
   String get label {
     switch (this) {
@@ -50,13 +54,18 @@ extension RecipeMealSlotX on RecipeMealSlot {
   }
 }
 
-/// Sub-filters: All / preference-weighted high match / quick prep.
+/**
+ * Recipe sub-filters.
+ * <p>
+ * Used to narrow the recipe list.
+ */
 enum RecipeSubFilter {
   all,
   highMatch,
   quickMeals,
 }
 
+/** Labels for recipe sub-filters. */
 extension RecipeSubFilterX on RecipeSubFilter {
   String get label {
     switch (this) {
@@ -70,7 +79,11 @@ extension RecipeSubFilterX on RecipeSubFilter {
   }
 }
 
-/// One required ingredient line from the API (availability from scoring).
+/**
+ * Recipe ingredient detail.
+ * <p>
+ * One required ingredient from the API with fridge availability.
+ */
 class RecipeIngredientDetail {
   const RecipeIngredientDetail({
     required this.name,
@@ -83,6 +96,11 @@ class RecipeIngredientDetail {
   final bool inFridge;
 }
 
+/**
+ * Recipe recommendation model.
+ * <p>
+ * Used by the recipes page and detail page.
+ */
 class RecipeRecommendation {
   const RecipeRecommendation({
     required this.id,
@@ -106,9 +124,9 @@ class RecipeRecommendation {
   final int kcal;
   final RecipeMealSlot slot;
 
-  /// Long description from backend recipe JSON (null for demo-only cards).
+  /** Optional backend description. Null for demo-only cards. */
   final String? description;
 
-  /// When non-null (API), detail screen uses this instead of heuristic tags.
+  /** Optional ingredient details used by the detail screen. */
   final List<RecipeIngredientDetail>? ingredientDetails;
 }

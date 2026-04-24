@@ -26,11 +26,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Composition root: loads JSON resources, wires services and controllers, starts text-mode {@link ConsoleApp}.
- * Optional demo inventory from {@code data.json} is controlled by a compile-time flag.
+ * Legacy console/demo composition root.
  * <p>
- * 组合根：加载 JSON 资源、装配服务与控制器、启动文本模式 {@link ConsoleApp}。
- * 是否从 {@code data.json} 预灌演示库存由编译期常量控制。
+ * This class wires the same controller/service stack used by the HTTP backend, then starts the
+ * text-mode {@link ConsoleApp}. The official product path is Flutter + Spring Boot HTTP, but this
+ * console flow is kept for backward compatibility and demos.
  */
 public final class SmartFridgeApp {
     /** Classpath food catalog resource. / classpath 食材目录资源。 */
@@ -86,12 +86,6 @@ public final class SmartFridgeApp {
                         inventoryService,
                         recommendationService,
                         groceryService));
-
-        // 图纸上画了两个入口：WebApp（网页壳）+ ConsoleApp（打字）。现在<strong>只</strong>跑了 ConsoleApp。
-        // README diagram shows WebApp + console; today we only start console.
-        // 如果还要做 WebApp：在这里 new WebApp(...).start()，四个 controller 跟下面一样传进去就行。
-        // If you still want WebApp: new WebApp(...).start() here with the same four controllers. 不要加数据库 / No DB.
-        // INSERT YOUR CODE HERE
 
         ConsoleApp consoleApp = new ConsoleApp(
                 inventoryController,

@@ -6,10 +6,10 @@ import service.IInventoryService;
 import java.util.List;
 
 /**
- * MVC controller for the Inventory screen and Add Item flow: delegates all rules to {@link IInventoryService}.
+ * Internal coordination layer for the inventory module.
  * <p>
- * 库存页与「添加食材」流程的控制器：业务规则全部委托给 {@link IInventoryService}。
- * <p>手机要调筛选/排序：去改 {@link api.web.InventoryApiController}，这里<strong>不用</strong>重复写规则。</p>
+ * This class is not a Spring web controller. It is a thin facade shared by the legacy console
+ * flow and the {@code api.web} HTTP layer, while business rules remain in {@link IInventoryService}.
  */
 public class InventoryController {
     /** Backing service for session inventory. / 会话库存的后端服务。 */

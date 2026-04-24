@@ -1,3 +1,5 @@
+// ignore_for_file: slash_for_doc_comments
+
 import 'package:flutter/material.dart';
 
 import '../navigation/app_destination.dart';
@@ -8,9 +10,37 @@ import '../screens/settings_screen.dart';
 import '../theme/smart_fridge_tokens.dart';
 import '../widgets/app_sidebar.dart';
 
-/// App shell: left sidebar (or drawer) + destination content. PRD navigation map.
+/**
+ * Main application shell.
+ * <p>
+ * Main app shell that switches page content by destination.
+ * Uses a sidebar on wide screens and a drawer on narrow screens.
+ *
+ * Official references:
+ * StatefulWidget:
+ * https://api.flutter.dev/flutter/widgets/StatefulWidget-class.html
+ * State:
+ * https://api.flutter.dev/flutter/widgets/State-class.html
+ * LayoutBuilder:
+ * https://api.flutter.dev/flutter/widgets/LayoutBuilder-class.html
+ * Scaffold:
+ * https://api.flutter.dev/flutter/material/Scaffold-class.html
+ * Drawer:
+ * https://api.flutter.dev/flutter/material/Drawer-class.html
+ * SafeArea:
+ * https://api.flutter.dev/flutter/widgets/SafeArea-class.html
+ *
+ * Open-source reference:
+ * Flutter samples:
+ * https://github.com/flutter/samples
+ * material_3_demo:
+ * https://github.com/flutter/samples/tree/main/material_3_demo
+ */
 class MainShell extends StatefulWidget {
-  const MainShell({super.key, this.initialDestination = AppDestination.inventory});
+  const MainShell({
+    super.key,
+    this.initialDestination = AppDestination.inventory,
+  });
 
   final AppDestination initialDestination;
 
@@ -18,11 +48,21 @@ class MainShell extends StatefulWidget {
   State<MainShell> createState() => _MainShellState();
 }
 
+/**
+ * State for MainShell.
+ * <p>
+ * Stores the current destination and the scaffold key for the drawer.
+ */
 class _MainShellState extends State<MainShell> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   late AppDestination _destination = widget.initialDestination;
 
+  /**
+   * Resolves page widget for a destination.
+   * <p>
+   * Returns the page widget for the selected destination.
+   */
   Widget _pageFor(AppDestination d) {
     switch (d) {
       case AppDestination.inventory:
@@ -36,6 +76,11 @@ class _MainShellState extends State<MainShell> {
     }
   }
 
+  /**
+   * Resolves title for a destination.
+   * <p>
+   * Returns the title for the narrow-screen top bar.
+   */
   String _titleFor(AppDestination d) {
     switch (d) {
       case AppDestination.inventory:
@@ -49,6 +94,11 @@ class _MainShellState extends State<MainShell> {
     }
   }
 
+  /**
+   * Updates current destination.
+   * <p>
+   * Updates the current destination after a sidebar or drawer selection.
+   */
   void _select(AppDestination d) {
     setState(() => _destination = d);
   }
@@ -61,6 +111,17 @@ class _MainShellState extends State<MainShell> {
       builder: (context, constraints) {
         final wide = constraints.maxWidth >= 900;
 
+        /**
+         * Wide-screen layout.
+         * <p>
+         * Uses a fixed sidebar and a content area on wide screens.
+         *
+         * Official references:
+         * Row:
+         * https://api.flutter.dev/flutter/widgets/Row-class.html
+         * Expanded:
+         * https://api.flutter.dev/flutter/widgets/Expanded-class.html
+         */
         if (wide) {
           return ColoredBox(
             color: SfColors.cream,
@@ -77,6 +138,17 @@ class _MainShellState extends State<MainShell> {
           );
         }
 
+        /**
+         * Drawer for narrow screens.
+         * <p>
+         * Moves the sidebar into a drawer on narrow screens.
+         *
+         * Official references:
+         * Drawer:
+         * https://api.flutter.dev/flutter/material/Drawer-class.html
+         * Navigator.pop:
+         * https://api.flutter.dev/flutter/widgets/Navigator/pop.html
+         */
         final drawer = Drawer(
           backgroundColor: SfColors.whiteCard,
           width: 280,
@@ -91,6 +163,20 @@ class _MainShellState extends State<MainShell> {
           ),
         );
 
+        /**
+         * Full-bleed body layout for inventory / recipes.
+         * <p>
+         * Inventory and recipes keep their own page headers.
+         * Narrow screens only add a menu button on top.
+         *
+         * Official references:
+         * Stack:
+         * https://api.flutter.dev/flutter/widgets/Stack-class.html
+         * Positioned:
+         * https://api.flutter.dev/flutter/widgets/Positioned-class.html
+         * IconButton:
+         * https://api.flutter.dev/flutter/material/IconButton-class.html
+         */
         if (_destination == AppDestination.inventory ||
             _destination == AppDestination.recipes) {
           return Scaffold(
@@ -106,7 +192,8 @@ class _MainShellState extends State<MainShell> {
                   child: SafeArea(
                     child: IconButton(
                       icon: Icon(Icons.menu, color: SfColors.brown),
-                      onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+                      onPressed: () =>
+                          _scaffoldKey.currentState?.openDrawer(),
                     ),
                   ),
                 ),
@@ -115,6 +202,12 @@ class _MainShellState extends State<MainShell> {
           );
         }
 
+        /**
+         * Standard mobile shell layout for grocery / settings.
+         * <p>
+         * Grocery and settings use a standard mobile shell
+         * with a menu button, title, and page content below.
+         */
         return Scaffold(
           key: _scaffoldKey,
           backgroundColor: SfColors.cream,
@@ -130,7 +223,8 @@ class _MainShellState extends State<MainShell> {
                     children: [
                       IconButton(
                         icon: Icon(Icons.menu, color: SfColors.brown),
-                        onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+                        onPressed: () =>
+                            _scaffoldKey.currentState?.openDrawer(),
                       ),
                       Text(
                         _titleFor(_destination),

@@ -1,5 +1,8 @@
+// ignore_for_file: slash_for_doc_comments
+
 import '../models/inventory_models.dart';
 
+/** Maps an API category icon to an app inventory category. */
 FoodCategory foodCategoryFromApiIcon(String? icon) {
   switch (icon) {
     case 'dairy_eggs':
@@ -21,7 +24,11 @@ FoodCategory foodCategoryFromApiIcon(String? icon) {
   }
 }
 
-/// Parses one FoodItem JSON object from the Java API.
+/**
+ * Parses one inventory item from API JSON.
+ * <p>
+ * Builds the app model used by the fridge screen.
+ */
 InventoryItem inventoryItemFromJson(Map<String, dynamic> json) {
   final cat = json['category'] as Map<String, dynamic>?;
   final icon = cat?['icon'] as String?;
@@ -64,6 +71,7 @@ InventoryItem inventoryItemFromJson(Map<String, dynamic> json) {
   );
 }
 
+/** Returns true when an item was created recently. */
 bool _isRecent(String createdAtIso) {
   try {
     final c = DateTime.parse(createdAtIso);

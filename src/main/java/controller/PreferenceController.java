@@ -5,9 +5,11 @@ import model.Preference;
 import service.IPreferenceService;
 
 /**
- * MVC controller for the Preference setup screen; delegates to {@link IPreferenceService}.
+ * Internal coordination layer for session preference operations.
  * <p>
- * 偏好设置页控制器；委托 {@link IPreferenceService}。
+ * This class is not part of the HTTP boundary. Spring annotations stay in
+ * {@code api.web.PreferenceApiController}; this layer remains a thin facade over
+ * {@link IPreferenceService}.
  */
 public class PreferenceController {
     /** Session preference service. / 会话偏好服务。 */

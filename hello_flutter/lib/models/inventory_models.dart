@@ -1,7 +1,10 @@
+// ignore_for_file: slash_for_doc_comments
+
 import 'package:flutter/material.dart';
 
 import '../theme/smart_fridge_tokens.dart';
 
+/** Inventory categories used by the fridge page. */
 enum FoodCategory {
   all,
   vegetables,
@@ -13,6 +16,7 @@ enum FoodCategory {
   frozen,
 }
 
+/** Labels and icons for inventory categories. */
 extension FoodCategoryX on FoodCategory {
   String get label {
     switch (this) {
@@ -57,19 +61,25 @@ extension FoodCategoryX on FoodCategory {
   }
 }
 
-/// Days until expiry; drives colour + copy.
+/**
+ * Expiry status bucket.
+ * <p>
+ * Used for expiry labels and color styling.
+ */
 enum ExpiryBand {
-  urgent, // today
-  soon, // 1–3 days
-  ok, // 4+
+  urgent,
+  soon,
+  ok,
 }
 
+/** Maps remaining days to an expiry band. */
 ExpiryBand expiryBandForDays(int daysLeft) {
   if (daysLeft <= 0) return ExpiryBand.urgent;
   if (daysLeft <= 3) return ExpiryBand.soon;
   return ExpiryBand.ok;
 }
 
+/** Returns the color for an expiry band. */
 Color expiryColor(ExpiryBand band) {
   switch (band) {
     case ExpiryBand.urgent:
@@ -81,6 +91,7 @@ Color expiryColor(ExpiryBand band) {
   }
 }
 
+/** Returns the display label for remaining days. */
 String expiryLabel(int daysLeft) {
   if (daysLeft < 0) return 'Expired';
   if (daysLeft == 0) return 'Expires Today';
@@ -89,8 +100,14 @@ String expiryLabel(int daysLeft) {
   return '$daysLeft days left';
 }
 
+/** Optional item badge shown on inventory cards. */
 enum ItemBadge { urgent, newItem }
 
+/**
+ * Inventory item model.
+ * <p>
+ * Used by the fridge page for list and card rendering.
+ */
 class InventoryItem {
   const InventoryItem({
     required this.id,
@@ -110,5 +127,6 @@ class InventoryItem {
   final bool isNew;
   final ItemBadge? badge;
 
+  /** Derived expiry band for the current item. */
   ExpiryBand get expiryBand => expiryBandForDays(daysLeft);
 }
