@@ -13,16 +13,17 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * TDD：演示用库存种子数据加载（对应 {@link DemoInventoryLoader}、资源文件 {@code data.json}）。
+ * TDD：Demo inventory data loading tests.（Maps to: {@link DemoInventoryLoader}、resource file {@code data.json}）。
  */
 public class TestDemoInventoryLoader {
     /**
-     * 测试功能：从 classpath 读取 {@code /data.json} 并映射为 {@link FoodItem} 列表。
-     * 验证点：条数与首条过期日与 JSON 一致；与 {@code food_catalog.json} 联动解析。
+     * Test：Reads data {@code /data.json} from classpath and maps into the list of {@link FoodItem}.
+     * Verification：number of items and the first item's expiry date match the JSON data.
+     * Also verifies integration with {@code food_catalog.json} parsing.
      * <p>
-     * 对应源码 / Maps to production:
+     * Maps to production:
      * {@link DemoInventoryLoader#loadFoodItemsOptional(String, IFoodCatalog)}，
-     * 辅助 {@link JsonFoodCatalogLoader#loadFromFileSafe(String)} 加载目录。
+     * helps {@link JsonFoodCatalogLoader#loadFromFileSafe(String)} for catalog loading.
      */
     @Test
     void testLoadsDemoInventoryFromClasspath() throws IOException {

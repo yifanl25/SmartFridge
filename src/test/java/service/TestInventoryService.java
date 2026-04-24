@@ -12,7 +12,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * TDD：会话内库存的增删查改与排序（对应 {@link InventoryService}）。
+ * TDD：Inventory management's increases and deletes and sorts and finds and changes.（Maps to: {@link InventoryService}）
  */
 public class TestInventoryService {
     private InventoryService inventoryService;
@@ -26,10 +26,10 @@ public class TestInventoryService {
     }
 
     /**
-     * 测试功能：查询当前会话全部库存项。
-     * 验证点：初始为空列表。
+     * Test: Retrieves all inventory items in the current session.
+     * Verification: Initial state should be an empty list.
      * <p>
-     * 对应源码 / Maps to: {@link InventoryService#getAllItems()}
+     * Maps to: {@link InventoryService#getAllItems()}
      */
     @Test
     void testGetAllItemsReturnsCurrentInventory() {
@@ -37,10 +37,10 @@ public class TestInventoryService {
     }
 
     /**
-     * 测试功能：按食材名添加库存（目录解析、默认数量等）。
-     * 验证点：名称与目录一致时成功加入并可读出。
+     * Test：Adds item by name(catalog lookup and defaults applied).
+     * Verification: Item is successfully created and matches catalog name.
      * <p>
-     * 对应源码 / Maps to: {@link InventoryService#addItem(String)}
+     * Maps to: {@link InventoryService#addItem(String)}
      */
     @Test
     void testAddItemCreatesFoodItemFromCatalog() {
@@ -48,10 +48,10 @@ public class TestInventoryService {
     }
 
     /**
-     * 测试功能：按食材分类（{@link FoodCategory}）筛选库存。
-     * 验证点：仅返回该分类下的项。
+     * Test: Filters inventory by category ({@link FoodCategory}).
+     * Verification: Only items in the specified category are returned.
      * <p>
-     * 对应源码 / Maps to: {@link InventoryService#filterByCategory(String)}（先 {@link InventoryService#addItem(String)}）
+     * Maps to: {@link InventoryService#filterByCategory(String)}（先 {@link InventoryService#addItem(String)}）
      */
     @Test
     void testFilterByCategoryReturnsMatchingItems() {
@@ -60,10 +60,10 @@ public class TestInventoryService {
     }
 
     /**
-     * 测试功能：按过期日排序（临期优先展示）。
-     * 验证点：排序结果条数与源一致（单条场景）。
+     * Test: Sorts items by expiry date (urgent items first).
+     * Verification: Result size matches source (single-item case).
      * <p>
-     * 对应源码 / Maps to: {@link InventoryService#sortByExpiry()}
+     * Maps to: {@link InventoryService#sortByExpiry()}
      */
     @Test
     void testSortByExpiryOrdersUrgentFirst() {
@@ -72,10 +72,10 @@ public class TestInventoryService {
     }
 
     /**
-     * 测试功能：按入库/创建时间排序（新到旧）。
-     * 验证点：排序结果非空且条数正确。
+     * Test: Sorts items by creation time (newest first).
+     * Verification: Result is non-empty and size is correct.
      * <p>
-     * 对应源码 / Maps to: {@link InventoryService#sortByCreatedTime()}
+     * Maps to: {@link InventoryService#sortByCreatedTime()}
      */
     @Test
     void testSortByCreatedTimeOrdersNewestFirst() {
@@ -84,10 +84,11 @@ public class TestInventoryService {
     }
 
     /**
-     * 测试功能：清空会话库存（结账/循环结束 PRD）。
-     * 验证点：清空后 {@code getAllItems()} 为 0。
+     * Test: Clears all inventory items in the session
+     * (used after checkout or session reset as defined in PRD).
+     * Verification: {@code getAllItems()} returns 0 after clearing.
      * <p>
-     * 对应源码 / Maps to: {@link InventoryService#clearInventory()}、{@link InventoryService#getAllItems()}
+     * Maps to: {@link InventoryService#clearInventory()}、{@link InventoryService#getAllItems()}
      */
     @Test
     void testClearInventoryRemovesAllItems() {
@@ -97,10 +98,10 @@ public class TestInventoryService {
     }
 
     /**
-     * 测试功能：批量追加预构建的 {@link FoodItem}（演示种子 / data.json 灌入）。
-     * 验证点：{@code addAllItems} 后总数累加。
+     * Test：Adds all items appended batch {@link FoodItem}.
+     * Verification：Total number of items increases accordingly after {@code addAllItems}.
      * <p>
-     * 对应源码 / Maps to: {@link InventoryService#addAllItems(List)}、{@link InventoryService#getAllItems()}
+     * Maps to: {@link InventoryService#addAllItems(List)}、{@link InventoryService#getAllItems()}
      */
     @Test
     void testAddAllItemsAppendsBatch() {

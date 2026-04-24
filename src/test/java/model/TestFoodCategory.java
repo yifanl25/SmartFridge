@@ -5,14 +5,15 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * TDD：食材/配料分类（对应 {@link FoodCategory}，仅用于库存与购物，不用于菜谱筛选）。
+ * TDD：FoodCategory tests.（Maps to: {@link FoodCategory}，
+ * used for inventory and grocery management, not for recipe filtering).
  */
 public class TestFoodCategory {
     /**
-     * 测试功能：目录中的食材分类 id、名称、图标。
-     * 验证点：与静态目录数据字段一致。
+     * Tests: the food category id, name, and icon in catalog.
+     * Verification: Values match the expected static catalog data.
      * <p>
-     * 对应源码 / Maps to: {@link FoodCategory#FoodCategory(String, String, String)}，
+     * Maps to: {@link FoodCategory#FoodCategory(String, String, String)}，
      * {@link FoodCategory#getId()}，{@link FoodCategory#getName()}，{@link FoodCategory#getIcon()}
      */
     @Test

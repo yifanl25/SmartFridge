@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * TDD：偏好/健康目标控制器（对应 {@link PreferenceController} → {@link IPreferenceService}）。
+ * TDD：PreferenceController delegations tests.（Maps to: {@link PreferenceController} → {@link IPreferenceService}）。
  */
 public class TestPreferenceController {
     private PreferenceController preferenceController;
@@ -23,10 +23,9 @@ public class TestPreferenceController {
     }
 
     /**
-     * 测试功能：保存用户健康目标。
-     * 验证点：返回值中的 {@link HealthGoal} 与入参一致。
+     * Test: SavePreference and the returned matches  {@link HealthGoal} input value.
      * <p>
-     * 对应源码 / Maps to: {@link PreferenceController#savePreference(HealthGoal)} → {@link PreferenceService#savePreference(HealthGoal)}
+     * Maps to: {@link PreferenceController#savePreference(HealthGoal)} → {@link PreferenceService#savePreference(HealthGoal)}
      */
     @Test
     void testSavePreferenceDelegatesToPreferenceService() {
@@ -34,10 +33,9 @@ public class TestPreferenceController {
     }
 
     /**
-     * 测试功能：读取当前会话已保存的偏好。
-     * 验证点：与最近一次 {@code savePreference} 一致。
+     * Test: Reads GetPreference and matches the mostely saved in {@code savePreference}.
      * <p>
-     * 对应源码 / Maps to: {@link PreferenceController#getPreference()} → {@link PreferenceService#getPreference()}
+     * Maps to: {@link PreferenceController#getPreference()} → {@link PreferenceService#getPreference()}
      */
     @Test
     void testGetPreferenceDelegatesToPreferenceService() {

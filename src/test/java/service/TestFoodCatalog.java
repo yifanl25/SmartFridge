@@ -12,13 +12,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * TDD：静态食材目录查询与别名（对应 {@link FoodCatalog} / {@link IFoodCatalog}）。
+ * TDD：Static food catalog lookup tests.(Maps to: {@link FoodCatalog} / {@link IFoodCatalog}).
  */
 public class TestFoodCatalog {
     private FoodCatalog foodCatalog;
 
     /**
-     * 构造与 {@code food_catalog.json} 片段一致的内存目录，供本类各用例复用。
+     * sets up a catalog which is aligned with {@code food_catalog.json}.
      */
     @BeforeEach
     void setUp() {
@@ -29,10 +29,10 @@ public class TestFoodCatalog {
     }
 
     /**
-     * 测试功能：按前缀搜索建议（添加食材时的联想列表）。
-     * 验证点：命中条数与预期一致。
+     * Test: prefix-based search suggestions (used for add-item autocomplete).
+     * Verification：number of matched results is as expected.
      * <p>
-     * 对应源码 / Maps to: {@link FoodCatalog#searchSuggestions(String)}
+     * Maps to: {@link FoodCatalog#searchSuggestions(String)}
      */
     @Test
     void testSearchSuggestionsReturnsMatchingEntries() {
@@ -40,10 +40,10 @@ public class TestFoodCatalog {
     }
 
     /**
-     * 测试功能：判断某名称是否在目录中（含别名解析）。
-     * 验证点：已知食材返回 true。
+     * Test：Checks whether a food item exists in the catalog.
+     * Verification：Known item returns true.
      * <p>
-     * 对应源码 / Maps to: {@link FoodCatalog#containsFood(String)}
+     * Maps to: {@link FoodCatalog#containsFood(String)}
      */
     @Test
     void testContainsFoodReturnsTrueWhenFoodExists() {
@@ -51,10 +51,10 @@ public class TestFoodCatalog {
     }
 
     /**
-     * 测试功能：查询某食材默认保质天数（用于计算默认过期日）。
-     * 验证点：与目录配置一致。
+     * Test：Retrieves default expiry days for a given food item(used for computing default expiration dates).
+     * Verification：Value matches catalog configuration.
      * <p>
-     * 对应源码 / Maps to: {@link FoodCatalog#getDefaultExpiryDays(String)}
+     * Maps to: {@link FoodCatalog#getDefaultExpiryDays(String)}
      */
     @Test
     void testGetDefaultExpiryDaysReturnsConfiguredValue() {

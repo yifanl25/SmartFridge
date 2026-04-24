@@ -6,22 +6,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 这是“从某道菜加入 grocery list”后的响应。
+ * Response returned after adding a recipe to the grocery list.
  *
- * 大白话：
- * 前端点了“把缺的食材加入购物清单”以后，
- * 不只是想知道成没成功，
- * 还想知道：
- * - 是哪道菜触发的
- * - 新增了几条
- * - 合并了几条
- * - 新增的是哪些行
- * - 合并的是哪些名字
+ * In simple terms:
+ * When the frontend clicks "add missing ingredients to grocery list",
+ * it does not only need to know whether the operation succeeded.
  *
- * 所以这里专门做一个 response，别直接丢个布尔值完事。
+ * It also needs to understand what actually happened, such as:
+ * - which recipe triggered the operation
+ * - how many new items were added
+ * - how many items were merged with existing ones
+ * - which items were newly created
+ * - which items were merged and consolidated
  *
- * <p>Teammate note: 这个 DTO 是为了告诉前端“这次把 recipe 加进 grocery 后到底发生了什么”。
- * 后面如果还要加 skippedItems、errorItems、unitSummary 之类的字段，就继续在这里扩。
+ * Therefore, we design a dedicated response object instead of returning
+ * a simple boolean result.
+ *
+ * <p>Team note:
+ * This DTO is designed to describe the actual changes caused by
+ * adding a recipe to the grocery list.
+ *
+ * If needed in the future, additional fields such as skippedItems,
+ * errorItems, or unitSummary can be added here.
+ * Only extend this response when the UI has a real requirement for it.
+ * </p>
  * insert your code here: add extra response fields only if UI really needs them</p>
  */
 public class RecipeToGroceryResponse {

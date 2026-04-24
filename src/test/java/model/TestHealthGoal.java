@@ -5,14 +5,14 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * TDD：健康目标枚举与推荐标签对齐（对应 {@link HealthGoal}）。
+ * TDD：Health goal enum consistency test.（Maps to: {@link HealthGoal}）。
  */
 public class TestHealthGoal {
     /**
-     * 测试功能：枚举常量与 {@code valueOf} 解析（会话偏好、CLI 命令等）。
-     * 验证点：三个 PRD 目标均可按名称还原。
+     * Test：enum constants and {@code valueOf} parsing (used in session preferences, CLI commands, etc.).
+     * Verification: all PRD-defined health goals can be correctly resolved by name.
      * <p>
-     * 对应源码 / Maps to: {@link HealthGoal#valueOf(String)}（及 {@link HealthGoal#MUSCLE_BUILDING}、{@link HealthGoal#FAT_LOSS}、{@link HealthGoal#BLOOD_SUGAR_CARE}）
+     * Maps to: {@link HealthGoal#valueOf(String)}（and {@link HealthGoal#MUSCLE_BUILDING}、{@link HealthGoal#FAT_LOSS}、{@link HealthGoal#BLOOD_SUGAR_CARE}）
      */
     @Test
     void testEnumValues() {
