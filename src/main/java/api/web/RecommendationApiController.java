@@ -129,8 +129,8 @@ public class RecommendationApiController {
             return ResponseEntity.notFound().build();
         }
 
-        // 真正把 recipe 组装成 detail response 的重活，
-        // 放在 DTO 的 from(...) 里做，避免 controller 太臃肿。
+        // The actual action of building the recipe in detail response is handled
+        // in the method of from(...) in DTO, to prevent the controller to be too heavy.
         return ResponseEntity.ok(RecipeDetailResponse.from(recipe, inventory, catalogController::canonicalFoodName));
     }
 
@@ -173,8 +173,9 @@ public class RecommendationApiController {
                 continue;
             }
 
-            // 先尽量把名字统一成 catalog 里的标准写法，
-            // 这样不容易因为别名不同而产生重复项。
+            // First, try to normalize names to the standard format used in the catalog,
+            // so we can avoid duplicates caused by different aliases.
+
             String canonical = catalogController.canonicalFoodName(ingredient.getName());
 
             int neededQty = parseQuantityAsPositiveInt(ingredient.getQuantityText());

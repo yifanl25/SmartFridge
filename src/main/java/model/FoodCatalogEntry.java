@@ -5,25 +5,21 @@ import java.util.List;
 
 /**
  * One row from {@code food_catalog.json}: canonical name, aliases, default shelf life, and ingredient category.
- * <p>
- * {@code food_catalog.json} 中的一行：规范名、别名、默认保质期天数及食材分类。
  */
 public class FoodCatalogEntry {
-    /** Optional stable id from JSON. / JSON 中的可选稳定 id。 */
+    /** Optional stable id from JSON.  */
     private final String id;
-    /** Canonical display name. / 规范显示名称。 */
+    /** Canonical display name.  */
     private final String foodName;
-    /** Alternate searchable strings. / 可搜索的别名列表。 */
+    /** Alternate searchable strings.  */
     private final List<String> aliases;
-    /** Days from add-date to default expiry. / 从添加日起算的默认保质天数。 */
+    /** Days from add-date to default expiry.  */
     private final int defaultExpiryDays;
-    /** Ingredient category for this food. / 该食材所属分类。 */
+    /** Ingredient category for this food.  */
     private final FoodCategory category;
 
     /**
      * Full constructor including id and aliases.
-     * <p>
-     * 包含 id 与别名的完整构造。
      */
     public FoodCatalogEntry(
             String id,
@@ -40,34 +36,32 @@ public class FoodCatalogEntry {
 
     /**
      * Convenience constructor when JSON omits id and aliases.
-     * <p>
-     * 当 JSON 省略 id 与别名时的简便构造。
      */
     public FoodCatalogEntry(String foodName, int defaultExpiryDays, FoodCategory category) {
         this(null, foodName, List.of(), defaultExpiryDays, category);
     }
 
-    /** Returns entry id or null if omitted. / 返回条目 id；若省略则为 null。 */
+    /** Returns entry id or null if omitted.  */
     public String getId() {
         return id;
     }
 
-    /** Returns canonical food name. / 返回规范食材名。 */
+    /** Returns canonical food name.  */
     public String getFoodName() {
         return foodName;
     }
 
-    /** Returns a defensive copy of aliases. / 返回别名的防御性拷贝。 */
+    /** Returns a defensive copy of aliases.  */
     public List<String> getAliases() {
         return new ArrayList<>(aliases);
     }
 
-    /** Returns configured default expiry offset in days. / 返回配置的默认保质天数。 */
+    /** Returns configured default expiry offset in days.  */
     public int getDefaultExpiryDays() {
         return defaultExpiryDays;
     }
 
-    /** Returns ingredient category. / 返回食材分类。 */
+    /** Returns ingredient category.  */
     public FoodCategory getCategory() {
         return category;
     }

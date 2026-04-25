@@ -34,14 +34,11 @@ import java.util.UUID;
 public class ConsoleApp {
     /**
      * Placeholder unit price for grocery lines built from ingredient names (catalog has no MSRP in PRD).
-     * <p>
-     * 由食材名生成购物行时的占位单价（PRD 目录无建议零售价）。
      */
     private static final double DEFAULT_GROCERY_UNIT_PRICE = 2.99;
 
-    // 购物单价写死 2.99，因为 JSON 目录里没有「建议零售价」这个字段 / Price is 2.99 because catalog JSON has no MSRP.
-    // 以后 PRD 加了价格，再改这里或让用户输入 / Change when PRD adds real prices or user input.
-    // INSERT YOUR CODE HERE
+    // Price is 2.99 because catalog JSON has no MSRP.
+    // Change when PRD adds real prices or user input.
 
     private final InventoryController inventoryController;
     private final PreferenceController preferenceController;
@@ -51,17 +48,15 @@ public class ConsoleApp {
 
     /**
      * Last printed recommendation ordering (1-based {@code grocery add} indices follow this list).
-     * <p>
-     * 上次打印的推荐顺序（{@code grocery add} 使用的一维下标与此列表一致）。
      */
     private List<Recipe> lastRecommendations = List.of();
 
     /**
-     * @param inventoryController      inventory / 库存控制器
-     * @param preferenceController     preference / 偏好控制器
-     * @param recommendationController recommendations / 推荐控制器
-     * @param groceryController        grocery + checkout hook / 购物与结账钩子
-     * @param foodCatalog              catalog for resolving grocery lines / 用于解析购物行的目录
+     * @param inventoryController      inventory
+     * @param preferenceController     preference
+     * @param recommendationController recommendations
+     * @param groceryController        grocery + checkout hook
+     * @param foodCatalog              catalog for resolving grocery lines
      */
     public ConsoleApp(
             InventoryController inventoryController,
@@ -78,8 +73,6 @@ public class ConsoleApp {
 
     /**
      * Non-blocking startup message for tests (does not read stdin).
-     * <p>
-     * 非阻塞启动提示，供测试使用（不读标准输入）。
      */
     public void start() {
         System.out.println("Smart Fridge console ready. Call runInteractive(System.in) to use the REPL.");
@@ -87,8 +80,6 @@ public class ConsoleApp {
 
     /**
      * Reads commands from {@code input} until quit/exit or EOF.
-     * <p>
-     * 从 {@code input} 读取命令直至 quit/exit 或 EOF。
      */
     public void runInteractive(InputStream input) {
         System.out.println();
@@ -117,8 +108,6 @@ public class ConsoleApp {
 
     /**
      * True for null, {@code quit}, or {@code exit} (case-insensitive trim).
-     * <p>
-     * 对 null、{@code quit}、{@code exit}（忽略大小写 trim）返回 true。
      */
     private static boolean shouldQuit(String line) {
         if (line == null) {
@@ -130,8 +119,6 @@ public class ConsoleApp {
 
     /**
      * Prints built-in command help to stdout.
-     * <p>
-     * 向标准输出打印内置命令帮助。
      */
     private static void printHelp() {
         System.out.println("Commands:");
@@ -156,8 +143,6 @@ public class ConsoleApp {
 
     /**
      * Parses one line and dispatches to controllers (also used from unit tests).
-     * <p>
-     * 解析一行并分派到各控制器（单测亦调用）。
      */
     public void processCommand(String input) {
         if (input == null) {
@@ -268,8 +253,6 @@ public class ConsoleApp {
 
     /**
      * Refreshes {@link #lastRecommendations} from current inventory + preference and prints them.
-     * <p>
-     * 根据当前库存与偏好刷新 {@link #lastRecommendations} 并打印。
      */
     private void runRecommendations() {
         List<FoodItem> inv = inventoryController.getVisibleItems();
@@ -278,7 +261,7 @@ public class ConsoleApp {
         printRecipes(lastRecommendations);
     }
 
-    /** Prints inventory lines to stdout. / 打印库存行。 */
+    /** Prints inventory lines to stdout.  */
     private void printInventory() {
         List<FoodItem> items = inventoryController.getVisibleItems();
         if (items.isEmpty()) {
@@ -295,8 +278,6 @@ public class ConsoleApp {
 
     /**
      * Prints numbered recipe summary lines.
-     * <p>
-     * 打印带序号的菜谱摘要行。
      */
     private void printRecipes(List<Recipe> recipes) {
         if (recipes.isEmpty()) {
@@ -314,7 +295,7 @@ public class ConsoleApp {
         }
     }
 
-    /** Prints grocery rows to stdout. / 打印购物行。 */
+    /** Prints grocery rows to stdout.  */
     private void printGrocery() {
         List<GroceryItem> items = groceryController.getItems();
         if (items.isEmpty()) {
@@ -332,8 +313,6 @@ public class ConsoleApp {
 
     /**
      * Prints subtotal, 8% tax, and total from {@link GroceryController} pricing helpers.
-     * <p>
-     * 通过 {@link GroceryController} 计价辅助方法打印小计、8% 税与总额。
      */
     private void printTotals() {
         double sub = groceryController.calculateSubtotal();
@@ -346,8 +325,6 @@ public class ConsoleApp {
 
     /**
      * Appends grocery lines for each missing required ingredient of recipe index {@code oneBasedIndex}.
-     * <p>
-     * 为菜谱序号 {@code oneBasedIndex}（从 1 起）的每条缺失必选食材追加购物行。
      */
     private void addGroceryFromRecipe(int oneBasedIndex) {
         if (lastRecommendations.isEmpty()) {
@@ -374,8 +351,6 @@ public class ConsoleApp {
 
     /**
      * Builds one {@link GroceryItem} row for a missing ingredient name using catalog category when possible.
-     * <p>
-     * 为缺失食材名构造一条 {@link GroceryItem}；尽可能使用目录中的分类。
      */
     private GroceryItem buildGroceryLine(String ingredientName) {
         FoodCatalogEntry entry = foodCatalog.resolveEntry(ingredientName)
@@ -395,13 +370,11 @@ public class ConsoleApp {
 
     /**
      * Writes current grocery list as pretty JSON to {@code path}.
-     * <p>
-     * 将当前购物列表以格式化 JSON 写入 {@code path}。
      */
     private void exportGrocery(String path) throws IOException {
-        // 作业说：做好的清单要存成 json、xml 或 csv 里的一种。这里<strong>只</strong>写了购物单 JSON。
-        // Course: save a list as json OR xml OR csv — today only grocery JSON. 别的清单、别的格式：PRD 写了再加 / Add more if PRD asks.
-        // INSERT YOUR CODE HERE
+
+        // Course: save a list as json OR xml OR csv, today only grocery JSON. Add more if PRD asks.
+
         Path p = Paths.get(path);
         List<GroceryItem> items = new ArrayList<>(groceryController.getItems());
         ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);

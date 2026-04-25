@@ -10,15 +10,13 @@ import java.util.stream.Collectors;
 
 /**
  * Default {@link IFoodCatalog} backed by a static list loaded from JSON at startup.
- * <p>
- * 默认 {@link IFoodCatalog} 实现，由启动时从 JSON 加载的静态列表支持。
  */
 public class FoodCatalog implements IFoodCatalog {
-    /** In-memory catalog rows. / 内存中的目录行。 */
+    /** In-memory catalog rows.  */
     private final List<FoodCatalogEntry> entries;
 
     /**
-     * @param entries catalog rows (copied defensively into this instance) / 目录行（会防御性拷贝入本实例）
+     * @param entries catalog rows (copied defensively into this instance)
      */
     public FoodCatalog(List<FoodCatalogEntry> entries) {
         this.entries = new ArrayList<>(entries);
@@ -26,8 +24,6 @@ public class FoodCatalog implements IFoodCatalog {
 
     /**
      * Normalizes strings for case-insensitive compare (trim + lower ROOT locale).
-     * <p>
-     * 规范化字符串以便忽略大小写比较（trim + ROOT 区域小写）。
      */
     private static String norm(String s) {
         return s == null ? "" : s.trim().toLowerCase(Locale.ROOT);
@@ -35,8 +31,6 @@ public class FoodCatalog implements IFoodCatalog {
 
     /**
      * Whether {@code name} equals this entry's food name or any alias (used by scoring and resolve).
-     * <p>
-     * 判断 {@code name} 是否与该条目的规范名或任一别名相等（供打分与解析使用）。
      */
     public boolean nameMatchesEntry(String name, FoodCatalogEntry e) {
         String n = norm(name);
@@ -56,8 +50,6 @@ public class FoodCatalog implements IFoodCatalog {
 
     /**
      * Whether entry matches non-empty prefix on food name or aliases.
-     * <p>
-     * 条目规范名或别名是否以非空前缀开头。
      */
     private boolean prefixMatchesEntry(String rawPrefix, FoodCatalogEntry e) {
         String p = norm(rawPrefix);

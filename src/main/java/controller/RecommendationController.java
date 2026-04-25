@@ -15,7 +15,7 @@ import java.util.List;
  * making {@code controller} itself responsible for HTTP routing.
  */
 public class RecommendationController {
-    // 真正负责推荐逻辑的是 recommendationService。
+    // The real responsibility for recommending logic is recommendationService.
     private final IRecommendationService recommendationService;
 
     public RecommendationController(IRecommendationService recommendationService) {
@@ -23,26 +23,28 @@ public class RecommendationController {
     }
 
     /**
-     * 根据当前库存 + 当前偏好，刷新并返回推荐列表。
+     * Generates and returns a list of recommended recipes
+     * based on the current inventory and user preference.
      */
     public List<Recipe> getRecommendations(List<FoodItem> inventory, Preference preference) {
         return recommendationService.getRecommendations(inventory, preference);
     }
 
     /**
-     * 按菜谱分类筛选当前推荐缓存。
+     * Filters the current cached recommendation list by recipe category.
      *
-     * 注意这里筛的是 RecipeCategory，
-     * 不是库存那边的 FoodCategory。
+     * Note: This filters by RecipeCategory,
+     * not FoodCategory from the inventory domain.
      */
     public List<Recipe> filterByRecipeCategory(String categoryName) {
         return recommendationService.filterByRecipeCategory(categoryName);
     }
 
     /**
-     * 从当前推荐结果里，根据 recipeId 找出某一条菜谱。
+     * Retrieves a single recommended recipe by its ID
+     * from the current recommendation result set.
      *
-     * 这是 recipe detail endpoint 会用到的帮助方法。
+     * This method is used by the recipe detail endpoint.
      */
     public Recipe getRecommendationById(List<FoodItem> inventory, Preference preference, String recipeId) {
         return getRecommendations(inventory, preference).stream()
@@ -52,14 +54,14 @@ public class RecommendationController {
     }
 
     /**
-     * 按 match score 排序。
+     * Sorts by match score.
      */
     public List<Recipe> sortByMatchScore() {
         return recommendationService.sortByMatchScore();
     }
 
     /**
-     * 按 cook time 排序。
+     * Sorts by cook time.
      */
     public List<Recipe> sortByCookTime() {
         return recommendationService.sortByCookTime();

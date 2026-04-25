@@ -13,19 +13,15 @@ import java.util.stream.Collectors;
 
 /**
  * In-memory inventory for one demo session; uses {@link IFoodCatalog} for category and default expiry.
- * <p>
- * 单次演示会话的内存库存；依赖 {@link IFoodCatalog} 解析分类与默认过期日。
  */
 public class InventoryService implements IInventoryService {
-    /** Mutable backing list for this session. / 本会话的可变 backing 列表。 */
+    /** Mutable backing list for this session.  */
     private final List<FoodItem> items;
-    /** Catalog for resolve/suggest and expiry defaults. / 用于解析/联想与默认保质期的目录。 */
+    /** Catalog for resolve/suggest and expiry defaults.  */
     private final IFoodCatalog foodCatalog;
 
     /**
      * Creates an empty inventory bound to the given catalog.
-     * <p>
-     * 创建绑定到给定目录的空库存。
      */
     public InventoryService(IFoodCatalog foodCatalog) {
         this.items = new ArrayList<>();
@@ -35,7 +31,7 @@ public class InventoryService implements IInventoryService {
     /**
      * {@inheritDoc}
      * <p>
-     * 返回防御性拷贝，避免调用方直接改内部列表。
+     * Returns a defensive copy to prevent external modification of the internal list.
      */
     @Override
     public List<FoodItem> getAllItems() {
@@ -45,7 +41,14 @@ public class InventoryService implements IInventoryService {
     /**
      * {@inheritDoc}
      * <p>
-     * 名称来自建议选择；分类来自目录；数量默认 1；创建日为今天；过期日 = 今天 + 默认保质天数。
+     * Resolves the food name from catalog suggestions or direct match.
+     * Defaults to a fallback entry if no match is found.
+     *
+     * Generated fields:
+     * - category from catalog entry
+     * - quantity defaulted to 1
+     * - creation date set to today
+     * - expiry date = today + default shelf life
      */
     @Override
     public FoodItem addItem(String foodName) {
@@ -70,7 +73,11 @@ public class InventoryService implements IInventoryService {
         return item;
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     *
+     * <p>
+     * Adds a batch of food items into the inventory.
+     */
     @Override
     public void addAllItems(List<FoodItem> toAdd) {
         items.addAll(toAdd);
@@ -79,7 +86,8 @@ public class InventoryService implements IInventoryService {
     /**
      * {@inheritDoc}
      * <p>
-     * 按食材分类显示名等值匹配（忽略大小写）。勿用于菜谱分类筛选。
+     * Filters food items by category name (case-insensitive match).
+     * Note: This is for inventory food categories, not recipe categories.
      */
     @Override
     public List<FoodItem> filterByCategory(String categoryName) {
@@ -91,7 +99,7 @@ public class InventoryService implements IInventoryService {
     /**
      * {@inheritDoc}
      * <p>
-     * 按过期日升序（越早越靠前）。
+     * Sorts items by expiry date in ascending order (earliest expiry first).
      */
     @Override
     public List<FoodItem> sortByExpiry() {
@@ -103,7 +111,7 @@ public class InventoryService implements IInventoryService {
     /**
      * {@inheritDoc}
      * <p>
-     * 按创建日降序（新到旧）。
+     * Sorts items by creation time in descending order (newest first).
      */
     @Override
     public List<FoodItem> sortByCreatedTime() {
@@ -112,7 +120,11 @@ public class InventoryService implements IInventoryService {
                 .collect(Collectors.toList());
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     *
+     * <p>
+     * Clears all items from the inventory.
+     */
     @Override
     public void clearInventory() {
         items.clear();

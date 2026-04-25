@@ -12,24 +12,24 @@ import java.util.List;
  * in {@link IGroceryService}, and this layer coordinates module-level actions such as session reset.
  */
 public class GroceryController {
-    // 真正管购物清单逻辑的是 service；controller 主要负责转发。
+    // The service is responsible for all grocery business logic; the controller only delegates calls.
     private final IGroceryService groceryService;
 
     // 这是 checkout 时要执行的“收尾动作”。
-    // 默认只是清空 grocery；
-    // 但如果以后你要把库存、偏好、推荐一起重置，
-    // 也可以把更大的 reset 动作塞进来。
+    // A callback executed at the end of the checkout process.
+    // By default, it only clears the grocery list.
+    // In the future, this can be extended to reset inventory, preferences, or recommendations.
     private final Runnable onCheckoutLoopEnd;
 
     /**
-     * 默认构造：checkout 只做 grocery 自己的清空。
+     * Default constructor: checkout only clears grocery data.
      */
     public GroceryController(IGroceryService groceryService) {
         this(groceryService, groceryService::checkout);
     }
 
     /**
-     * 自定义构造：允许外部传一个更完整的 checkout 收尾逻辑。
+     * Custom constructor: allows injecting a more comprehensive checkout callback.
      */
     public GroceryController(IGroceryService groceryService, Runnable onCheckoutLoopEnd) {
         this.groceryService = groceryService;
@@ -37,87 +37,87 @@ public class GroceryController {
     }
 
     /**
-     * 取当前购物清单。
+     * Gets the current grocery list.
      */
     public List<GroceryItem> getItems() {
         return groceryService.getItems();
     }
 
     /**
-     * 加一条购物项。
+     * Adds a new grocery item.
      */
     public void addLine(GroceryItem item) {
         groceryService.addLine(item);
     }
 
     /**
-     * 按分类筛选购物项。
+     * Filters grocery items by category.
      */
     // ===== teammate note =====
-    // controller 这里只做转发，不要把复杂业务规则塞进来。
+    // The controller should only delegate calls. Do not place business rules here.
     // insert your code here only if the service signature changes
     public List<GroceryItem> filterByCategory(String categoryName) {
         return groceryService.filterByCategory(categoryName);
     }
 
     /**
-     * 按名字搜索购物项。
+     * Searches grocery items by keyword.
      */
     // ===== teammate note =====
-    // controller 这里只做转发，不要把复杂搜索逻辑写在这里。
+    // The controller should only delegate calls. Do not place business rules here.
     // insert your code here only if the service signature changes
     public List<GroceryItem> searchByName(String keyword) {
         return groceryService.searchByName(keyword);
     }
 
     /**
-     * 勾选 / 取消勾选某个购物项是否已买。
+     * Toggles whether an item is marked as collected (purchased or not).
      */
     public GroceryItem toggleCollected(String itemId) {
         return groceryService.toggleCollected(itemId);
     }
 
     /**
-     * 按增量修改数量。
+     * Updates item quantity using a delta adjustment.
      */
     public GroceryItem updateQuantity(String itemId, int delta) {
         return groceryService.updateQuantity(itemId, delta);
     }
 
     /**
-     * 删除一条购物项。
+     * Deletes a grocery item.
      */
     public void deleteItem(String itemId) {
         groceryService.deleteItem(itemId);
     }
 
     /**
-     * 算小计。
+     * Calculates subtotal.
      */
     public double calculateSubtotal() {
         return groceryService.calculateSubtotal();
     }
 
     /**
-     * 算税。
+     * Calculates tax.
      */
     public double calculateTax(double subtotal) {
         return groceryService.calculateTax(subtotal);
     }
 
     /**
-     * 算总价。
+     * Calculates total.
      */
     public double calculateTotal(double subtotal, double tax) {
         return groceryService.calculateTotal(subtotal, tax);
     }
 
     /**
-     * 执行 checkout。
+     * Executes checkout process.
      *
-     * 这里不是直接写死成某一种 reset，
-     * 而是跑构造时传进来的 Runnable，
-     * 这样以后要换结账后的行为会更灵活。
+     * Instead of hardcoding a specific reset behavior,
+     * this method executes the injected Runnable callback.
+     * This makes the checkout process flexible and extensible.
      */
     public void checkout() {
         onCheckoutLoopEnd.run();

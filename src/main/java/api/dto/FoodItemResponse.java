@@ -4,13 +4,13 @@ import model.FoodCategory;
 import model.FoodItem;
 
 /**
- * 返回给手机的「食材 JSON」/ JSON view of {@link FoodItem} for the app (uses {@code newItem} not raw word {@code new}).
- * <p>多出来的字段：先看 FoodItem 里有没有，<strong>不要</strong>加仓库位置 storageLocation。</p>
+ * JSON view of {@link FoodItem} for the app (uses {@code newItem} not raw word {@code new}).
+ * <p>For any additional fields, first check whether they already exist in FoodItem.
+ * <strong>DO NOT</strong>add in storageLocation.</p>
  */
 public class FoodItemResponse {
-    // 以后字段变了，改 from() 就行 / When FoodItem grows, update from().
-    // 食材类≠菜谱类，别混在一起 / Food vs recipe categories stay separate.
-    // INSERT YOUR CODE HERE
+    // When FoodItem grows, update from().
+    // Food vs recipe categories stay separate.
 
     private String id;
     private String name;

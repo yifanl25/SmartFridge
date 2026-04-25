@@ -26,15 +26,15 @@ public interface IGroceryService {
     void addLine(GroceryItem item);
 
     /**
-     * 按分类筛选。
-     * <p>Teammate note: 这个接口是给 grocery 分类筛选用的。
+     * Filters by category.
+     * <p>Teammate note: This interface is used for category-based filtering for grocery items.
      * insert your code here: keep interface in sync if service rule changes</p>
      */
     List<GroceryItem> filterByCategory(String categoryName);
 
     /**
      * Filter the items whose category matches the given category name.
-     * <p>Teammate note: 这个接口是给 grocery 分类筛选用的。
+     * <p>Teammate note: This interface is used for category-based filtering for grocery items.
      * insert your code here: keep interface in sync if service rule changes</p>
      */
     List<GroceryItem> searchByName(String keyword);

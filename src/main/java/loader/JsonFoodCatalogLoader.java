@@ -14,8 +14,6 @@ import java.util.List;
 
 /**
  * Loads {@code food_catalog.json} into {@link FoodCatalogEntry} list (classpath or absolute file path).
- * <p>
- * 将 {@code food_catalog.json} 加载为 {@link FoodCatalogEntry} 列表（classpath 或绝对文件路径）。
  */
 public final class JsonFoodCatalogLoader {
     private static final ObjectMapper MAPPER = new ObjectMapper();
@@ -25,10 +23,8 @@ public final class JsonFoodCatalogLoader {
 
     /**
      * Reads JSON: tries {@code getResourceAsStream} first, then {@link Files#newInputStream(Path)}.
-     * <p>
-     * 读取 JSON：先试 classpath 资源，再试 {@link Files#newInputStream(Path)}。
      *
-     * @param pathOrResource e.g. {@code /food_catalog.json} or disk path / 如 {@code /food_catalog.json} 或磁盘路径
+     * @param pathOrResource e.g. {@code /food_catalog.json} or disk path
      */
     public static List<FoodCatalogEntry> loadFromFile(String pathOrResource) throws IOException {
         InputStream in = JsonFoodCatalogLoader.class.getResourceAsStream(
@@ -58,8 +54,6 @@ public final class JsonFoodCatalogLoader {
 
     /**
      * Same as {@link #loadFromFile(String)} for app entrypoints; wraps failure in {@link IllegalStateException}.
-     * <p>
-     * 供应用入口调用，失败时包装为 {@link IllegalStateException}。
      */
     public static List<FoodCatalogEntry> loadFromFileSafe(String pathOrResource) {
         try {

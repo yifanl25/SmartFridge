@@ -10,10 +10,8 @@ public class Main {
 
     /**
      * Program entry; delegates composition root startup to {@link SmartFridgeApp}.
-     * <p>
-     * 程序入口；将组合根启动委托给 {@link SmartFridgeApp}。
      *
-     * @param args unused in current demo / 当前演示未使用
+     * @param args unused in current demo
      */
     public static void main(String[] args) {
         SmartFridgeApp.main(args);

@@ -33,18 +33,16 @@ import java.util.List;
  * console flow is kept for backward compatibility and demos.
  */
 public final class SmartFridgeApp {
-    /** Classpath food catalog resource. / classpath 食材目录资源。 */
+    /** Classpath food catalog resource.  */
     private static final String FOOD_CATALOG_RESOURCE = "/food_catalog.json";
-    /** Classpath recipes resource. / classpath 菜谱资源。 */
+    /** Classpath recipes resource.  */
     private static final String RECIPE_RESOURCE = "/recipes.json";
 
     /**
      * When {@code true}, pre-seeds inventory from {@link #DATA_JSON_RESOURCE}. Keep {@code false} for grading default.
-     * <p>
-     * 为 {@code true} 时从 {@link #DATA_JSON_RESOURCE} 预灌库存。交作业默认请保持 {@code false}。
      */
     private static final boolean LOAD_DEMO_INVENTORY = false;
-    /** Demo seed file under {@code src/main/resources}. / {@code src/main/resources} 下的演示种子文件。 */
+    /** Demo seed file under {@code src/main/resources}.  */
     private static final String DATA_JSON_RESOURCE = "/data.json";
 
     private SmartFridgeApp() {
@@ -52,10 +50,8 @@ public final class SmartFridgeApp {
 
     /**
      * Wires the full stack and runs the interactive console until user quits.
-     * <p>
-     * 装配完整调用栈并运行交互式控制台直至用户退出。
      *
-     * @param args unused / 未使用
+     * @param args unused
      */
     public static void main(String[] args) {
         List<FoodCatalogEntry> catalogEntries = JsonFoodCatalogLoader.loadFromFileSafe(FOOD_CATALOG_RESOURCE);

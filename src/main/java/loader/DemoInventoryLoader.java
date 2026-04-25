@@ -22,9 +22,6 @@ import java.util.UUID;
 /**
  * Optional demo seed loader: reads {@code data.json} (array of name/expiryDate/category) and maps to {@link FoodItem}.
  * Expiry comes from JSON; category/name are resolved via {@link IFoodCatalog} when possible.
- * <p>
- * 可选演示种子加载器：读取 {@code data.json}（name/expiryDate/category 数组）并映射为 {@link FoodItem}。
- * 过期日来自 JSON；名称与分类尽可能通过 {@link IFoodCatalog} 解析。
  */
 public final class DemoInventoryLoader {
     private static final ObjectMapper MAPPER = new ObjectMapper();
@@ -34,10 +31,8 @@ public final class DemoInventoryLoader {
 
     /**
      * Loads from classpath (path starting with {@code /}) or filesystem; returns empty list if missing.
-     * <p>
-     * 从 classpath（以 {@code /} 开头）或文件系统加载；资源不存在则返回空列表。
      *
-     * @throws IOException if the file exists but is not valid JSON / 文件存在但 JSON 无效时抛出
+     * @throws IOException if the file exists but is not valid JSON
      */
     public static List<FoodItem> loadFoodItemsOptional(String pathOrResource, IFoodCatalog foodCatalog) throws IOException {
         InputStream in = DemoInventoryLoader.class.getResourceAsStream(
@@ -62,8 +57,6 @@ public final class DemoInventoryLoader {
 
     /**
      * Same as {@link #loadFoodItemsOptional(String, IFoodCatalog)} but wraps {@link IOException} in {@link IllegalStateException}.
-     * <p>
-     * 与 {@link #loadFoodItemsOptional(String, IFoodCatalog)} 相同，但将 {@link IOException} 包装为 {@link IllegalStateException}。
      */
     public static List<FoodItem> loadFoodItemsSafe(String pathOrResource, IFoodCatalog foodCatalog) {
         try {
@@ -75,8 +68,6 @@ public final class DemoInventoryLoader {
 
     /**
      * Maps one JSON row to a {@link FoodItem} using catalog resolution or JSON category fallback.
-     * <p>
-     * 将一行 JSON 映射为 {@link FoodItem}：优先目录解析，否则用 JSON 中的 category 兜底。
      */
     private static FoodItem toFoodItem(DemoInventoryRow row, IFoodCatalog foodCatalog) {
         String name = row.name == null ? "" : row.name.trim();
@@ -108,8 +99,6 @@ public final class DemoInventoryLoader {
 
     /**
      * Builds a synthetic {@link FoodCategory} when catalog has no entry for the demo name.
-     * <p>
-     * 当目录无对应条目时，用演示数据中的分类字符串构造合成 {@link FoodCategory}。
      */
     private static FoodCategory fallbackCategory(String label) {
         String name = label == null || label.trim().isEmpty() ? "Misc" : label.trim();
@@ -117,7 +106,7 @@ public final class DemoInventoryLoader {
         return new FoodCategory(id, name, "box");
     }
 
-    /** Jackson DTO for one array element in {@code data.json}. / {@code data.json} 数组元素的 Jackson DTO。 */
+    /** Jackson DTO for one array element in {@code data.json}.  */
     @SuppressWarnings("unused")
     private static class DemoInventoryRow {
         public String name;
