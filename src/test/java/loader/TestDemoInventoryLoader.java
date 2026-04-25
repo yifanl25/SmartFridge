@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * TDD：Demo inventory data loading tests.（Maps to: {@link DemoInventoryLoader}、resource file {@code data.json}）。
@@ -33,4 +33,8 @@ public class TestDemoInventoryLoader {
         assertEquals(20, items.size());
         assertEquals("2026-04-18", items.get(0).getExpiryDate());
     }
+
+
+
+
 }

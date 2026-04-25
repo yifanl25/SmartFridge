@@ -8,8 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * TDD：Static food catalog lookup tests.(Maps to: {@link FoodCatalog} / {@link IFoodCatalog}).
@@ -60,4 +59,50 @@ public class TestFoodCatalog {
     void testGetDefaultExpiryDaysReturnsConfiguredValue() {
         assertEquals(7, foodCatalog.getDefaultExpiryDays("Milk"));
     }
+
+    /**
+     * Tests searchSuggestions() returns empty list for null prefix.
+     * Branch: prefix is null → p is empty → return empty list.
+     */
+    @Test
+    void testSearchSuggestionsReturnsEmptyForNullPrefix() {
+        assertEquals(0, foodCatalog.searchSuggestions(null).size());
+    }
+
+    /**
+     * Tests containsFood() returns false for unknown food.
+     * Branch: resolveEntry returns empty → return false.
+     */
+    @Test
+    void testContainsFoodReturnsFalseForUnknownFood() {
+        assertFalse(foodCatalog.containsFood("Pizza"));
+    }
+
+    /**
+     * Tests getDefaultExpiryDays() returns 3 for unknown food.
+     * Branch: resolveEntry returns empty → orElse(3).
+     */
+    @Test
+    void testGetDefaultExpiryDaysReturnsThreeForUnknownFood() {
+        assertEquals(3, foodCatalog.getDefaultExpiryDays("Pizza"));
+    }
+
+    /**
+     * Tests canonicalFoodName() returns trimmed raw name when food not in catalog.
+     * Branch: resolveEntry empty → raw != null → return raw.trim().
+     */
+    @Test
+    void testCanonicalFoodNameReturnsRawWhenNotInCatalog() {
+        assertEquals("Pizza", foodCatalog.canonicalFoodName("Pizza"));
+    }
+
+    /**
+     * Tests canonicalFoodName() returns empty string when raw is null.
+     * Branch: resolveEntry empty → raw == null → return "".
+     */
+    @Test
+    void testCanonicalFoodNameReturnsEmptyStringForNull() {
+        assertEquals("", foodCatalog.canonicalFoodName(null));
+    }
+
 }

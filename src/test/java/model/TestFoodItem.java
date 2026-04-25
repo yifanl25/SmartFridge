@@ -42,6 +42,21 @@ public class TestFoodItem {
     }
 
     /**
+     * Tests isNew() returns false when item was created more than 1 day ago.
+     * Branch: created.isBefore(yesterday) → return false.
+     */
+    @Test
+    void testIsNotNewWhenCreatedTwoDaysAgo() {
+        FoodCategory category = new FoodCategory("c1", "Dairy", "milk");
+        String twoDaysAgo = LocalDate.now().minusDays(2).toString();
+        FoodItem item = new FoodItem(
+                "f4", "Milk", category, 1, "pcs",
+                twoDaysAgo,
+                LocalDate.now().plusDays(7).toString());
+        assertFalse(item.isNew());
+    }
+
+    /**
      * Test: "urgent / near expiry" flag when expiry date is today.
      * Verification：{@link FoodItem#isUrgent()} returns true。
      * <p>

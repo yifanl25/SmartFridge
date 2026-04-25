@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * TDD：Inventory management's increases and deletes and sorts and finds and changes.（Maps to: {@link InventoryService}）
@@ -111,4 +112,17 @@ public class TestInventoryService {
         inventoryService.addAllItems(List.of(a, b));
         assertEquals(2, inventoryService.getAllItems().size());
     }
+
+    /**
+     * Tests addItem() falls back to Misc category when food is not in catalog.
+     * Branch: resolveEntry empty, searchSuggestions empty → use Misc category.
+     */
+    @Test
+    void testAddItemFallsBackToMiscWhenNotInCatalog() {
+        FoodItem item = inventoryService.addItem("DragonFruit");
+        assertEquals("DragonFruit", item.getName());
+        assertEquals("Misc", item.getCategory().getName());
+    }
+
+
 }
