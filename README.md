@@ -2,7 +2,7 @@
 
 [![Presentation slide 1](assets/sf1.png)](https://docs.google.com/presentation/d/1-dzaCJht_Pti-AOUJda0-IwF9ksO_Fna9TkXhQCvT1M/edit)
 
-📊 [View full presentation on Google Slides](https://docs.google.com/presentation/d/1-dzaCJht_Pti-AOUJda0-IwF9ksO_Fna9TkXhQCvT1M/edit)
+🍿 [View full presentation on Google Slides](https://docs.google.com/presentation/d/1-dzaCJht_Pti-AOUJda0-IwF9ksO_Fna9TkXhQCvT1M/edit)
 
 * The group member's names and link to their personal githubs
     * Duanxi Zhou: https://github.com/Chickenzdx
